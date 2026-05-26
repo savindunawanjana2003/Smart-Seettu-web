@@ -5,7 +5,7 @@ import bcrypt from "bcryptjs";
 import { singAccesstoken, signRefreshToken } from "../utils/token";
 
 export const registerCustomer = async (req: Request, res: Response) => {
-  const { id, name, email, password, nic, poneNumber, Address } = req.body;
+  const { id, name, email, password, nic, poneNumber, address } = req.body;
 
   try {
     const salt = bcrypt.genSaltSync(10);
@@ -15,10 +15,10 @@ export const registerCustomer = async (req: Request, res: Response) => {
       id,
       name,
       email,
-      hashedPassword,
+      password: hashedPassword,
       nic,
       poneNumber,
-      Address,
+      address,
     });
 
     const saveCustormer = await customer.save();

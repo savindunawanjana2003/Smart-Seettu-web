@@ -1,6 +1,9 @@
 import { Request, Response, NextFunction, ErrorRequestHandler } from "express";
 import { AppError } from "../errors/AppError";
+import dotenv from "dotenv";
+import { dot } from "node:test/reporters";
 
+dotenv.config();
 export const globalErrorHandler: ErrorRequestHandler = (
   err,
   req,

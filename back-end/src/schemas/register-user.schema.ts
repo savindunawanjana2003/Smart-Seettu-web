@@ -14,7 +14,7 @@ export const registerSchema = z.object({
     nic: z.string().regex(/^([0-9]{9}[vVxX]|[0-9]{12})$/, {
       message: "Please enter a valid NIC number",
     }),
-    phoneNumber: z
+    poneNumber: z
       .string()
       .min(10, { message: "Phone number must be 10 digits" })
       .max(10, { message: "Phone number must be 10 digits" }),
