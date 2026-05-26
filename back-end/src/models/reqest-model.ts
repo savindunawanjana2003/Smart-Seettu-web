@@ -27,4 +27,4 @@ export default reqestModel;
 //respons eka enakota allredy reqest eka db eke save wela thiyenne  memberRespons eka difolt "not accsept" thiyenne  respons eke  accsept thiyei
 // nam  row eka update karala  member grup ekata add karanawa
 
-//  respons eka allaganna hama welema triger mena lesa   funshion ekak  thiyenna one  eken karanne   reqest ekak confirm kara nam   member grup ekata add karanawa  mekedi wenne grup collection ekata  member ge id eka dana ke
+//-  respons eka allaganna hama welema triger mena lesa   funshion ekak  thiyenna one  eken karanne   reqest ekak confirm kara nam   member grup ekata add karanawa  mekedi wenne grup collection ekata  member ge id eka dana ke
