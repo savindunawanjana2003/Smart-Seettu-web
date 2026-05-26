@@ -15,12 +15,15 @@ interface Imembers {
   contactnumber: string;
   tagname: string; // is member or admin
 }
-// firstly  the addmin must include  as a member with admin tag name in the grup collection
+// firstly  the admin must include  as a member with admin tag name in the grup collection
 export interface Igrup extends Document {
-  gid: string;
-  gadminid: string;
-  gmemberCount: string;
-  members: Imembers[];
+  id: string;
+  adminid: string;
+  memberCount: string;
+  expectedMonthlySeettuAmount: string;
+  monthlyContributionPerMember: string;
+  seettuDurationInMonths: string;
+  members?: Imembers[];
   createDate: string;
 }
 
@@ -33,10 +36,13 @@ const memberSchema = new Schema<Imembers>({
 });
 
 const grupSchema = new Schema<Igrup>({
-  gid: { type: String, required: true, unique: true },
-  gadminid: { type: String, required: true, unique: true },
-  gmemberCount: { type: String, required: true, unique: true },
-  members: { type: [memberSchema], required: true, unique: true },
+  id: { type: String, required: true, unique: true },
+  adminid: { type: String, required: true, unique: true },
+  memberCount: { type: String, required: true },
+  expectedMonthlySeettuAmount: { type: String, required: true }, // masekata ekathu wenna one mulu mudala
+  monthlyContributionPerMember: { type: String, required: true, unique: true }, //grup create karapu gaman inne addmin  nisa   masekata ekathu wenna mulu gana  gewanna watenna
+  seettuDurationInMonths: { type: String, required: true }, // mulma ekata 1 mounth mokada  member laganata masa gana equl nisa
+  members: { type: [memberSchema] },
   createDate: { type: String, required: true, unique: true },
 });
 
