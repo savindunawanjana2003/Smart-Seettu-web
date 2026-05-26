@@ -1,4 +1,4 @@
-import { Iuser } from "../models/user-profile"; // export
+import { Icustomer } from "../models/customer-modal"; // export
 import jwt from "jsonwebtoken"; // default export
 import dotenv from "dotenv";
 dotenv.config();
@@ -6,11 +6,10 @@ dotenv.config();
 const JWT_SECRET = process.env.JWT_SECRET as string;
 const JWT_REFRESH_SECRET = process.env.JWT_REFRESH_SECRET as string;
 
-export const singAccesstoken = (user: Iuser): string => {
+export const singAccesstoken = (user: Icustomer): string => {
   return jwt.sign(
     {
       sub: user._id.toString(),
-      roles: user.roles,
       email: user.email,
     },
     JWT_SECRET,
@@ -18,7 +17,7 @@ export const singAccesstoken = (user: Iuser): string => {
   );
 };
 
-export const signRefreshToken = (user: Iuser): string => {
+export const signRefreshToken = (user: Icustomer): string => {
   return jwt.sign(
     {
       sub: user._id.toString(),

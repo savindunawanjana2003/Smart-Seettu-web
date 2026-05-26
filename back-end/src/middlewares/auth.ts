@@ -21,10 +21,10 @@ export const authenticate = (
     console.log("Access token is missing---------");
     throw new AppError("Access token is missing", 401);
   }
-  const token = authHeader.split(" ")[1];
+  const secretoftoken = authHeader.split(" ")[1];
 
   try {
-    const playLode = jwt.verify(token, JWT_SECRET);
+    const playLode = jwt.verify(secretoftoken, JWT_SECRET);
     req.user = playLode;
     next();
   } catch (error) {
