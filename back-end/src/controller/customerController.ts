@@ -1,7 +1,8 @@
 import { Request, Response } from "express";
-import customerModal from "../models/customerModal";
+import customerModal from "../models/customer-modal";
+import { AppError } from "../errors/AppError";
 
-export const saveCustomer = async (req: Request, res: Response) => {
+export const registerCustomer = async (req: Request, res: Response) => {
   const {
     cid,
     cname,
@@ -34,8 +35,9 @@ export const saveCustomer = async (req: Request, res: Response) => {
     });
   } catch (error) {
     console.error(error);
-    res.status(500).json({
-      Message: "Save Unsuccsess fully !",
-    });
+    throw new AppError("Save Unsuccsess fully", 500);
+    // res.status(500).json({
+    //   Message: "Save Unsuccsess fully !",
+    // });
   }
 };

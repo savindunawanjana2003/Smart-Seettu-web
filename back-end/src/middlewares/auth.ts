@@ -6,7 +6,6 @@ import { AppError } from "../errors/AppError";
 dotenv.config();
 
 const JWT_SECRET = process.env.JWT_SECRET as string;
-
 export interface AutheReqest extends Request {
   user?: any;
 }

@@ -1,0 +1,8 @@
+auth-custormer-router.ts
+i us this do only custormer login and registetion 
+
+custormer-rout.ts
+in the file avelable croud like delte update customer profile
+
+grup-router.ts
+in this page avelable all croud for grup

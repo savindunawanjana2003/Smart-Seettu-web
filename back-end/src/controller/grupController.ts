@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import groupModel from "../models/groupModal";
+import groupModel from "../models/group-modal";
 
 export const savegroup = async (req: Request, res: Response) => {
   const { gid, gadminid, gmemberCount, members, createDate } = req.body;
