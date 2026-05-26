@@ -1,27 +1,51 @@
-import express from "express";
+import express, { Application } from "express";
+import cors from "cors";
 import mongoose from "mongoose";
 import dotenv from "dotenv";
-import customerRouter from "./routes/customerRouter";
-import groupRouter from "./routes/groupRouter";
+import { connection } from "./config/db";
+import { globalErrorHandler } from "./middlewares/global-Error-Handler";
+// Routers Import
+// =======================
+import Authrouter from "./routers/auth-router";
 
+// ============1. Env Configuration===========
+dotenv.config({ path: "./key.env" });
+
+const PORT = process.env.PORT || 5000;
 const app = express();
-dotenv.config();
+
+// ============ 2. Express Settings ===========
+// Nginx / Heroku / AWS Load Balancer වැනි Proxies හරහා එන ඇත්තම User IP එක හඳුනා ගැනීමට
+app.set("trust proxy", 1);
+//============first global midle wares========
+app.use(cros());
 app.use(express.json());
-app.use("/api/v1/custormer", customerRouter);
-app.use("/api/v1/group", groupRouter);
 
-const db_url = process.env.MONGO_URL as string;
-const port_number = Number(process.env.PORT);
+// =============routing========
+app.use("/backendapi/v1/auth", Authrouter);
 
-mongoose
-  .connect(db_url)
-  .then(() => {
-    console.log("Mongo-Db conected... ");
-  })
-  .catch((error) => {
-    console.log(error);
-  });
+// ============Global Error Handling Middleware (ඕනෑම Route එකක Error එකක් ආවොත් මෙතනට අහුවෙනවා)
+// uda thiyena ruter ekak  kohe hari ahlak awith methana thiytena midle ware triger wenna globle lesa hadanna one phala
 
-app.listen(port_number, () => {
-  console.log("server runing port:3000");
-});
+app.use(globalErrorHandler);
+
+const startServer = async (): Promise<void> => {
+  try {
+    await connection();
+    // console.log("Database connected successfully... ");
+
+    const server = app.listen(PORT, () => {
+      console.log(`Server is running on port: ${PORT} `);
+    });
+
+    server.on("error", (err: any) => {
+      console.error("Server network error: ", err);
+      process.exit(1);
+    });
+  } catch (error) {
+    console.error("Database connection error: ", error);
+    process.exit(1);
+  }
+};
+
+startServer();
