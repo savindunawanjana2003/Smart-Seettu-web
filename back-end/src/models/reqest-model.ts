@@ -21,7 +21,7 @@ export default reqestModel;
 
 // reqestId ekak denn amekatath naththn unikly haduna ganna bari wenawa
 
-//if admin send the reqest each member, in on time save the  new data in the reqest collection, and after the  come respons
+//11 if admin send the reqest each member, in on time save the  new data in the reqest collection, and after the  come respons
 // chek  who accsept the reqest  if accsept, apudete the data row in the collection (memberRespons:"accespt" or memberRespons:"not accespt")
 //after the come reqest  chek this  acoding to the  memberRespons, the system desaide,  as  does member incloud the grup
 //respons eka enakota allredy reqest eka db eke save wela thiyenne  memberRespons eka difolt "not accsept" thiyenne  respons eke  accsept thiyei
