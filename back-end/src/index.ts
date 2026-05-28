@@ -17,7 +17,9 @@ const app = express();
 app.set("trust proxy", 1);
 app.use(cros());
 app.use(express.json());
-
+app.use("/get", (req, res) => {
+  res.send("Ok Congratulation");
+});
 app.use("/api/v1/auth", Authrouter);
 // app.use();
 
