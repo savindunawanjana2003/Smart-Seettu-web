@@ -17,10 +17,10 @@ const app = express();
 app.set("trust proxy", 1);
 app.use(cros());
 app.use(express.json());
-app.use("/", (req, res) => {
+app.get("/", (req, res) => {
   res.send("Ok Congratulation");
 });
-app.get("/api/v1/auth", Authrouter);
+app.use("/api/v1/auth", Authrouter);
 // app.use();
 
 // ============Global Error Handling Middleware (ඕනෑම Route එකක Error එකක් ආවොත්
