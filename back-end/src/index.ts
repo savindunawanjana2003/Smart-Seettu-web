@@ -20,7 +20,7 @@ app.use(express.json());
 app.use("/", (req, res) => {
   res.send("Ok Congratulation");
 });
-app.use("/api/v1/auth", Authrouter);
+app.get("/api/v1/auth", Authrouter);
 // app.use();
 
 // ============Global Error Handling Middleware (ඕනෑම Route එකක Error එකක් ආවොත්
