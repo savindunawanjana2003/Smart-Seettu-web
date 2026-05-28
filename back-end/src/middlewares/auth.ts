@@ -9,7 +9,6 @@ const JWT_SECRET = process.env.JWT_SECRET as string;
 export interface AutheReqest extends Request {
   user?: any;
 }
-
 export const authenticate = (
   req: AutheReqest,
   res: Response,
