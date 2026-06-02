@@ -4,17 +4,17 @@ import dotenv from "dotenv";
 dotenv.config();
 export const connection = async (): Promise<void> => {
   try {
-    const DB_URL = process.env.MONGO_URL as string;
+    const dburl = process.env.MONGO_URL as string;
 
-    if (!DB_URL) {
-      throw new Error("MONGO_URI is not defined in environment variables.");
+    if (!dburl) {
+      throw new Error("MONGO_URL is not defined in environment variables.");
     }
 
     const options: mongoose.ConnectOptions = {
       autoIndex: process.env.NODE_ENV !== "production",
     };
 
-    const conn = await mongoose.connect(DB_URL, options);
+    const conn = await mongoose.connect(dburl, options);
 
     console.log(`MongoDB Connected: ${conn.connection.host}:📡`);
   } catch (error) {

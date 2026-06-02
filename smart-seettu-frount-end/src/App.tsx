@@ -1,5 +1,6 @@
 import React from "react";
-import Firstpage from "./pages/firstpage";
+import Firstpage from "./pages/Web";
+import Test from "./pages/test";
 
 const App = () => {
   return (
