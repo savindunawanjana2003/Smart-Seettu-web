@@ -1,6 +1,6 @@
 import React from "react";
 import "../hirowPage.css";
-import Header from "../components/Nave-bar";
+// import Header from "../components/Nave-bar";
 
 import img4 from "../assets/image/4.jpg";
 import img3 from "../assets/image/3.jpg";
