@@ -1,5 +1,4 @@
 import { useState } from "react";
-import React from "react";
 import { Menu, X, LogOut, User, ChevronDown } from "lucide-react";
 
 const Header = () => {
