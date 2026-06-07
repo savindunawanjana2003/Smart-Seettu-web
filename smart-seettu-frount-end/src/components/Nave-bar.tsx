@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Menu, X} from "lucide-react";
+import { Menu, X } from "lucide-react";
 
 const Header = () => {
   const [open, setOpen] = useState(false);
@@ -114,11 +114,11 @@ const Header = () => {
           </button>
           {isLoggedIn && (
             <div
-              className="fixed inset-0 bg-transparent/20 z-50 flex items-center justify-center"
+              className="fixed inset-0 bg-transparent/20 z-50 flex items-center justify-center "
               onClick={closeLoginFromBackground}
             >
               <div
-                className="w-full max-w-md md:max-w-xl bg-mist-700 flex flex-col gap-4 p-6 sm:p-10 md:pl-11 border rounded-3xl mx-auto"
+                className="w-full max-w-md md:max-w-xl bg-cyan-950 flex flex-col gap-4 p-6 sm:p-10 md:pl-11 border rounded-3xl mx-auto w-25px h-100px"
                 onClick={(e) => e.stopPropagation()}
               >
                 <label htmlFor="" className="text-4xl pt-7">
