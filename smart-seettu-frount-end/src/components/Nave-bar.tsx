@@ -21,7 +21,7 @@ const Header = () => {
   const handleLogout = () => {
     // Clear user session/data
     setIsLoggedIn(false);
-    setUser(Object);
+    setUser(null);
     setUserMenuOpen(false);
     setOpen(false);
 
