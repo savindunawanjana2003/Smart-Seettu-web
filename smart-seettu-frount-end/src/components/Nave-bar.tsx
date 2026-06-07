@@ -16,6 +16,7 @@ const Header = () => {
     setIsLoggedIn(true);
     setUserMenuOpen(false);
   };
+  
 
   // Logout handler
   const handleLogout = () => {
