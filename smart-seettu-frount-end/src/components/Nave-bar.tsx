@@ -4,7 +4,9 @@ import { Menu, X, LogOut, User, ChevronDown } from "lucide-react";
 const Header = () => {
   const [open, setOpen] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [userMenuOpen, setUserMenuOpen] = useState(false);
+  // const [userMenuOpen, setUserMenuOpen] = useState(false);
+
+  // ====================================
   const [user, setUser] = useState({
     name: "John Doe",
     email: "john@example.com",
@@ -14,16 +16,15 @@ const Header = () => {
   // Login handler
   const handleLogin = () => {
     setIsLoggedIn(true);
-    setUserMenuOpen(false);
+    // setUserMenuOpen(false);
   };
-  
 
   // Logout handler
   const handleLogout = () => {
     // Clear user session/data
     setIsLoggedIn(false);
     setUser(Object);
-    setUserMenuOpen(false);
+    // setUserMenuOpen(false);
     setOpen(false);
 
     // Optional: Clear any stored tokens
@@ -33,6 +34,12 @@ const Header = () => {
     // Optional: Redirect to home or login page
     // window.location.href = "/";
   };
+
+  const closeLoginFromBackground = () => {
+    setIsLoggedIn(false);
+  };
+
+  // =================================
 
   return (
     <div>
@@ -99,52 +106,78 @@ const Header = () => {
               </a>
             </li>
           </ul>
-
-          {/* Auth Section - Desktop */}
-          <div className="hidden md:block">
-            {!isLoggedIn ? (
-              <button
-                onClick={handleLogin}
-                className="bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-white px-6 py-2 rounded-lg transition-all duration-200 shadow-md hover:shadow-lg transform hover:scale-105"
+          <button
+            onClick={handleLogin}
+            className="bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-white px-6 py-2 rounded-lg transition-all duration-200 shadow-md hover:shadow-lg transform hover:scale-105"
+          >
+            Login
+          </button>
+          {isLoggedIn && (
+            <div
+              className="fixed inset-0 bg-transparent/20 z-50 flex items-center justify-center"
+              onClick={closeLoginFromBackground}
+            >
+              <div
+                className="w-full max-w-md md:max-w-xl bg-mist-700 flex flex-col gap-4 p-6 sm:p-10 md:pl-11 border rounded-3xl mx-auto"
+                onClick={(e) => e.stopPropagation()}
               >
-                Login
-              </button>
-            ) : (
-              <div className="relative">
+                <label htmlFor="" className="text-4xl pt-7">
+                  Please Log in
+                </label>
+                <div className="flex flex-col gap-2">
+                  <label
+                    className="text-amber-50 text-light font-bold text-xl"
+                    htmlFor=""
+                  >
+                    Email
+                  </label>
+                  <input
+                    className="bg-amber-50 w-[90%] text-gray-950 pl-2 h-12 rounded"
+                    type="email"
+                    placeholder=" email"
+                    part="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}"
+                  />
+                </div>
+                <div className="flex flex-col gap-2">
+                  <label
+                    className="text-amber-50 text-light font-bold text-xl"
+                    htmlFor=""
+                  >
+                    Password
+                  </label>
+                  <input
+                    className="bg-amber-50 w-[90%] text-gray-950 pl-2 h-12 border rounded"
+                    type="password"
+                    placeholder="password"
+                  />
+                </div>
+                <a className="text-sky-600 text-xl" href="#">
+                  Forgot password?
+                </a>
                 <button
-                  onClick={() => setUserMenuOpen(!userMenuOpen)}
-                  className="flex items-center space-x-3 bg-gray-800 hover:bg-gray-700 rounded-lg px-4 py-2 transition-colors duration-200"
+                  type="button"
+                  className="btn btn-outline-primary bg-amber-300 h-13 w-[90%] border-b-blue-950 border-1 rounded hover:bg-amber-400 text-black font-bold"
                 >
-                  <div className="w-8 h-8 bg-amber-500 rounded-full flex items-center justify-center">
-                    <User size={16} className="text-white" />
-                  </div>
-                  <span className="text-gray-200">{user?.name}</span>
-                  <ChevronDown size={16} className="text-gray-400" />
+                  Login
                 </button>
-
-                {/* User Dropdown Menu */}
-                {userMenuOpen && (
-                  <div className="absolute right-0 mt-2 w-64 bg-gray-800 rounded-lg shadow-xl border border-gray-700 overflow-hidden">
-                    <div className="px-4 py-3 border-b border-gray-700">
-                      <p className="text-sm text-gray-300">{user?.name}</p>
-                      <p className="text-xs text-gray-500">{user?.email}</p>
-                      <p className="text-xs text-amber-500 mt-1">
-                        {user?.role}
-                      </p>
-                    </div>
-                    <button
-                      onClick={handleLogout}
-                      className="w-full text-left px-4 py-3 text-sm text-red-400 hover:bg-gray-700 hover:text-red-300 transition-colors duration-200 flex items-center space-x-2"
-                    >
-                      <LogOut size={16} />
-                      <span>Logout</span>
-                    </button>
-                  </div>
-                )}
+                <button
+                  type="button"
+                  className="btn btn-outline-primary bg-transparent border-amber-400 text-amber-400 font-bold rounded border-1 h-13 w-[90%]"
+                >
+                  Register for free
+                </button>
+                <span className="text-xl ">OR</span>
+                <button
+                  type="button"
+                  className="btn btn-outline-primary bg-amber-300 h-13 border-b-blue-950 border-1 rounded hover:bg-amber-400 text-black font-bold w-[90%] mb-5"
+                >
+                  Sign with google
+                </button>
               </div>
-            )}
-          </div>
-
+            </div>
+          )}
+          {/* ====login buten ekata adala unit ekata methnata enne
+           */}
           {/* Mobile Menu Button */}
           <button
             className="md:hidden text-gray-300 hover:text-white transition-colors"
@@ -189,7 +222,7 @@ const Header = () => {
                 </a>
               </li>
 
-              <div className="w-full px-6 mt-2">
+              {/* <div className="w-full px-6 mt-2">
                 {!isLoggedIn ? (
                   <button
                     onClick={handleLogin}
@@ -212,7 +245,7 @@ const Header = () => {
                     </button>
                   </div>
                 )}
-              </div>
+              </div> */}
             </ul>
           </div>
         )}
