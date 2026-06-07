@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Menu, X, LogOut, User, ChevronDown } from "lucide-react";
+import { Menu, X} from "lucide-react";
 
 const Header = () => {
   const [open, setOpen] = useState(false);
