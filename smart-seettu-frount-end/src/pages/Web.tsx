@@ -13,8 +13,8 @@ import { Zap, Users, ArrowRight } from "lucide-react";
 const Home = () => {
   return (
     <div className="overflow-x-hidden">
-      <Header />
-      <h2>Savindu nawanjana</h2>
+      {/* <Header /> */}
+      <h2 className="">Savindu nawanjana</h2>
       <div className="bg-gradient-to-br from-black via-gray-900 to-green-950 text-green-400 mt-10 px-6 py-16 md:px-16 banner-container">
         <div className="w-full max-w-7xl mx-auto flex flex-col-reverse md:flex-row items-center justify-between gap-16 md:gap-10">
           <div className="w-full md:w-1/2 text-center md:text-left space-y-4 z-10">
