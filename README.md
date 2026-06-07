@@ -104,3 +104,6 @@ Track Seettu progress
 The Seettu Application System modernizes the traditional Sri Lankan Seettu savings method by transforming it into a digital platform.
 
 It combines community-based financial culture with modern technology to provide a secure, efficient, and reliable financial management solution.
+
+Back-end-url= https://smart-seettu-web.vercel.app/
+ frount-end=https://seettu-web.vercel.app/
