@@ -7,11 +7,11 @@ const Header = () => {
   // const [userMenuOpen, setUserMenuOpen] = useState(false);
 
   // ====================================
-  const [user, setUser] = useState({
-    name: "John Doe",
-    email: "john@example.com",
-    role: "Member",
-  });
+  // const [user, setUser] = useState({
+  //   name: "John Doe",
+  //   email: "john@example.com",
+  //   role: "Member",
+  // });
 
   // Login handler
   const handleLogin = () => {
@@ -19,21 +19,21 @@ const Header = () => {
     // setUserMenuOpen(false);
   };
 
-  // Logout handler
-  const handleLogout = () => {
-    // Clear user session/data
-    setIsLoggedIn(false);
-    setUser(Object);
-    // setUserMenuOpen(false);
-    setOpen(false);
+  // // Logout handler
+  // const handleLogout = () => {
+  //   // Clear user session/data
+  //   setIsLoggedIn(false);
+  //   setUser(Object);
+  //   // setUserMenuOpen(false);
+  //   setOpen(false);
 
-    // Optional: Clear any stored tokens
-    localStorage.removeItem("authToken");
-    sessionStorage.removeItem("user");
+  //   // Optional: Clear any stored tokens
+  //   localStorage.removeItem("authToken");
+  //   sessionStorage.removeItem("user");
 
-    // Optional: Redirect to home or login page
-    // window.location.href = "/";
-  };
+  //   // Optional: Redirect to home or login page
+  //   // window.location.href = "/";
+  // // };
 
   const closeLoginFromBackground = () => {
     setIsLoggedIn(false);
