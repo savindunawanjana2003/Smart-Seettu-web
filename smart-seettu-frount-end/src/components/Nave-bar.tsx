@@ -118,10 +118,13 @@ const Header = () => {
               onClick={closeLoginFromBackground}
             >
               <div
-                className="w-full max-w-md md:max-w-xl bg-cyan-950 flex flex-col gap-4 p-6 sm:p-10 md:pl-11 border rounded-3xl mx-auto w-25px h-100px"
+                className="w-full max-w-md md:max-w-xl bg-cyan-950 flex flex-col gap-1 p-6 sm:p-10 md:pl-11 border rounded-3xl mx-auto w-25px h-[50vh] mt-10 mb-10 ml-5 mr-5"
                 onClick={(e) => e.stopPropagation()}
               >
-                <label htmlFor="" className="text-4xl pt-7">
+                <label
+                  htmlFor=""
+                  className=" sm:text-4xl md:text-4xl pt-1 sm:p:7"
+                >
                   Please Log in
                 </label>
                 <div className="flex flex-col gap-2">
@@ -132,7 +135,7 @@ const Header = () => {
                     Email
                   </label>
                   <input
-                    className="bg-amber-50 w-[90%] text-gray-950 pl-2 h-12 rounded"
+                    className="bg-amber-50 w-[90%] text-gray-950 pl-2 h-[6vh] rounded"
                     type="email"
                     placeholder=" email"
                     part="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}"
@@ -146,7 +149,7 @@ const Header = () => {
                     Password
                   </label>
                   <input
-                    className="bg-amber-50 w-[90%] text-gray-950 pl-2 h-12 border rounded"
+                    className="bg-amber-50 w-[90%] text-gray-950 pl-2  h-[6vh] border rounded"
                     type="password"
                     placeholder="password"
                   />
@@ -156,20 +159,20 @@ const Header = () => {
                 </a>
                 <button
                   type="button"
-                  className="btn btn-outline-primary bg-amber-300 h-13 w-[90%] border-b-blue-950 border-1 rounded hover:bg-amber-400 text-black font-bold"
+                  className="btn btn-outline-primary bg-amber-300  h-[6vh] w-[90%] border-b-blue-950 border-1 rounded hover:bg-amber-400 text-black font-bold"
                 >
                   Login
                 </button>
                 <button
                   type="button"
-                  className="btn btn-outline-primary bg-transparent border-amber-400 text-amber-400 font-bold rounded border-1 h-13 w-[90%]"
+                  className="btn btn-outline-primary bg-transparent border-amber-400 text-amber-400 font-bold rounded border-1  h-[6vh] w-[90%]"
                 >
                   Register for free
                 </button>
                 <span className="text-xl ">OR</span>
                 <button
                   type="button"
-                  className="btn btn-outline-primary bg-amber-300 h-13 border-b-blue-950 border-1 rounded hover:bg-amber-400 text-black font-bold w-[90%] mb-5"
+                  className="btn btn-outline-primary bg-amber-300  h-[6vh] border-b-blue-950 border-1 rounded hover:bg-amber-400 text-black font-bold w-[90%] mb-5"
                 >
                   Sign with google
                 </button>
