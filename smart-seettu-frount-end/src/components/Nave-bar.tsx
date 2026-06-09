@@ -1,7 +1,8 @@
 import { useState } from "react";
 import { Menu, X } from "lucide-react";
-import { useNavigate } from "react-router-dom";
+// import { useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
+import { loginfuntion } from "../service/auth";
 
 import userIcon from "../assets/image/userIcon.png";
 import {
@@ -11,7 +12,6 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { Link } from "react-scroll";
 import { registere } from "../service/user";
-
 interface RegistrationData {
   name: string;
   email: string;
@@ -43,10 +43,22 @@ type FormFields =
   | "poneNumber"
   | "address";
 
+export interface loginDeatils {
+  email: string;
+  password: string;
+}
+
 const Header = ({ sections }) => {
   const [open, setOpen] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [isShowUserIcon, setisShowUserIcon] = useState(false);
+
+  // --------------------
+
+  const [email, setEmail] = useState("");
+  const [password, setpassword] = useState("");
+
+  // ----------------------
 
   // const navigate = useNavigate();
 
@@ -70,13 +82,58 @@ const Header = ({ sections }) => {
     setIsLoggedIn(true);
   };
 
-  const reqestFromseverTologinfunshion = () => {
-    alert("kasjka");
-    // axios eken passe login sacsess nam   login butten eka hide wela  profail icon eka show wenna one   butten eka thibba thana
-    if (true) {
-      setIsLoggedIn(false);
-      setisLoginSuccsesres(true);
+  // const handleChangeLogin = (e: any) => {
+  // const name = e.target.name;
+  // const { value } = e.target;
+  // setLoginDeatiles((prev) => ({
+  //   ...prev,
+  //   [name]: value,
+  // }));
+  // };
+
+  const reqestFromseverTologinfunshion = async () => {
+    if (email == "" || password == "") {
+      Swal.fire({
+        title: "⚠️ Incomplete Form",
+        text: "Please fill in all required fields before submitting.",
+        icon: "error",
+        iconColor: "#dc3545",
+        confirmButtonText: "Continue",
+        confirmButtonColor: "#dc3545",
+        background: "#fefefe",
+        showConfirmButton: true,
+        showCancelButton: false,
+        allowOutsideClick: false,
+        allowEscapeKey: true,
+        timer: 4000,
+        timerProgressBar: true,
+        customClass: {
+          popup: "swal-custom-popup",
+          title: "swal-custom-title",
+          confirmButton: "swal-custom-btn",
+        },
+        didOpen: () => {
+          const popup = Swal.getPopup();
+          popup.style.borderRadius = "12px";
+          popup.style.fontFamily = "'Inter', system-ui, sans-serif";
+        },
+      });
+      return;
     }
+
+    try {
+      const respons = await loginfuntion(email, password);
+    } catch (error) {
+      console.log(error.message);
+    }
+
+    // alert(respons + "<==");
+
+    // axios eken passe login sacsess nam   login butten eka hide wela  profail icon eka show wenna one   butten eka thibba thana
+    // if (true) {
+    //   setIsLoggedIn(false);
+    //   setisLoginSuccsesres(true);
+    // }
   };
 
   const closeLoginFromBackground = () => {
@@ -121,17 +178,14 @@ const Header = ({ sections }) => {
       newErrors.email = "Please enter a valid email address";
     }
 
-    // nic validation
     if (!formData.nic.trim()) {
       newErrors.nic = "NIC is required";
     }
 
-    // poneNumber validation
     if (!formData.poneNumber.trim()) {
       newErrors.poneNumber = "Phone number is required";
     }
 
-    // address validation
     if (!formData.address.trim()) {
       newErrors.address = "Address is required";
     }
@@ -374,6 +428,8 @@ const Header = ({ sections }) => {
                     Email
                   </label>
                   <input
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
                     className="bg-gray-800 text-white border border-gray-700 px-3 py-2 rounded focus:outline-amber-500"
                     type="email"
                     placeholder="email@example.com"
@@ -385,6 +441,8 @@ const Header = ({ sections }) => {
                     Password
                   </label>
                   <input
+                    value={password}
+                    onChange={(e) => setpassword(e.target.value)}
                     className="bg-gray-800 text-white border border-gray-700 px-3 py-2 rounded focus:outline-amber-500"
                     type="password"
                     placeholder="password"

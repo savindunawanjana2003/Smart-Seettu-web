@@ -9,24 +9,22 @@ import { Router } from "express";
 
 import { login } from "../controller/customerController";
 // import { authenticate } from "../middleware/auth";
-import { requireRole } from "../middlewares/role";
+// import { requireRole } from "../middlewares/role";
 import { validateRequest } from "../middlewares/validate-Request-Body";
 import { authRateLimiter } from "../middlewares/rateLimiter"; // Brute-force attacks වැලැක්වීමට
 import { loginSchema } from "../schemas/login-user.schema";
-import { authenticate } from "../middlewares/auth";
-import { UserRole } from "../models/user-profile";
+// import { authenticate } from "../middlewares/auth";
+// import { UserRole } from "../models/user-profile";
 import { registerSchema } from "../schemas/register-user.schema";
 import { registerCustomer } from "../controller/customerController";
 
 const router = Router();
 
-router
-  .route("/login")
-  .post(authRateLimiter, validateRequest(loginSchema), login);
+router.route("/login").post(authRateLimiter, login);
+//  validateRequest(loginSchema),
 
-router.route("/users/register").post(
-  validateRequest(registerSchema), // 3. Request Body එක Validate කරනවා
-  registerCustomer,
-);
+router
+  .route("/users/register")
+  .post(validateRequest(registerSchema), registerCustomer);
 
 export default router;

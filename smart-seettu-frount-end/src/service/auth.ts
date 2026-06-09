@@ -1,8 +1,9 @@
 import api from "./api";
+// import type { loginDeatils } from "../components/Nave-bar";
 
-export const login = async (email: string, password: string) => {
+export const loginfuntion = async (email: string, password: string) => {
   const res = await api.post("/auth/login", { email, password });
-  alert(res.data.accessToken);
+  // alert(res.data.accessToken);
   return res;
   // accessToken: accessToken,
   //     refreshToken: refreshToken,
