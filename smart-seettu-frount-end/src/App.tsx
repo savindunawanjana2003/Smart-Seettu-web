@@ -1,10 +1,6 @@
-import Firstpage from "./pages/Web";
+import { AppRoutes } from "./router/AppRoutes";
 const App = () => {
-  return (
-    <div>
-      <Firstpage />
-    </div>
-  );
+  return <AppRoutes />;
 };
 
 export default App;

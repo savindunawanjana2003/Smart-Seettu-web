@@ -1,26 +1,31 @@
-// import React from "react";
-// import { BrowserRouter, Route, Routes } from "react-router-dom";
-// // import Login from "../pages/Login";
-// // import Home2 from "../layout/NavigatorPanel";
-// // import Ai from "../pages/Ai";
-// // import Blog from "../pages/Blog";
-// // import User from "../pages/User";
-// // import Intro from "../pages/Introduction";
+import Firstpage from "../pages/Web";
+import Apage from "../pages/A";
+import Bpage from "../pages/B";
 
-// export const AppRoutes = () => {
-//   return (
-//     <BrowserRouter>
-//       <Routes>
-//         {/* Main Layout */}
-//         {/* මේ routes ටිකට parent layout එක Home2 => <Route element={<Home2 />}> */}
-//         <Route element={<Home2 />}>
-//           <Route path="/Intro" element={<Intro />} />
-//           <Route path="/ai" element={<Ai />} />
-//           <Route path="/user" element={<User />} />
-//           <Route path="/blog" element={<Blog />} />
-//         </Route>
-//         <Route path="/" element={<Login />} />
-//       </Routes>
-//     </BrowserRouter>
-//   );
-// };
+import Dashbord from "../pages/Dashbord";
+import Main from "../layout/mainConteiner";
+import { BrowserRouter, Route, Routes } from "react-router-dom";
+import { createContext } from "react";
+export const Xcontext = createContext<any>(null);
+export const AppRoutes = () => {
+  // const marginTop = localStorage.getItem("ptop");
+  // const naveBarisvisible = localStorage.getItem("naveBarisvisible");
+  // methanadi mama nested routing use kara
+  return (
+    <BrowserRouter>
+      <Xcontext.Provider value={{}}>
+        <Routes>
+          <Route path="/" element={<Main />}>
+            {/* index dala kiwama  me page eka thamai  mulinma aoutlate ekata set wenne */}
+            <Route index element={<Firstpage />} />
+          </Route>
+          {/* ------------------------- */}
+          <Route path="/pages/Dashbord" element={<Dashbord />}>
+            <Route path="pages/A" element={<Apage />} />
+            <Route path="pages/B" element={<Bpage />} />
+          </Route>
+        </Routes>
+      </Xcontext.Provider>
+    </BrowserRouter>
+  );
+};

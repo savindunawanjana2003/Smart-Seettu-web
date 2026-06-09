@@ -1,45 +1,209 @@
 import { useState } from "react";
 import { Menu, X } from "lucide-react";
+import { useNavigate } from "react-router-dom";
+import {
+  faBox,
+  faShoppingCart,
+  faUsers,
+} from "@fortawesome/free-solid-svg-icons";
+import { Link } from "react-scroll";
 
-const Header = () => {
+// 1. Define explicit TypeScript interfaces to resolve compilation errors
+interface RegistrationData {
+  name: "";
+  email: "";
+  password: "";
+  confirmPassword: "";
+}
+
+interface FormErrors {
+  name?: string;
+  email?: string;
+  password?: string;
+  confirmPassword?: string;
+  submit?: string;
+}
+
+type FormFields = "name" | "email" | "password" | "confirmPassword";
+
+const Header = ({ sections }) => {
+  // useEffect(() => {}, []);
   const [open, setOpen] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-  // const [userMenuOpen, setUserMenuOpen] = useState(false);
 
-  // ====================================
-  // const [user, setUser] = useState({
-  //   name: "John Doe",
-  //   email: "john@example.com",
-  //   role: "Member",
-  // });
+  const navigate = useNavigate();
+
+  // Registration & Validation States
+  const [formData, setFormData] = useState<RegistrationData>({
+    name: "",
+    email: "",
+    password: "",
+    confirmPassword: "",
+  });
+  const [errors, setErrors] = useState<FormErrors>({});
+  const [isLoading, setIsLoading] = useState(false);
+  const [isLoginSuccsesres, setisLoginSuccsesres] = useState(false);
+  // Changed to standard camelCase formatting
+  const [isClickRegister, setIsClickRegister] = useState(false);
 
   // Login handler
-  const handleLogin = () => {
+  const showLoginmodal = () => {
     setIsLoggedIn(true);
-    // setUserMenuOpen(false);
   };
 
-  // // Logout handler
-  // const handleLogout = () => {
-  //   // Clear user session/data
-  //   setIsLoggedIn(false);
-  //   setUser(Object);
-  //   // setUserMenuOpen(false);
-  //   setOpen(false);
+  const reqestFromseverTologinfunshion = () => {
+    // =========================
 
-  //   // Optional: Clear any stored tokens
-  //   localStorage.removeItem("authToken");
-  //   sessionStorage.removeItem("user");
+    // axios eken passe login sacsess nam   login butten eka hide wela  profail icon eka show wenna one   butten eka thibba thana
+    if (true) {
+      // alert("Ok login succsess fully");
 
-  //   // Optional: Redirect to home or login page
-  //   // window.location.href = "/";
-  // // };
+      setIsLoggedIn(false);
+      setisLoginSuccsesres(true);
+
+      // navigate("/");
+    }
+
+    // =================================
+  };
 
   const closeLoginFromBackground = () => {
     setIsLoggedIn(false);
   };
 
-  // =================================
+  const registerHeader = () => {
+    setIsLoggedIn(false);
+    setIsClickRegister(true);
+    // If you are using React Router pages instead of modals, use: navigate("/register");
+  };
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const name = e.target.name as FormFields;
+    const { value } = e.target;
+    setFormData((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+
+    // Clear error when user starts typing
+    if (errors[name]) {
+      setErrors((prev) => ({
+        ...prev,
+        [name]: "",
+      }));
+    }
+  };
+
+  const validateForm = () => {
+    const newErrors: FormErrors = {};
+    const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+
+    // Name validation
+    if (!formData.name.trim()) {
+      newErrors.name = "Full name is required";
+    } else if (formData.name.trim().length < 3) {
+      newErrors.name = "Name must be at least 3 characters";
+    }
+
+    // Email validation
+    if (!formData.email.trim()) {
+      newErrors.email = "Email is required";
+    } else if (!emailRegex.test(formData.email)) {
+      newErrors.email = "Please enter a valid email address";
+    }
+
+    // Password validation
+    if (!formData.password) {
+      newErrors.password = "Password is required";
+    }
+    if (formData.password.length < 6) {
+      newErrors.password = "Password must be at least 6 characters";
+    } else if (!/(?=.*[A-Z])/.test(formData.password)) {
+      newErrors.password =
+        "Password must contain at least one uppercase letter";
+    } else if (!/(?=.*[0-9])/.test(formData.password)) {
+      newErrors.password = "Password must contain at least one number";
+    }
+
+    // Confirm password validation
+    if (!formData.confirmPassword) {
+      newErrors.confirmPassword = "Please confirm your password";
+    } else if (formData.password !== formData.confirmPassword) {
+      newErrors.confirmPassword = "Passwords do not match";
+    }
+
+    return newErrors;
+  };
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    const newErrors = validateForm();
+
+    if (Object.keys(newErrors).length > 0) {
+      setErrors(newErrors);
+      return;
+    }
+
+    setIsLoading(true);
+    try {
+      // Remove confirmPassword before sending to API
+      const { confirmPassword, ...dataToSend } = formData;
+
+      const response = await fetch("/api/register", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(dataToSend),
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        alert("Registration successful! Please login.");
+        setIsClickRegister(false);
+        setIsLoggedIn(true); // Toggle back to login window
+      } else {
+        setErrors({
+          submit: data.message || "Registration failed. Please try again.",
+        });
+      }
+    } catch (error) {
+      setErrors({ submit: "Network error. Please check your connection." });
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleLoginRedirect = () => {
+    setIsClickRegister(false);
+    setIsLoggedIn(true);
+  };
+
+  const handleGoogleSignUp = () => {
+    console.log("Google sign up initiated");
+  };
+
+  const navItems = [
+    {
+      targetSection: "customers-section",
+      icon: faUsers,
+      label: "Customers",
+      color: "bg-blue-500 hover:bg-blue-600",
+    },
+    {
+      targetSection: "items-section",
+      icon: faBox,
+      label: "Items",
+      color: "bg-green-500 hover:bg-green-600",
+    },
+    {
+      targetSection: "orders-section",
+      icon: faShoppingCart,
+      label: "Orders",
+      color: "bg-purple-500 hover:bg-purple-600",
+    },
+  ];
 
   return (
     <div>
@@ -58,131 +222,148 @@ const Header = () => {
           {/* Desktop Menu */}
           <ul className="hidden md:flex gap-8 text-gray-300 font-medium">
             <li>
-              <a
-                href="#"
+              <Link
+                to={sections[0].id}
                 className="hover:text-amber-400 transition-colors duration-200"
+                smooth={true}
+                offset={-70}
+                duration={500}
               >
                 Home
-              </a>
+              </Link>
             </li>
             <li>
-              <a
-                href="#"
+              <Link
+                to={sections[1].id}
                 className="hover:text-amber-400 transition-colors duration-200"
+                smooth={true}
+                offset={-70}
+                duration={500}
               >
                 Members
-              </a>
+              </Link>
             </li>
             <li>
-              <a
-                href="#"
+              <Link
+                to={sections[2].id}
                 className="hover:text-amber-400 transition-colors duration-200"
+                smooth={true}
+                offset={-70}
+                duration={500}
               >
                 Payments
-              </a>
+              </Link>
             </li>
             <li>
-              <a
-                href="#"
+              <Link
+                to={sections[0].id}
                 className="hover:text-amber-400 transition-colors duration-200"
+                smooth={true}
+                offset={-70}
+                duration={500}
               >
                 Dashboard
-              </a>
+              </Link>
             </li>
             <li>
-              <a
-                href="#"
+              <Link
+                to={sections[1].id}
                 className="hover:text-amber-400 transition-colors duration-200"
+                smooth={true}
+                offset={-70}
+                duration={500}
               >
                 About
-              </a>
+              </Link>
             </li>
             <li>
-              <a
-                href="#"
+              <Link
+                to={sections[0].id}
                 className="hover:text-amber-400 transition-colors duration-200"
+                smooth={true}
+                offset={-70}
+                duration={500}
               >
                 Contact
-              </a>
+              </Link>
             </li>
           </ul>
+
           <button
-            onClick={handleLogin}
-            className="bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-white px-6 py-2 rounded-lg transition-all duration-200 shadow-md hover:shadow-lg transform hover:scale-105"
+            onClick={showLoginmodal}
+            // className=""
+
+            className={`bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-white px-6 py-2 rounded-lg transition-all duration-200 shadow-md hover:shadow-lg transform hover:scale-105 ${
+              isLoginSuccsesres ? "hidden" : "block"
+            }`}
           >
             Login
           </button>
+          {/* <div className="bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 w-15 h-15 sm:w-10 sm:h-10 md:w-20 md:h-20 border-4 border-blue-500 rounded-full hover:to-amber-700 text-white px-6 py-2 transition-all duration-200 shadow-md hover:shadow-lg transform hover:scale-105"></div> */}
+          {/* <div className="w-60 h-50 bg-amber-300">sds</div> */}
+          {/* ==================================================== */}
+          {/* Login Modal overlay */}
           {isLoggedIn && (
             <div
-              className="fixed inset-0 bg-transparent/20 z-50 flex items-center justify-center "
+              className="fixed inset-0 bg-black/40 backdrop-blur-sm z-50 flex items-center justify-center"
               onClick={closeLoginFromBackground}
             >
               <div
-                className="w-full lg:h-[60vh] sm:w-[80vw] sm:h-[70vh] md:h-[70vh] max-w-md md:max-w-xl bg-cyan-950 flex flex-col gap-1 p-6 sm:p-10 md:pl-11 border rounded-3xl mx-auto w-25px h-[50vh] mt-10 mb-10 ml-5 mr-5"
+                className="w-full max-w-md bg-slate-900 border border-gray-700 flex flex-col gap-4 p-8 rounded-3xl mx-4 shadow-2xl text-white"
                 onClick={(e) => e.stopPropagation()}
               >
-                <label
-                  htmlFor=""
-                  className=" sm:text-4xl md:text-4xl pt-1 sm:p:7"
-                >
+                <h3 className="text-3xl font-bold text-amber-400">
                   Please Login
-                </label>
+                </h3>
+
                 <div className="flex flex-col gap-2">
-                  <label
-                    className="text-amber-50 text-light font-bold text-xl"
-                    htmlFor=""
-                  >
+                  <label className="text-gray-300 font-semibold text-sm">
                     Email
                   </label>
                   <input
-                    className="bg-amber-50 w-[90%] text-gray-950 pl-2 h-[6vh] rounded"
+                    className="bg-gray-800 text-white border border-gray-700 px-3 py-2 rounded focus:outline-amber-500"
                     type="email"
-                    placeholder=" email"
-                    part="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}"
+                    placeholder="email@example.com"
                   />
                 </div>
+
                 <div className="flex flex-col gap-2">
-                  <label
-                    className="text-amber-50 text-light font-bold text-xl"
-                    htmlFor=""
-                  >
+                  <label className="text-gray-300 font-semibold text-sm">
                     Password
                   </label>
                   <input
-                    className="bg-amber-50 w-[90%] text-gray-950 pl-2  h-[6vh] border rounded"
+                    className="bg-gray-800 text-white border border-gray-700 px-3 py-2 rounded focus:outline-amber-500"
                     type="password"
                     placeholder="password"
                   />
                 </div>
-                <a className="text-sky-600 text-xl" href="#">
+
+                <a
+                  className="text-amber-400 text-sm hover:underline self-start"
+                  href="#"
+                >
                   Forgot password?
                 </a>
+
                 <button
                   type="button"
-                  className="btn btn-outline-primary bg-amber-300  h-[6vh] w-[90%] border-b-blue-950 border-1 rounded hover:bg-amber-400 text-black font-bold"
+                  onClick={reqestFromseverTologinfunshion}
+                  className={`bg-amber-500 hover:bg-amber-600 transition-colors py-2 rounded  text-black font-bold mt-2 ${isLoginSuccsesres ? "hidden" : "block"}`}
                 >
                   Login
                 </button>
+
                 <button
                   type="button"
-                  className="btn btn-outline-primary bg-transparent border-amber-400 text-amber-400 font-bold rounded border-1  h-[6vh] w-[90%]"
+                  className="bg-transparent border border-amber-500 text-amber-400 font-semibold py-2 rounded hover:bg-amber-500/10 transition-colors"
+                  onClick={registerHeader}
                 >
                   Register for free
-                </button>{" "}
-                <span className="text-xl  h-[6vh] w-[90%] flex items-center justify-center ">
-                  <h1>OR</h1>
-                </span>
-                <button
-                  type="button"
-                  className="btn btn-outline-primary bg-amber-300  h-[6vh] border-b-blue-950 border-1 rounded hover:bg-amber-400 text-black font-bold w-[90%] mb-5"
-                >
-                  Sign with google
                 </button>
               </div>
             </div>
           )}
-          {/* ====login buten ekata adala unit ekata methnata enne
-           */}
+
           {/* Mobile Menu Button */}
           <button
             className="md:hidden text-gray-300 hover:text-white transition-colors"
@@ -226,32 +407,192 @@ const Header = () => {
                   Contact
                 </a>
               </li>
+            </ul>
+          </div>
+        )}
 
-              {/* <div className="w-full px-6 mt-2">
-                {!isLoggedIn ? (
-                  <button
-                    onClick={handleLogin}
-                    className="w-full bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-white px-5 py-2 rounded-lg transition-all"
-                  >
-                    Login
-                  </button>
-                ) : (
-                  <div className="space-y-3">
-                    <div className="bg-gray-800 rounded-lg p-3">
-                      <p className="text-sm text-gray-300">{user?.name}</p>
-                      <p className="text-xs text-gray-500">{user?.email}</p>
-                    </div>
-                    <button
-                      onClick={handleLogout}
-                      className="w-full bg-red-600/20 hover:bg-red-600 text-red-400 hover:text-white px-5 py-2 rounded-lg transition-all flex items-center justify-center space-x-2"
-                    >
-                      <LogOut size={16} />
-                      <span>Logout</span>
-                    </button>
+        {/* Registration Modal Overlay */}
+        {isClickRegister && (
+          <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 overflow-y-auto">
+            {/* REMOVED SELF-RECURSIVE <Header /> INSTANCE CALL FROM HERE TO PREVENT INFINITE LOOP CRASH */}
+            <div className="w-full max-w-md bg-gray-800 rounded-xl shadow-2xl my-8 border border-gray-700">
+              <form onSubmit={handleSubmit} className="flex flex-col gap-4 p-6">
+                <h2 className="text-3xl font-bold text-amber-400 text-center">
+                  Create Account
+                </h2>
+
+                {errors.submit && (
+                  <div className="bg-red-500/10 border border-red-500 text-red-500 p-3 rounded-lg text-center text-sm">
+                    {errors.submit}
                   </div>
                 )}
-              </div> */}
-            </ul>
+
+                {/* Full Name Field */}
+                <div className="flex flex-col gap-1">
+                  <label
+                    className="text-gray-300 font-semibold text-sm"
+                    htmlFor="name"
+                  >
+                    Full Name
+                  </label>
+                  <input
+                    id="name"
+                    name="name"
+                    type="text"
+                    value={formData.name}
+                    onChange={handleChange}
+                    placeholder="John Doe"
+                    className={`bg-gray-900 text-white border border-gray-700 px-3 h-10 rounded focus:outline-amber-500 ${
+                      errors.name ? "border-red-500 focus:outline-red-500" : ""
+                    }`}
+                    disabled={isLoading}
+                  />
+                  {errors.name && (
+                    <p className="text-red-400 text-xs mt-0.5">{errors.name}</p>
+                  )}
+                </div>
+
+                {/* Email Field */}
+                <div className="flex flex-col gap-1">
+                  <label
+                    className="text-gray-300 font-semibold text-sm"
+                    htmlFor="email"
+                  >
+                    Email
+                  </label>
+                  <input
+                    id="email"
+                    name="email"
+                    type="email"
+                    value={formData.email}
+                    onChange={handleChange}
+                    placeholder="your@email.com"
+                    className={`bg-gray-900 text-white border border-gray-700 px-3 h-10 rounded focus:outline-amber-500 ${
+                      errors.email ? "border-red-500 focus:outline-red-500" : ""
+                    }`}
+                    disabled={isLoading}
+                  />
+                  {errors.email && (
+                    <p className="text-red-400 text-xs mt-0.5">
+                      {errors.email}
+                    </p>
+                  )}
+                </div>
+
+                {/* Password Field */}
+                <div className="flex flex-col gap-1">
+                  <label
+                    className="text-gray-300 font-semibold text-sm"
+                    htmlFor="password"
+                  >
+                    Password
+                  </label>
+                  <input
+                    id="password"
+                    name="password"
+                    type="password"
+                    value={formData.password}
+                    onChange={handleChange}
+                    placeholder="Create a password"
+                    className={`bg-gray-900 text-white border border-gray-700 px-3 h-10 rounded focus:outline-amber-500 ${
+                      errors.password
+                        ? "border-red-500 focus:outline-red-500"
+                        : ""
+                    }`}
+                    disabled={isLoading}
+                  />
+                  {errors.password && (
+                    <p className="text-red-400 text-xs mt-0.5">
+                      {errors.password}
+                    </p>
+                  )}
+                </div>
+
+                {/* Confirm Password Field */}
+                <div className="flex flex-col gap-1">
+                  <label
+                    className="text-gray-300 font-semibold text-sm"
+                    htmlFor="confirmPassword"
+                  >
+                    Confirm Password
+                  </label>
+                  <input
+                    id="confirmPassword"
+                    name="confirmPassword"
+                    type="password"
+                    value={formData.confirmPassword}
+                    onChange={handleChange}
+                    placeholder="Confirm your password"
+                    className={`bg-gray-900 text-white border border-gray-700 px-3 h-10 rounded focus:outline-amber-500 ${
+                      errors.confirmPassword
+                        ? "border-red-500 focus:outline-red-500"
+                        : ""
+                    }`}
+                    disabled={isLoading}
+                  />
+                  {errors.confirmPassword && (
+                    <p className="text-red-400 text-xs mt-0.5">
+                      {errors.confirmPassword}
+                    </p>
+                  )}
+                </div>
+
+                {/* Register Button */}
+                <button
+                  type="submit"
+                  disabled={isLoading}
+                  className="bg-amber-500 h-10 w-full rounded hover:bg-amber-600 transition-colors text-black font-bold text-md mt-2 disabled:opacity-50"
+                >
+                  {isLoading ? "Creating Account..." : "Register"}
+                </button>
+
+                {/* Login Link */}
+                <button
+                  type="button"
+                  onClick={handleLoginRedirect}
+                  className="bg-transparent border border-amber-500 text-amber-500 font-semibold rounded hover:bg-amber-500/10 transition-colors h-10 text-sm"
+                >
+                  Already have an account? Login
+                </button>
+
+                {/* OR Divider */}
+                <div className="relative my-1">
+                  <div className="absolute inset-0 flex items-center">
+                    <div className="w-full border-t border-gray-600"></div>
+                  </div>
+                  <div className="relative flex justify-center text-xs">
+                    <span className="px-2 bg-gray-800 text-gray-400">OR</span>
+                  </div>
+                </div>
+
+                {/* Google Sign Up Button */}
+                <button
+                  type="button"
+                  onClick={handleGoogleSignUp}
+                  className="bg-white h-10 w-full rounded hover:bg-gray-100 transition-colors text-gray-800 font-bold text-sm flex items-center justify-center gap-2"
+                >
+                  <svg className="w-4 h-4" viewBox="0 0 24 24">
+                    <path
+                      fill="#4285F4"
+                      d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"
+                    />
+                    <path
+                      fill="#34A853"
+                      d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"
+                    />
+                    <path
+                      fill="#FBBC05"
+                      d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"
+                    />
+                    <path
+                      fill="#EA4335"
+                      d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"
+                    />
+                  </svg>
+                  Sign up with Google
+                </button>
+              </form>
+            </div>
           </div>
         )}
       </div>

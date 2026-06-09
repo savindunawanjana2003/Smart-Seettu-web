@@ -108,3 +108,5 @@ It combines community-based financial culture with modern technology to provide 
 Back-end-url= https://smart-seettu-web.vercel.app/
  frount-end=https://seettu-web.vercel.app/
 
+
+
