@@ -2,6 +2,7 @@ import { Request, Response, NextFunction, ErrorRequestHandler } from "express";
 import { AppError } from "../errors/AppError";
 import dotenv from "dotenv";
 import { dot } from "node:test/reporters";
+import { error } from "node:console";
 
 dotenv.config();
 export const globalErrorHandler: ErrorRequestHandler = (
@@ -13,21 +14,22 @@ export const globalErrorHandler: ErrorRequestHandler = (
   err.statusCode = err.statusCode || 500;
   err.status = err.status || "error";
 
-  // Industry එකේදී Development සහ Production වලදී Response දෙන විදිය වෙනස් කරනවා
   if (process.env.NODE_ENV === "development") {
+    console.log("=============77======" + err.message);
     res.status(err.statusCode).json({
       status: err.status,
       message: err.message,
-      stack: err.stack, // Dev වලදී විතරක් error එක ආපු තැන (stack trace) පෙන්වනවා
+      stack: err.stack,
       error: err,
     });
   } else {
-    // Production (Live) එකේදී clean response එකක් දෙනවා
+    console.log("=================88==" + err.message);
+
     res.status(err.statusCode).json({
       status: err.status,
       message: err.isOperational
         ? err.message
-        : "Something went wrong inside the server!",
+        : "Something went wrong inside the server",
     });
   }
 };

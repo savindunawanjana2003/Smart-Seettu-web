@@ -1,19 +1,25 @@
 import { useState } from "react";
 import { Menu, X } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import Swal from "sweetalert2";
+
+import userIcon from "../assets/image/userIcon.png";
 import {
   faBox,
   faShoppingCart,
   faUsers,
 } from "@fortawesome/free-solid-svg-icons";
 import { Link } from "react-scroll";
+import { registere } from "../service/user";
 
-// 1. Define explicit TypeScript interfaces to resolve compilation errors
 interface RegistrationData {
-  name: "";
-  email: "";
-  password: "";
-  confirmPassword: "";
+  name: string;
+  email: string;
+  password: string;
+  confirmPassword: string;
+  nic: string;
+  poneNumber: string;
+  address: string;
 }
 
 interface FormErrors {
@@ -21,50 +27,56 @@ interface FormErrors {
   email?: string;
   password?: string;
   confirmPassword?: string;
+  nic?: string;
+  poneNumber?: string;
+  address?: string;
   submit?: string;
 }
 
-type FormFields = "name" | "email" | "password" | "confirmPassword";
+// mewa thamai inputs fild wala thiyenna name attribute ekata enna puluwan values
+type FormFields =
+  | "name"
+  | "email"
+  | "password"
+  | "confirmPassword"
+  | "nic"
+  | "poneNumber"
+  | "address";
 
 const Header = ({ sections }) => {
-  // useEffect(() => {}, []);
   const [open, setOpen] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [isShowUserIcon, setisShowUserIcon] = useState(false);
 
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
 
-  // Registration & Validation States
   const [formData, setFormData] = useState<RegistrationData>({
     name: "",
     email: "",
     password: "",
     confirmPassword: "",
+    nic: "",
+    poneNumber: "",
+    address: "",
   });
+
   const [errors, setErrors] = useState<FormErrors>({});
   const [isLoading, setIsLoading] = useState(false);
   const [isLoginSuccsesres, setisLoginSuccsesres] = useState(false);
-  // Changed to standard camelCase formatting
+
   const [isClickRegister, setIsClickRegister] = useState(false);
 
-  // Login handler
   const showLoginmodal = () => {
     setIsLoggedIn(true);
   };
 
   const reqestFromseverTologinfunshion = () => {
-    // =========================
-
+    alert("kasjka");
     // axios eken passe login sacsess nam   login butten eka hide wela  profail icon eka show wenna one   butten eka thibba thana
     if (true) {
-      // alert("Ok login succsess fully");
-
       setIsLoggedIn(false);
       setisLoginSuccsesres(true);
-
-      // navigate("/");
     }
-
-    // =================================
   };
 
   const closeLoginFromBackground = () => {
@@ -85,7 +97,6 @@ const Header = ({ sections }) => {
       [name]: value,
     }));
 
-    // Clear error when user starts typing
     if (errors[name]) {
       setErrors((prev) => ({
         ...prev,
@@ -98,21 +109,33 @@ const Header = ({ sections }) => {
     const newErrors: FormErrors = {};
     const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
 
-    // Name validation
     if (!formData.name.trim()) {
       newErrors.name = "Full name is required";
     } else if (formData.name.trim().length < 3) {
       newErrors.name = "Name must be at least 3 characters";
     }
 
-    // Email validation
     if (!formData.email.trim()) {
       newErrors.email = "Email is required";
     } else if (!emailRegex.test(formData.email)) {
       newErrors.email = "Please enter a valid email address";
     }
 
-    // Password validation
+    // nic validation
+    if (!formData.nic.trim()) {
+      newErrors.nic = "NIC is required";
+    }
+
+    // poneNumber validation
+    if (!formData.poneNumber.trim()) {
+      newErrors.poneNumber = "Phone number is required";
+    }
+
+    // address validation
+    if (!formData.address.trim()) {
+      newErrors.address = "Address is required";
+    }
+
     if (!formData.password) {
       newErrors.password = "Password is required";
     }
@@ -125,7 +148,6 @@ const Header = ({ sections }) => {
       newErrors.password = "Password must contain at least one number";
     }
 
-    // Confirm password validation
     if (!formData.confirmPassword) {
       newErrors.confirmPassword = "Please confirm your password";
     } else if (formData.password !== formData.confirmPassword) {
@@ -133,6 +155,19 @@ const Header = ({ sections }) => {
     }
 
     return newErrors;
+  };
+
+  const clearForm = () => {
+    const emtyObject = {
+      name: "",
+      email: "",
+      password: "",
+      confirmPassword: "",
+      nic: "",
+      poneNumber: "",
+      address: "",
+    };
+    setFormData(emtyObject);
   };
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -146,30 +181,40 @@ const Header = ({ sections }) => {
 
     setIsLoading(true);
     try {
-      // Remove confirmPassword before sending to API
+      // i removed the confirm password brfore sending data to api
       const { confirmPassword, ...dataToSend } = formData;
 
-      const response = await fetch("/api/register", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(dataToSend),
-      });
+      const response = await registere(
+        dataToSend.name,
+        dataToSend.email,
+        dataToSend.password,
+        dataToSend.nic,
+        dataToSend.poneNumber,
+        dataToSend.address,
+      );
 
-      const data = await response.json();
-
-      if (response.ok) {
-        alert("Registration successful! Please login.");
+      if (response?.status === 201) {
+        Swal.fire({
+          title: "Success!",
+          text: "ඔබගේ ලියාපදිංචිය සාර්ථකයි!",
+          icon: "success",
+          confirmButtonText: "Ok",
+          confirmButtonColor: "#f59e0b",
+        });
         setIsClickRegister(false);
-        setIsLoggedIn(true); // Toggle back to login window
+        clearForm();
+        setErrors({
+          submit: null,
+        });
       } else {
         setErrors({
-          submit: data.message || "Registration failed. Please try again.",
+          submit: response?.data?.message || "Something went wrongs",
         });
       }
     } catch (error) {
-      setErrors({ submit: "Network error. Please check your connection." });
+      setErrors({
+        submit: error?.response?.data?.message || "Something went wrongs77",
+      });
     } finally {
       setIsLoading(false);
     }
@@ -291,17 +336,25 @@ const Header = ({ sections }) => {
 
           <button
             onClick={showLoginmodal}
-            // className=""
-
             className={`bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-white px-6 py-2 rounded-lg transition-all duration-200 shadow-md hover:shadow-lg transform hover:scale-105 ${
               isLoginSuccsesres ? "hidden" : "block"
             }`}
           >
             Login
           </button>
-          {/* <div className="bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 w-15 h-15 sm:w-10 sm:h-10 md:w-20 md:h-20 border-4 border-blue-500 rounded-full hover:to-amber-700 text-white px-6 py-2 transition-all duration-200 shadow-md hover:shadow-lg transform hover:scale-105"></div> */}
-          {/* <div className="w-60 h-50 bg-amber-300">sds</div> */}
-          {/* ==================================================== */}
+          {isShowUserIcon && (
+            <div className="w-[5vw] h-[5vw] bg-transparent-300  flex flex-col justify-center items-center">
+              <div className="w-[4vw] h-[4vw] bg-amber-300 border-4 border-emerald-600 rounded-full flex justify-center items-center">
+                <img
+                  src={userIcon}
+                  alt="Profile"
+                  className="w-full h-full object-cover rounded-full"
+                ></img>
+              </div>
+              {<h6 className="text-[6px]">saa</h6>}
+            </div>
+          )}
+
           {/* Login Modal overlay */}
           {isLoggedIn && (
             <div
@@ -414,7 +467,6 @@ const Header = ({ sections }) => {
         {/* Registration Modal Overlay */}
         {isClickRegister && (
           <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 overflow-y-auto">
-            {/* REMOVED SELF-RECURSIVE <Header /> INSTANCE CALL FROM HERE TO PREVENT INFINITE LOOP CRASH */}
             <div className="w-full max-w-md bg-gray-800 rounded-xl shadow-2xl my-8 border border-gray-700">
               <form onSubmit={handleSubmit} className="flex flex-col gap-4 p-6">
                 <h2 className="text-3xl font-bold text-amber-400 text-center">
@@ -475,6 +527,89 @@ const Header = ({ sections }) => {
                   {errors.email && (
                     <p className="text-red-400 text-xs mt-0.5">
                       {errors.email}
+                    </p>
+                  )}
+                </div>
+
+                {/* nic Field */}
+                <div className="flex flex-col gap-1">
+                  <label
+                    className="text-gray-300 font-semibold text-sm"
+                    htmlFor="nic"
+                  >
+                    Nic
+                  </label>
+                  <input
+                    id="nic"
+                    name="nic"
+                    type="text"
+                    value={formData.nic}
+                    onChange={handleChange}
+                    placeholder="Your NIC Number"
+                    className={`bg-gray-900 text-white border border-gray-700 px-3 h-10 rounded focus:outline-amber-500 ${
+                      errors.nic ? "border-red-500 focus:outline-red-500" : ""
+                    }`}
+                    disabled={isLoading}
+                  />
+                  {errors.nic && (
+                    <p className="text-red-400 text-xs mt-0.5">{errors.nic}</p>
+                  )}
+                </div>
+
+                {/* poneNumber Field */}
+                <div className="flex flex-col gap-1">
+                  <label
+                    className="text-gray-300 font-semibold text-sm"
+                    htmlFor="poneNumber"
+                  >
+                    Phone Number
+                  </label>
+                  <input
+                    id="poneNumber"
+                    name="poneNumber"
+                    type="text"
+                    value={formData.poneNumber}
+                    onChange={handleChange}
+                    placeholder="077XXXXXXXX"
+                    className={`bg-gray-900 text-white border border-gray-700 px-3 h-10 rounded focus:outline-amber-500 ${
+                      errors.poneNumber
+                        ? "border-red-500 focus:outline-red-500"
+                        : ""
+                    }`}
+                    disabled={isLoading}
+                  />
+                  {errors.poneNumber && (
+                    <p className="text-red-400 text-xs mt-0.5">
+                      {errors.poneNumber}
+                    </p>
+                  )}
+                </div>
+
+                {/* address Field */}
+                <div className="flex flex-col gap-1">
+                  <label
+                    className="text-gray-300 font-semibold text-sm"
+                    htmlFor="address"
+                  >
+                    Address
+                  </label>
+                  <input
+                    id="address"
+                    name="address"
+                    type="text"
+                    value={formData.address}
+                    onChange={handleChange}
+                    placeholder="Your Address"
+                    className={`bg-gray-900 text-white border border-gray-700 px-3 h-10 rounded focus:outline-amber-500 ${
+                      errors.address
+                        ? "border-red-500 focus:outline-red-500"
+                        : ""
+                    }`}
+                    disabled={isLoading}
+                  />
+                  {errors.address && (
+                    <p className="text-red-400 text-xs mt-0.5">
+                      {errors.address}
                     </p>
                   )}
                 </div>

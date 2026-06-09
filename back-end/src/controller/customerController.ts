@@ -7,6 +7,35 @@ import { singAccesstoken, signRefreshToken } from "../utils/token";
 export const registerCustomer = async (req: Request, res: Response) => {
   const { id, name, email, password, nic, poneNumber, address } = req.body;
 
+  const user1 = await customerModal.findOne({ email });
+  console.log("===========================");
+  if (!user1) {
+  } else {
+    throw new AppError(
+      "User email Already exit avelable please login with your user credentials",
+      400,
+    );
+  }
+
+  const user2 = await customerModal.findOne({ poneNumber });
+  console.log(user2);
+  console.log("===========================");
+  if (!user2) {
+  } else {
+    throw new AppError(
+      "User poneNumber Already exit avelable please login with your user credentials",
+      400,
+    );
+  }
+
+  const user3 = await customerModal.findOne({ nic });
+  if (!user3) {
+  } else {
+    throw new AppError(
+      "User Nnic Already exit avelable please login with your user credentials",
+      400,
+    );
+  }
   try {
     const salt = bcrypt.genSaltSync(10);
     const hashedPassword = bcrypt.hashSync(password, salt);

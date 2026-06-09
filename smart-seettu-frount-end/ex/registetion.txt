@@ -1,0 +1,358 @@
+
+React වලින් form එකක් (විශේෂයෙන්ම Validation සහ API Requests සහිතව) මුල සිටම සකස් කරගන්නා ආකාරය පියවරෙන් පියවර සරලව සිංහලෙන් ඉගෙන ගනිමු.
+
+ඔබට තනිවම අලුත් Form එකක් නිර්මාණය කරගැනීමට අවශ්‍ය වන TypeScript Interfaces, State Management, Event Handling, Validation සහ Form Submission යන සියලුම දේ මේ පිළිවෙළට භාවිත කළ හැකියි.
+1. Data Structure එක අර්ථ දැක්වීම (TypeScript Interfaces)
+
+React + TypeScript භාවිත කරන විට, අපගේ form එකේ ඇති variables සහ errors මොනවාදැයි කල්තියා Compiler එකට පැවසිය යුතුය.
+TypeScript
+
+// Form එක ඇතුළේ පරිශීලකයා ඇතුළත් කරන දත්ත වල ස්වභාවය (Data Types)
+interface RegistrationData {
+  name: string;
+  email: string;
+  password: string;
+  confirmPassword: string;
+}
+
+// Errors පෙන්වීමට භාවිත කරන Object එකේ ස්වභාවය
+interface FormErrors {
+  name?: string;
+  email?: string;
+  password?: string;
+  confirmPassword?: string;
+  submit?: string; // API එකෙන් එන errors සඳහා (උදා: Email already exists)
+}
+
+// input field එකක 'name' attribute එකට දිය හැකි දේවල් සීමා කිරීම
+type FormFields = "name" | "email" | "password" | "confirmPassword";
+
+2. States නිර්මාණය කිරීම (State Management)
+
+Form එක ක්‍රියාත්මක වීමට ප්‍රධාන වශයෙන් States 3ක් අවශ්‍ය වේ: input දත්ත තබා ගැනීමට, errors තබා ගැනීමට සහ loading තත්ත්වය පරීක්ෂා කිරීමට.
+TypeScript
+
+// 1. පරිශීලකයා type කරන දත්ත save කරගන්නා state එක
+const [formData, setFormData] = useState<RegistrationData>({
+  name: "",
+  email: "",
+  password: "",
+  confirmPassword: "",
+});
+
+// 2. Validation වැරදුනොත් වැරදි පණිවිඩ (Error messages) save කරගන්නා state එක
+const [errors, setErrors] = useState<FormErrors>({});
+
+// 3. Register button එක click කරලා server එකෙන් response එකක් එනකම් loading පෙන්වන්න ගන්නා state එක
+const [isLoading, setIsLoading] = useState(false);
+
+3. Input වෙනස්වීම් හසුරුවීම (Event Handling)
+
+පරිශීලකයා input field එකක යමක් type කරන සෑම මොහොතකම, එම අලුත් අගය (Value) අපගේ formData state එකට යාවත්කාලීන (Update) විය යුතුය.
+TypeScript
+
+const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const name = e.target.name as FormFields; // වෙනස් වූ field එකේ නම (eg: "email")
+  const { value } = e.target;              // එහි අලුත් අගය
+
+  // පැරණි දත්ත ඒ ආකාරයෙන්ම තබාගෙන, වෙනස් වූ field එක පමණක් update කරයි
+  setFormData((prev) => ({
+    ...prev,
+    [name]: value,
+  }));
+
+  // පරිශීලකයා අකුරක් type කරන්න ගත් සැනින් එම field එකේ තිබූ පැරණි error එක clear කරයි
+  if (errors[name]) {
+    setErrors((prev) => ({
+      ...prev,
+      [name]: "",
+    }));
+  }
+};
+
+4. දත්ත නිවැරදිදැයි පරික්ෂා කිරීම (Form Validation)
+
+Form එක submit කිරීමට පෙර සියලුම නීති (Rules) නිවැරදිදැයි බැලීමට මෙම function එක ක්‍රියාත්මක වේ.
+TypeScript
+
+const validateForm = () => {
+  const newErrors: FormErrors = {};
+  
+  // Email එකක්දැයි පරික්ෂා කරන Regular Expression එක
+  const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+
+  // 1. Name Validation
+  if (!formData.name.trim()) {
+    newErrors.name = "Full name is required";
+  } else if (formData.name.trim().length < 3) {
+    newErrors.name = "Name must be at least 3 characters";
+  }
+
+  // 2. Email Validation
+  if (!formData.email.trim()) {
+    newErrors.email = "Email is required";
+  } else if (!emailRegex.test(formData.email)) {
+    newErrors.email = "Please enter a valid email address";
+  }
+
+  // 3. Password Validation
+  if (!formData.password) {
+    newErrors.password = "Password is required";
+  } else if (formData.password.length < 6) {
+    newErrors.password = "Password must be at least 6 characters";
+  } else if (!/(?=.*[A-Z])/.test(formData.password)) {
+    newErrors.password = "Password must contain at least one uppercase letter";
+  } else if (!/(?=.*[0-9])/.test(formData.password)) {
+    newErrors.password = "Password must contain at least one number";
+  }
+
+  // 4. Confirm Password Validation
+  if (!formData.confirmPassword) {
+    newErrors.confirmPassword = "Please confirm your password";
+  } else if (formData.password !== formData.confirmPassword) {
+    newErrors.confirmPassword = "Passwords do not match";
+  }
+
+  return newErrors; // සියලුම errors ඇතුළත් object එකක් ආපසු ලබාදේ
+};
+
+5. Form එක Submit කිරීම සහ Backend API එකට සම්බන්ධ කිරීම
+
+පරිශීලකයා Register Button එක click කල විට සිදුවන ක්‍රියාවලියයි.
+TypeScript
+
+const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+  e.preventDefault(); // Button එක click කල විට පිටුව refresh වීම වළක්වයි
+
+  const newErrors = validateForm(); // Validation check කරයි
+
+  // errors තිබේ නම්, ඒවා state එකට දමා එතනින් ක්‍රියාවලිය නතර කරයි
+  if (Object.keys(newErrors).length > 0) {
+    setErrors(newErrors);
+    return;
+  }
+
+  setIsLoading(true); // Loading animation එක start කරයි
+
+  try {
+    // Backend එකට confirmPassword යැවීමට අවශ්‍ය නැති නිසා එය ඉවත් කර ඉතිරිය වෙන් කරගනී
+    const { confirmPassword, ...dataToSend } = formData;
+
+    // මෙතනදී register(dataToSend) ලෙස ඔබේ සැබෑ API සේවාව කැඳවිය හැක
+    // const response = await register(dataToSend);
+    
+    alert("Registration successful!");
+    
+  } catch (error) {
+    // Network error එකක් ආවොත් පොදු error state එකට දමයි
+    setErrors({ submit: "Network error. Please check your connection." });
+  } finally {
+    setIsLoading(false); // සාර්ථක වුවත් නැතත් අවසානයේ loading නතර කරයි
+  }
+};
+
+6. HTML / JSX ව්‍යුහය (The Form Layout)
+
+ඉහත ලියූ logic සියල්ලම HTML tags සමඟ සම්බන්ධ වන ආකාරය මෙසේය:
+JavaScript
+
+<form onSubmit={handleSubmit} className="flex flex-col gap-4 p-6 bg-gray-800 rounded-xl">
+  <h2 className="text-3xl font-bold text-amber-400 text-center">Create Account</h2>
+
+  {/* පොදු Error එකක් තිබේ නම් එය පෙන්වන තැන */}
+  {errors.submit && (
+    <div className="bg-red-500/10 border border-red-500 text-red-500 p-3 rounded-lg text-sm text-center">
+      {errors.submit}
+    </div>
+  )}
+
+  {/* Full Name Input Field */}
+  <div className="flex flex-col gap-1">
+    <label className="text-gray-300 text-sm font-semibold" htmlFor="name">Full Name</label>
+    <input
+      id="name"
+      name="name" // ඉතා වැදගත්: මෙය handleChange එකේ e.target.name ලෙස හඳුනාගනී
+      type="text"
+      value={formData.name} // State එක සමඟ bind කිරීම (Controlled Component)
+      onChange={handleChange} // Type කරන විට state එක update කරන function එක
+      placeholder="John Doe"
+      className={`bg-gray-900 text-white border p-2 rounded focus:outline-amber-500 ${
+        errors.name ? "border-red-500 focus:outline-red-500" : "border-gray-700"
+      }`}
+      disabled={isLoading} // Request එක යන අතරතුර input block කරයි
+    />
+    {/* මෙම field එකේ error එකක් තිබේ නම් පමණක් රතු පැහැයෙන් පෙන්වයි */}
+    {errors.name && <p className="text-red-400 text-xs mt-0.5">{errors.name}</p>}
+  </div>
+
+  {/* Email Input Field */}
+  <div className="flex flex-col gap-1">
+    <label className="text-gray-300 text-sm font-semibold" htmlFor="email">Email</label>
+    <input
+      id="email"
+      name="email"
+      type="email"
+      value={formData.email}
+      onChange={handleChange}
+      placeholder="your@email.com"
+      className={`bg-gray-900 text-white border p-2 rounded focus:outline-amber-500 ${
+        errors.email ? "border-red-500 focus:outline-red-500" : "border-gray-700"
+      }`}
+      disabled={isLoading}
+    />
+    {errors.email && <p className="text-red-400 text-xs mt-0.5">{errors.email}</p>}
+  </div>
+
+  {/* Password Input Field */}
+  <div className="flex flex-col gap-1">
+    <label className="text-gray-300 text-sm font-semibold" htmlFor="password">Password</label>
+    <input
+      id="password"
+      name="password"
+      type="password"
+      value={formData.password}
+      onChange={handleChange}
+      placeholder="Create a password"
+      className={`bg-gray-900 text-white border p-2 rounded focus:outline-amber-500 ${
+        errors.password ? "border-red-500 focus:outline-red-500" : "border-gray-700"
+      }`}
+      disabled={isLoading}
+    />
+    {errors.password && <p className="text-red-400 text-xs mt-0.5">{errors.password}</p>}
+  </div>
+
+  {/* Confirm Password Input Field */}
+  <div className="flex flex-col gap-1">
+    <label className="text-gray-300 text-sm font-semibold" htmlFor="confirmPassword">Confirm Password</label>
+    <input
+      id="confirmPassword"
+      name="confirmPassword"
+      type="password"
+      value={formData.confirmPassword}
+      onChange={handleChange}
+      placeholder="Confirm your password"
+      className={`bg-gray-900 text-white border p-2 rounded focus:outline-amber-500 ${
+        errors.confirmPassword ? "border-red-500 focus:outline-red-500" : "border-gray-700"
+      }`}
+      disabled={isLoading}
+    />
+    {errors.confirmPassword && <p className="text-red-400 text-xs mt-0.5">{errors.confirmPassword}</p>}
+  </div>
+
+  {/* Submit Button */}
+  <button
+    type="submit"
+    disabled={isLoading} // Loading වන විට දෙපාරක් click කිරීම වැළැක්වීමට block කරයි
+    className="bg-amber-500 w-full py-2 rounded hover:bg-amber-600 text-black font-bold mt-2 disabled:opacity-50"
+  >
+    {isLoading ? "Creating Account..." : "Register"}
+  </button>
+</form>
+
+
+Gemini is AI and can make mistakes.
+==================================================================================================================================
+
+Form එකක සමස්ත ක්‍රියාවලිය (Step-by-Step Flow)
+
+පරිශීලකයෙකු Form එකක් පුරවා Submit කරන විට ප්‍රධාන පියවර 5ක් සිදු වේ:
+
+[පරිශීලකයා Input කිරීම] ──> [State එක Update වීම (onChange)] ──> [Submit කිරීම (onSubmit)]
+                                                                       │
+[සාර්ථකයි: API එකට යැවීම] <── [Validation පරීක්ෂාව (නීති රීති)] <───────┘
+
+1. දත්ත ගබඩා කරගැනීම (State Management & TypeScript)
+
+පරිශීලකයා Form එකේ ටයිප් කරන දේවල් මතක තබා ගැනීමට React වල State එකක් භාවිත කරයි.
+TypeScript Interfaces
+
+පළමුව, Form එකට ඇතුළත් කරන දත්ත වල හැඩය (Data types) TypeScript මඟින් ස්ථිර කර ගනී. කේතයේ මුලින්ම ඇති interface RegistrationData මඟින් කියවෙන්නේ Form එක ඇතුළේ අනිවාර්යයෙන්ම name, email, password, සහ confirmPassword තිබිය යුතු බවයි.
+useState Hook එක
+TypeScript
+
+const [formData, setFormData] = useState<RegistrationData>({
+  name: "",
+  email: "",
+  password: "",
+  confirmPassword: "",
+});
+
+Form එක මුලින්ම Load වන විට සියලුම Fields හිස්ව ("") පවතී.
+2. පරිශීලකයා ටයිප් කරන විට සිදුවන දේ (Event Handling - handleChange)
+
+පරිශීලකයා Input ලේබලයක එක අකුරක් හෝ ටයිප් කරන සෑම අවස්ථාවකදීම onChange={handleChange} කියන Event එක Trigger වේ.
+TypeScript
+
+const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const name = e.target.name as FormFields; // ටයිප් කරපු input එකේ නම (උදා: "email")
+  const { value } = e.target;              // ඇතුළත් කරපු අලුත් අකුර/අගය
+
+  setFormData((prev) => ({
+    ...prev,
+    [name]: value, // පැරණි දත්ත නැති නොකර, අදාළ input එකේ අගය පමණක් update කරයි
+  }));
+  
+  // කලින් රතු පාටින් වැරැද්දක් (Error) පෙන්වා තිබුනේ නම්, ටයිප් කරන්න ගත් සැනින් එය ඉවත් කරයි.
+  if (errors[name]) {
+    setErrors((prev) => ({ ...prev, [name]: "" }));
+  }
+};
+
+3. Form එක Submit කිරීම (Event Handling - handleSubmit)
+
+පරිශීලකයා Form එක අවසානයේ ඇති "Register" බටන් එක ක්ලික් කළ විට <form onSubmit={handleSubmit}> මඟින් මෙම Function එක ක්‍රියාත්මක කරයි.
+TypeScript
+
+const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+  e.preventDefault(); // පිටුව (Page) එක Refresh වීම වළක්වයි. මෙය අනිවාර්ය වේ!
+
+4. නීති රීති පරීක්ෂා කිරීම (Form Validation - validateForm)
+
+Submit වූ සැනින් දත්ත Backend එකට යවන්නේ නැත. ඊට පෙර validateForm() ක්‍රියාත්මක වී සියලුම දත්ත නිවැරදිදැයි බලයි.
+
+    ඊමේල් පරීක්ෂාව: @ ලකුණ සහ .com වැනි දෑ නිවැරදිව තිබේදැයි emailRegex මඟින් පරීක්ෂා කරයි.
+
+    මුද්‍රාපද (Password) පරීක්ෂාව: අවම වශයෙන් අකුරු 6ක් තිබේද, Capital අකුරක් ((?=.*[A-Z])) සහ අංකයක් ((?=.*[0-9])) තිබේදැයි බලයි.
+
+    Confirm Password: මුලින් ගැසූ Password එකට සමානදැයි බලයි (formData.password !== formData.confirmPassword).
+
+යම් හෙයකින් වැරැද්දක් තිබේ නම්, එම වැරදි සියල්ල errors කියන State එකට එකතු කර, එතනින්ම Process එක නතර කරයි (return;). එවිට HTML එකේ ඇති {errors.name && ...} කොටස් හරහා පරිශීලකයාට රතු පාටින් Error එක දිස්වේ.
+5. Backend API එක සමඟ සම්බන්ධ වීම (API Integration)
+
+සියලුම දත්ත නිවැරදි නම් පමණක්, කේතය try {} බ්ලොක් එක ඇතුළට පැමිණේ.
+TypeScript
+
+setIsLoading(true); // බටන් එක "Creating Account..." ලෙස වෙනස් කර block කරයි (Double-click වැළැක්වීමට)
+
+try {
+  // 1. Confirm Password එක backend එකට අවශ්‍ය නැති නිසා, එය ඉවත් කර ඉතිරි දත්ත වෙන් කරගනී.
+  const { confirmPassword, ...dataToSend } = formData;
+
+  // 2. ඔබේ service/user.ts එකේ ඇති registere function එක කැඳවයි.
+  // (ඔබේ කේතයේ register() ලෙස තිබූ තැන, නිවැරදි parameters සමඟ මෙසේ විය යුතුය):
+  const response = await registere(
+    dataToSend.name, 
+    dataToSend.email, 
+    dataToSend.password, 
+    "user" // userRole එක ලෙස සාමාන්‍යයෙන් "user" හෝ "admin" යවයි
+  );
+
+  // මෙතනින් පසු response එක සාර්ථක නම් (status 200/201), Modal එක වසා Login එකට පරිශීලකයා යොමු කරයි.
+} catch (error) {
+  // Network අවුලක් හෝ backend error එකක් ආවොත් පොදු error එකක් පෙන්වයි.
+  setErrors({ submit: "Network error. Please check your connection." });
+} finally {
+  setIsLoading(false); // ක්‍රියාවලිය අවසන් වූ පසු (වැරදුනත්/හරිගියත්) Loading එක නතර කරයි.
+}
+
+HTML / JSX ව්‍යුහය සකස් වී ඇති ආකාරය
+
+ඔබ HTML Form එකක් හදන විට අනිවාර්යයෙන්ම පහත කරුණු තිබිය යුතුයි:
+
+    <form onSubmit={...}>: Form එකක ප්‍රධාන ආවරණය.
+
+    name="email": Input එකකට name attribute එකක් තිබීම අනිවාර්යයි (එතකොටයි handleChange එකට අදාළ Field එක හඳුනාගන්න පුළුවන්).
+
+    value={formData.email}: Input එකේ අගය හැමතිස්සෙම React State එකට සම්බන්ධ කර තැබීම (Controlled Component).
+
+    disabled={isLoading}: Backend එකට Data යන අතරතුර පරිශීලකයාට Form එක වෙනස් කිරීමට නොදීම.

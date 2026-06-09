@@ -8,7 +8,7 @@ import { Router } from "express";
 // } from "../controllers/authController";
 
 import { login } from "../controller/customerController";
-// import { authenticate } from "../middleware/auth"; 
+// import { authenticate } from "../middleware/auth";
 import { requireRole } from "../middlewares/role";
 import { validateRequest } from "../middlewares/validate-Request-Body";
 import { authRateLimiter } from "../middlewares/rateLimiter"; // Brute-force attacks වැලැක්වීමට

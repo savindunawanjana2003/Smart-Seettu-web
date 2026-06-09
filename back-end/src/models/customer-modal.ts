@@ -12,12 +12,12 @@ export interface Icustomer extends Document {
 
 const custormerSchema = new Schema<Icustomer>(
   {
-    name: { type: String, required: true, unique: true },
+    name: { type: String, required: true },
     email: { type: String, required: true, unique: true },
     password: { type: String, required: true },
     nic: { type: String, required: true, unique: true },
     poneNumber: { type: String, required: true, unique: true },
-    address: { type: String, required: true, unique: true },
+    address: { type: String, required: true },
     resetPasswrod: { type: String },
     otp: { type: String },
   },

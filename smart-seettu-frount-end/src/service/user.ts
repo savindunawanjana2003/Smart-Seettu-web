@@ -1,16 +1,22 @@
 import api from "./api";
 
 export const registere = async (
-  username: string,
-  userEmail: string,
-  userPassword: string,
-  userRole: string,
+  name: string,
+  email: string,
+  password: string,
+  nic: string,
+  poneNumber: string,
+  address: string,
 ) => {
-  const res = await api.post("/user/create", {
-    username,
-    userEmail,
-    userPassword,
-    userRole,
+  const res = await api.post("auth/users/register", {
+    name,
+    email,
+    password,
+    nic,
+    poneNumber,
+    address,
   });
+  console.log(res + "================================");
+
   return res;
 };

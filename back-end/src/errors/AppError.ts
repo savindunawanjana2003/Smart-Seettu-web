@@ -10,6 +10,6 @@ export class AppError extends Error {
     this.isOperational = true; // this difine , this is a our costum error
 
     Error.captureStackTrace(this, this.constructor);
-    //  this is a way  to find what ia the place,code line as awelable  error
+    // metganin api balanawa mona link ekedida error eka enne kiyala
   }
 }

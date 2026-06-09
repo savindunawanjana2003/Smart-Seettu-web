@@ -5,7 +5,7 @@ import dotenv from "dotenv";
 import Authrouter from "./routes/auth-custormer-router";
 import { globalErrorHandler } from "./middlewares/global-Error-Handler";
 import { connection } from "./config/db";
-import { AppError } from "./errors/AppError";
+// import { AppError } from "./errors/AppError";
 
 // ===
 dotenv.config();
@@ -22,9 +22,9 @@ app.get("/", (req, res) => {
 });
 app.use("/api/v1/auth", Authrouter);
 // app.use();
-
 // ============Global Error Handling Middleware (ඕනෑම Route එකක Error එකක් ආවොත්
 app.use(globalErrorHandler);
+
 const startSever = async (): Promise<void> => {
   try {
     await connection();

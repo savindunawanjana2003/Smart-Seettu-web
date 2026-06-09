@@ -2,12 +2,12 @@ import axios, { AxiosError } from "axios";
 import { refreshTokenCall } from "./auth";
 
 const api = axios.create({
-  baseURL: "http://localhost:5001/backendapi/v1",
+  baseURL: "http://localhost:3001/api/v1",
 });
 
 const PUBLIC_ENDPOINT = [
   "/auth/login",
-  "/auth/users/create",
+  "/auth/users/register",
   "/auth/callrefreshToken",
 ];
 api.interceptors.request.use(
