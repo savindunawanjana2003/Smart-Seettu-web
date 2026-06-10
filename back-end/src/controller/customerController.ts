@@ -65,6 +65,10 @@ export const registerCustomer = async (req: Request, res: Response) => {
 };
 
 export const login = async (req: Request, res: Response) => {
+  console.log(
+    "login ekata enawa ===========================================0000000000000000",
+  );
+  console.log(req.body);
   const { email, password } = req.body;
   const customer = await customerModal.findOne({ email });
 
@@ -91,4 +95,9 @@ export const login = async (req: Request, res: Response) => {
       refreshToken,
     },
   });
+
+
+
+
+  
 };

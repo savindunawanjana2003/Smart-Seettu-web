@@ -7,6 +7,7 @@ import { loginfuntion } from "../service/auth";
 import userIcon from "../assets/image/userIcon.png";
 import {
   faBox,
+  faL,
   faShoppingCart,
   faUsers,
 } from "@fortawesome/free-solid-svg-icons";
@@ -21,7 +22,6 @@ interface RegistrationData {
   poneNumber: string;
   address: string;
 }
-
 interface FormErrors {
   name?: string;
   email?: string;
@@ -78,9 +78,22 @@ const Header = ({ sections }) => {
 
   const [isClickRegister, setIsClickRegister] = useState(false);
 
+  const [isagrementShoe, setagrementshow] = useState(false);
+
+  const [isClikBackground, setisClikBackground] = useState(true);
+
+  const [isChecked, setIsChecked] = useState(false);
+
   const showLoginmodal = () => {
     setIsLoggedIn(true);
   };
+
+  const iconClikAgrement = () => {
+    setagrementshow(true);
+    setisClikBackground(true);
+  };
+
+  const chekIsClickBackground = () => {};
 
   // const handleChangeLogin = (e: any) => {
   // const name = e.target.name;
@@ -123,17 +136,98 @@ const Header = ({ sections }) => {
 
     try {
       const respons = await loginfuntion(email, password);
+      //    data: {
+      //   email: customer?.email,
+      //   accessToken,
+      //   refreshToken,
+      // },
+
+      if (respons.status === 200) {
+        localStorage.setItem("accessToken", respons.data.data.accessToken);
+        localStorage.setItem("refreshToken", respons.data.data.refreshToken);
+
+        Swal.fire({
+          title: "Login succsessfully",
+          text: "",
+          icon: "success",
+          iconColor: "#00BFFE",
+          confirmButtonText: "Continue",
+          confirmButtonColor: "#dc3545",
+          background: "#fefefe",
+          showConfirmButton: true,
+          showCancelButton: false,
+          allowOutsideClick: false,
+          allowEscapeKey: true,
+          timer: 3000,
+          timerProgressBar: true,
+          customClass: {
+            popup: "swal-custom-popup",
+            title: "swal-custom-title",
+            confirmButton: "swal-custom-btn",
+          },
+          didOpen: () => {
+            const popup = Swal.getPopup();
+            popup.style.borderRadius = "12px";
+            popup.style.fontFamily = "'Inter', system-ui, sans-serif";
+          },
+        });
+      } else if (respons.status === 429) {
+        Swal.fire({
+          title: "Too Many Requests",
+          text: "You have made too many login attempts. Please try again after some time.",
+          icon: "error",
+          iconColor: "#dc3545",
+          confirmButtonText: "Try Again",
+          confirmButtonColor: "#6c757d",
+          background: "#fefefe",
+          showConfirmButton: true,
+          showCancelButton: false,
+          allowOutsideClick: false,
+          allowEscapeKey: true,
+          timer: 5000,
+          timerProgressBar: true,
+          customClass: {
+            popup: "swal-custom-popup",
+            title: "swal-custom-title",
+            confirmButton: "swal-custom-btn",
+          },
+          didOpen: () => {
+            const popup = Swal.getPopup();
+            popup.style.borderRadius = "12px";
+            popup.style.fontFamily = "'Inter', system-ui, sans-serif";
+          },
+        });
+      }
     } catch (error) {
+      if (error.status === 429) {
+        Swal.fire({
+          title: "Too Many Requests",
+          text: "You have made too many login attempts. Please try again after some time.",
+          icon: "error",
+          iconColor: "#dc3545",
+          confirmButtonText: "Try Again",
+          confirmButtonColor: "#6c757d",
+          background: "#fefefe",
+          showConfirmButton: true,
+          showCancelButton: false,
+          allowOutsideClick: false,
+          allowEscapeKey: true,
+          timer: 5000,
+          timerProgressBar: true,
+          customClass: {
+            popup: "swal-custom-popup",
+            title: "swal-custom-title",
+            confirmButton: "swal-custom-btn",
+          },
+          didOpen: () => {
+            const popup = Swal.getPopup();
+            popup.style.borderRadius = "12px";
+            popup.style.fontFamily = "'Inter', system-ui, sans-serif";
+          },
+        });
+      }
       console.log(error.message);
     }
-
-    // alert(respons + "<==");
-
-    // axios eken passe login sacsess nam   login butten eka hide wela  profail icon eka show wenna one   butten eka thibba thana
-    // if (true) {
-    //   setIsLoggedIn(false);
-    //   setisLoginSuccsesres(true);
-    // }
   };
 
   const closeLoginFromBackground = () => {
@@ -143,7 +237,6 @@ const Header = ({ sections }) => {
   const registerHeader = () => {
     setIsLoggedIn(false);
     setIsClickRegister(true);
-    // If you are using React Router pages instead of modals, use: navigate("/register");
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -237,32 +330,41 @@ const Header = ({ sections }) => {
     try {
       // i removed the confirm password brfore sending data to api
       const { confirmPassword, ...dataToSend } = formData;
+      if (isChecked) {
+        const response = await registere(
+          dataToSend.name,
+          dataToSend.email,
+          dataToSend.password,
+          dataToSend.nic,
+          dataToSend.poneNumber,
+          dataToSend.address,
+        );
 
-      const response = await registere(
-        dataToSend.name,
-        dataToSend.email,
-        dataToSend.password,
-        dataToSend.nic,
-        dataToSend.poneNumber,
-        dataToSend.address,
-      );
-
-      if (response?.status === 201) {
-        Swal.fire({
-          title: "Success!",
-          text: "ඔබගේ ලියාපදිංචිය සාර්ථකයි!",
-          icon: "success",
-          confirmButtonText: "Ok",
-          confirmButtonColor: "#f59e0b",
-        });
-        setIsClickRegister(false);
-        clearForm();
-        setErrors({
-          submit: null,
-        });
+        if (response?.status === 201) {
+          Swal.fire({
+            title: "Success!",
+            text: "ඔබගේ ලියාපදිංචිය සාර්ථකයි!",
+            icon: "success",
+            confirmButtonText: "Ok",
+            confirmButtonColor: "#f59e0b",
+          });
+          setIsClickRegister(false);
+          clearForm();
+          setErrors({
+            submit: null,
+          });
+        } else {
+          setErrors({
+            submit: response?.data?.message || "Something went wrongs",
+          });
+        }
       } else {
-        setErrors({
-          submit: response?.data?.message || "Something went wrongs",
+        Swal.fire({
+          title: "Attention Please!",
+          text: "Please agree to the Terms and Conditions of the website before proceeding.",
+          icon: "warning",
+          confirmButtonText: "I Agree",
+          confirmButtonColor: "#f59e0b",
         });
       }
     } catch (error) {
@@ -271,6 +373,7 @@ const Header = ({ sections }) => {
       });
     } finally {
       setIsLoading(false);
+      setIsChecked(false);
     }
   };
 
@@ -730,6 +833,280 @@ const Header = ({ sections }) => {
                   )}
                 </div>
 
+                {/* ========================== */}
+
+                <div className="flex items-start gap-7 p-4 bg-gray-50 border border-gray-200 rounded-lg w-[100%] mb-4 flex justify-evenly items-center">
+                  <input
+                    type="checkbox"
+                    id="agree-terms"
+                    name="terms_agreement"
+                    value="accepted"
+                    required
+                    checked={isChecked}
+                    onChange={() => setIsChecked(true)}
+                    className="w-4 h-4 mt-1 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
+                  />
+                  <span className="className-sm text-gray-600 leading-relaxed flex flex-column justify-center items-center text-[9px] gap-1">
+                    <a
+                      href="#"
+                      className="text-blue-600 font-medium hover:underline hover:text-blue-700 transition-colors"
+                    >
+                      Terms and Conditions
+                    </a>
+                    ...
+                  </span>
+
+                  <svg
+                    onClick={iconClikAgrement}
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="24"
+                    height="24"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    className="w-5 h-5"
+                    cursor-pointer
+                  >
+                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                    <polyline points="14 2 14 8 20 8"></polyline>
+                    <line x1="16" y1="13" x2="8" y2="13"></line>
+                    <line x1="16" y1="17" x2="8" y2="17"></line>
+                    <polyline points="10 9 9 9 8 9"></polyline>
+                  </svg>
+                </div>
+                {/* ============================== */}
+
+                {isagrementShoe && (
+                  <div
+                    // onClick={chekIsClickBackground}
+
+                    onClick={() => setisClikBackground(false)}
+                    className={`fixed inset-0 z-50 flex items-center justify-center p-4 bg-transparent backdrop-blur-sm animate-fade-in ${isClikBackground ? "block" : "hidden"}`}
+                  >
+                    {/* Modal Card */}
+                    <div
+                      onClick={(e) => e.stopPropagation()}
+                      className="relative w-full max-w-3xl max-h-[90vh] bg-white rounded-2xl shadow-2xl flex flex-col border-t-8 border-blue-600 overflow-hidden"
+                    >
+                      {/* Header Section */}
+                      <div className="p-6 border-b border-gray-100 bg-gray-50/50 text-center">
+                        <h1 className="text-2xl font-black text-blue-600 tracking-wider">
+                          LANKA SEETU
+                        </h1>
+                        <p className="text-xs text-gray-500 mt-1">
+                          විශ්වාසවන්ත සහ විනිවිදභාවයෙන් යුතු ඩිජිටල් සීට්ටු
+                          වේදිකාව
+                        </p>
+
+                        <div className="mt-4">
+                          <h2 className="text-lg font-bold text-gray-800">
+                            නියමයන් සහ කොන්දේසි (Terms & Conditions)
+                          </h2>
+                          <p className="text-xs italic text-gray-400 mt-0.5">
+                            කරුණාකර ඉදිරියට යාමට පෙර මෙම නිල ගිවිසුම හොඳින්
+                            කියවා තේරුම් ගන්න.
+                          </p>
+                        </div>
+                      </div>
+
+                      {/* Scrollable Content Body */}
+                      <div className="p-6 overflow-y-auto space-y-6 text-sm text-gray-600 leading-relaxed text-justify">
+                        {/* Section 1 */}
+                        <div>
+                          <h3 className="text-base font-bold text-gray-800 border-b border-gray-100 pb-1 mb-2">
+                            1. සීට්ටු ක්‍රියාවලිය හැඳින්වීම (System Process)
+                          </h3>
+                          <p>
+                            Lanka Seetu යනු සාමාජිකයින් පිරිසක් එකතු වී,
+                            අන්‍යෝන්‍ය විශ්වාසය මත මාසිකව ස්ථාවර මුදලක් එකතු කර,
+                            භ්‍රමණ ක්‍රමයකට (Rotating Payout) අනුව එක් එක්
+                            සාමාජිකයාට මුළු මුදල ලබාදෙන පද්ධතියකි.
+                          </p>
+
+                          <div className="mt-3 p-4 bg-gray-50 border border-gray-200 rounded-xl space-y-2 text-xs">
+                            <div>
+                              <span className="font-bold text-blue-600">
+                                • සමූහය හැදීම (Group Formation):
+                              </span>{" "}
+                              නිශ්චිත සාමාජිකයින් සංඛ්‍යාවක් (උදා: 10, 20, 50)
+                              එක්ව සමූහයක් සාදා ගනී.
+                            </div>
+                            <div>
+                              <span className="font-bold text-blue-600">
+                                • මාසික දායකත්වය (Monthly Collection):
+                              </span>{" "}
+                              සෑම සාමාජිකයෙක්ම සෑම මාසයකම නියමිත දිනට පෙර එක හා
+                              සමාන මුදලක් (උදා: රු. 10,000) ලබා දිය යුතුය.
+                            </div>
+                            <div>
+                              <span className="font-bold text-blue-600">
+                                • මුදල් ලබාදීම (Monthly Payout):
+                              </span>{" "}
+                              එකතු වන මුළු මුදල (Total Pool - උදා: රු. 100,000)
+                              ක්‍රමවේදයට අනුව (ස්ථාවර අනුපිළිවෙල, ලොතරැයි හෝ
+                              වෙන්දේසි ක්‍රමයට) සෑම මාසයකදීම එක් අයෙකුට බැගින්
+                              ලබා දේ.
+                            </div>
+                          </div>
+                        </div>
+
+                        {/* Section 2 */}
+                        <div>
+                          <h3 className="text-base font-bold text-gray-800 border-b border-gray-100 pb-1 mb-2">
+                            2. නායකයාගේ වගකීම (Leader Role)
+                          </h3>
+                          <ul className="list-disc pl-5 space-y-1.5">
+                            <li>
+                              සමූහයේ සියලුම සාමාජිකයින්ගෙන් නියමිත වේලාවට මුදල්
+                              එකතු කිරීම සහ කළමනාකරණය.
+                            </li>
+                            <li>
+                              මුදල් ලබාදෙන අනුපිළිවෙල (Turn Order)
+                              විනිවිදභාවයකින් යුතුව සකස් කිරීම.
+                            </li>
+                            <li>
+                              සීට්ටු වාර්තා (Ledger / Records) නිවැරදිව තබා
+                              ගැනීම.
+                            </li>
+                          </ul>
+                        </div>
+
+                        {/* Legal Alert Box */}
+                        <div className="p-4 bg-red-50/70 border-l-4 border-red-500 rounded-r-xl space-y-2">
+                          <h4 className="font-bold text-red-700 text-sm">
+                            ⚠️ විශේෂ නීතිමය නිවේදනය සහ අවවාදයයි (Legal Warning)
+                          </h4>
+                          <p className="text-xs text-gray-700">
+                            <span className="font-bold text-black">
+                              මුදල් වංචා කිරීම සහ අතරමඟින් හැර යාම:
+                            </span>{" "}
+                            යම් සාමාජිකයෙකු තමාගේ වාරය පැමිණි විට සීට්ටු මුදල්
+                            ලබා ගැනීමෙන් පසු, ඉදිරි මාස සඳහා අදාළ මාසික මුදල්
+                            ගෙවීම පැහැර හැරීම හෝ සමූහයෙන් ඉවත් වීම{" "}
+                            <span className="font-bold text-red-600">
+                              දඬුවම් ලැබිය හැකි බරපතල මූල්‍ය වංචාවකි.
+                            </span>
+                          </p>
+                          <p className="text-xs text-gray-700">
+                            එවැනි අසාධාරණ සහ නීතිවිරෝධී ක්‍රියාවකදී, අදාළ සමූහයේ
+                            (Group) සිටින{" "}
+                            <span className="font-bold text-black">
+                              ඕනෑම සාමාජිකයෙකුට හෝ නායකයෙකුට වංචා කළ පුද්ගලයාට
+                              එරෙහිව ශ්‍රී ලංකා නීතිය යටතේ සිවිල් සහ අපරාධ නඩු
+                              පැවරීම ඇතුළු නීතිමය පියවර (Legal Action) ගැනීමට
+                              පූර්ණ අයිතිය ඇත.
+                            </span>
+                          </p>
+                        </div>
+
+                        {/* Section 3 */}
+                        <div>
+                          <h3 className="text-base font-bold text-gray-800 border-b border-gray-100 pb-1 mb-2">
+                            3. සාමාජික කොන්දේසි (Member Rules)
+                          </h3>
+                          <ol className="list-decimal pl-5 space-y-2">
+                            <li>
+                              <span className="font-bold text-black">
+                                පූර්ණ කාලීන රැඳී සිටීම:
+                              </span>{" "}
+                              Lanka Seetu වෙබ් අඩවියට ලියාපදිංචි වන සහ සීට්ටු
+                              සමූහයකට එකතු වන සෑම පුද්ගලයෙකුම, අදාළ සීට්ටු වටය
+                              ආරම්භයේ සිට{" "}
+                              <span className="font-bold text-black">
+                                එහි සම්පූර්ණ ක්‍රියාවලිය අවසන් වන තෙක් (අවසන්
+                                මාසය/වාරය දක්වා)
+                              </span>{" "}
+                              සමූහයේ රැඳී සිටිමින් දායකත්වය දැක්වීමට නීතිමය
+                              වශයෙන් බැඳී සිටී.
+                            </li>
+                            <li>
+                              <span className="font-bold text-black">
+                                කාලීන ගෙවීම්:
+                              </span>{" "}
+                              සෑම සාමාජිකයෙකුම තමාට මුදල් ලැබුණත්, නොලැබුණත්
+                              නායකයා විසින් නියම කරනු ලබන දිනට පෙර තමාගේ මාසික
+                              වාරිකය ගෙවා අවසන් කළ යුතුය.
+                            </li>
+                            <li>
+                              <span className="font-bold text-black">
+                                විනිවිදභාවය:
+                              </span>{" "}
+                              වංචනික තොරතුරු සැපයීම හෝ සාමාජිකයින් නොමඟ යැවීම
+                              සපුරා තහනම් වන අතර, එවැනි අවස්ථාවකදී ගිණුම
+                              අත්හිටුවීමට වෙබ් අඩවියට අයිතිය ඇත.
+                            </li>
+                          </ol>
+                        </div>
+
+                        {/* Section 4 */}
+                        <div>
+                          <h3 className="text-base font-bold text-gray-800 border-b border-gray-100 pb-1 mb-2">
+                            4. වගකීම් ලිමිතය (Disclaimer)
+                          </h3>
+                          <p>
+                            Lanka Seetu යනු සාමාජිකයින් අතර සම්බන්ධීකරණය පහසු
+                            කරන ඩිජिटल තාක්ෂණික වේදිකාවක් (Platform) පමණි.
+                            සාමාජිකයින් අතර ඇති වන පුද්ගලික මූල්‍ය ගනුදෙනු සහ
+                            විශ්වාසය පිළිබඳව පාරිභෝගිකයින් වගබලා ගත යුතු අතර,
+                            යම් පැහැර හැරීමකදී සාමාජිකයින්ට නීතිමය ක්‍රියාමාර්ග
+                            වෙත යොමු විය හැක.
+                          </p>
+                        </div>
+                      </div>
+
+                      {/* Footer Section with Checkbox and Button */}
+                      <div className="p-6 border-t border-gray-100 bg-gray-50 flex flex-col gap-4">
+                        {/* Checkbox */}
+                        <label className="flex items-start gap-3 p-3 bg-blue-50/50 border border-blue-100 rounded-xl cursor-pointer select-none">
+                          <input
+                            type="checkbox"
+                            // checked={isAgreed}
+                            // onChange={(e) => setIsAgreed(e.target.checked)}
+                            className="mt-1 w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500 cursor-pointer"
+                          />
+                          <span className="text-xs text-gray-700 leading-normal">
+                            මම "Lanka Seetu" හි ඉහත සඳහන් සියලුම නියමයන්,
+                            කොන්දේසි සහ නීතිමය රීති කියවා හොඳින් තේරුම් ගතිමි.
+                            සීට්ටු වටය අවසන් වනතුරු එහි රැඳී සිටීමටත්, නීති
+                            විරෝධී ලෙස හැර යාමකදී මට එරෙහිව නීතිමය පියවර ගත හැකි
+                            බවටත් මම එකඟ වෙමි.
+                          </span>
+                        </label>
+
+                        {/* Buttons */}
+                        <div className="flex gap-3 justify-end">
+                          <button
+                            // onClick={}
+                            className="px-5 py-2.5 text-sm font-medium text-gray-500 hover:text-gray-700 hover:bg-gray-100 rounded-xl transition"
+                          >
+                            Cancel
+                          </button>
+                          <button
+                            // disabled={}
+                            // onClick={() => {
+                            //   if (isAgreed) {
+                            //     onAccept();
+                            //     onClose();
+                            //   }
+                            // }}
+                            className="px-6 py-2.5 text-sm font-bold text-white bg-blue-600 hover:bg-blue-700 disabled:bg-gray-300 disabled:cursor-not-allowed rounded-xl shadow-md disabled:shadow-none transition"
+                          >
+                            මම එකඟ වෙමි (Accept & Continue)
+                          </button>
+                        </div>
+
+                        <p className="text-center text-[10px] text-gray-400 border-t border-gray-200/60 pt-3">
+                          &copy; 2026 Lanka Seetu. All Rights Reserved. |
+                          ආරක්ෂිත සහ විධිමත් සීට්ටු ක්‍රමවේදයක් සඳහා.
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                )}
+
                 {/* Register Button */}
                 <button
                   type="submit"
@@ -753,6 +1130,7 @@ const Header = ({ sections }) => {
                   <div className="absolute inset-0 flex items-center">
                     <div className="w-full border-t border-gray-600"></div>
                   </div>
+
                   <div className="relative flex justify-center text-xs">
                     <span className="px-2 bg-gray-800 text-gray-400">OR</span>
                   </div>

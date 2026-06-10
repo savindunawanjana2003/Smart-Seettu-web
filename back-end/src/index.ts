@@ -10,31 +10,31 @@ import { connection } from "./config/db";
 // ===
 dotenv.config();
 
-const PORT = process.env.PORT || 5000;
+const PORT = process.env.PORT;
 const app = express();
 
 // =====express sitingemail
 app.set("trust proxy", 1);
-// app.use(cors());
-app.use(
-  cors({
-    origin: "http://localhost:5173", // Frontend එකේ URL එක මෙතනට දෙන්න
-    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
-    credentials: true,
-  }),
-);
+app.use(cors());
+// app.use(
+//   cors({
+//     origin: "http://localhost:5173", // Frontend එකේ URL එක මෙතනට දෙන්න
+//     methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+//     credentials: true,
+//   }),
+// );
 app.use(express.json());
-// app.post("/", (req, res) => {
-//   console.log(req.body.email);
-//   console.log("000000000000000000000000000000000000000000000000000000000000");
-// });
+app.post("/", (req, res) => {
+  console.log(req.body.email);
+  console.log("000000000000000000000000000000000000000000000000000000000000");
+});
 app.use((req, res, next) => {
   console.log(`\n================== [ NEW REQUEST ] ==================`);
   console.log(`Method: ${req.method}`);
   console.log(`URL: ${req.originalUrl}`);
   console.log(`Body:`, req.body); // මෙතනින් තමයි email, password පේන්නේ
   console.log(`=====================================================\n`);
-  next(); // 👈 මේක අනිවාර්යයි! නැත්නම් රික්වෙස්ට් එක මෙතනින් හිරවෙනවා.
+  next();
 });
 
 app.use("/api/v1/auth", Authrouter);
