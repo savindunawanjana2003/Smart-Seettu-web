@@ -14,6 +14,7 @@ export const authenticate = (
   res: Response,
   next: NextFunction,
 ) => {
+  console.log(req.headers.authorization + "=======================");
   const authHeader = req.headers.authorization;
   if (!authHeader) {
     // return res.status(401).json({ messag: "Access token is missing" });
@@ -22,8 +23,13 @@ export const authenticate = (
   }
   const secretoftoken = authHeader.split(" ")[1];
 
+  console.log(secretoftoken);
+
   try {
+    console.log("/////////////////");
     const playLode = jwt.verify(secretoftoken, JWT_SECRET);
+    console.log("/////////////////");
+
     req.user = playLode;
     next();
   } catch (error) {

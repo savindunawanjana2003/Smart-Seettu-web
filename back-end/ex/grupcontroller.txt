@@ -49,9 +49,10 @@ export const savegroup = async (req: Request, res: Response) => {
   }
 };
 
+// 3. GET NEXT MEMBER ID FOR A SPECIFIC GROUP (උදා: M-001, M-002...)
 export const getNextmemberIdBygrupId = async (req: Request, res: Response) => {
   try {
-    const { groupId } = req.params;
+    const { groupId } = req.params; // URL එකෙන් group id එක ගන්නවා (/next-member/:groupId)
 
     const group = await groupModel.findOne({ id: groupId });
 
@@ -60,9 +61,10 @@ export const getNextmemberIdBygrupId = async (req: Request, res: Response) => {
       return;
     }
 
-    let nextMemberId = "M-001";
+    let nextMemberId = "M-001"; // පළවෙනි මෙම්බර් නම් (Admin සාමාන්‍යයෙන් M-001 වෙයි)
 
     if (group.members && group.members.length > 0) {
+      // අන්තිමට එකතු කරපු මෙම්බර්ව ගන්නවා
       const lastMember = group.members[group.members.length - 1];
       const lastMemberIdNum = parseInt(lastMember.memberId.split("-")[1]);
       const nextMemberIdNum = lastMemberIdNum + 1;
@@ -77,9 +79,11 @@ export const getNextmemberIdBygrupId = async (req: Request, res: Response) => {
     });
   }
 };
-
+// =========================
+// 2. GET NEXT GROUP ID (උදා: GRP-001, GRP-002...)
 export const getNextGrupId = async (req: Request, res: Response) => {
   try {
+    // Database එකේ දැනට තියෙන අන්තිම Group එක ගන්නවා
     const lastGroup = await groupModel
       .findOne()
       .sort({ createDate: -1, _id: -1 });
@@ -87,9 +91,10 @@ export const getNextGrupId = async (req: Request, res: Response) => {
     let nextId = "GRP-001";
 
     if (lastGroup && lastGroup.id) {
+      // GRP-001 එකෙන් අංකය විතරක් වෙන් කරගන්නවා (001)
       const lastIdNumber = parseInt(lastGroup.id.split("-")[1]);
       const nextIdNumber = lastIdNumber + 1;
-
+      // ආයෙත් "GRP-002" වගේ format එකට හදනවා
       nextId = `GRP-${String(nextIdNumber).padStart(3, "0")}`;
     }
 
@@ -107,15 +112,20 @@ export const getAllGrupmembersWholeGrup = async (
   res: Response,
 ) => {
   try {
+    // Request එකේ params වලින් හරි query එකෙන් හරි groupId එක ගන්නවා (උදා: /members/:groupId)
     const { groupId } = req.params;
     console.log(groupId + "+========================================");
 
+    // Database එකෙන් අදාළ Group එක විතරක් හොයාගන්නවා
     const group = await groupModel.findOne({ id: groupId });
 
+    // ගෲප් එකක් නැත්නම් 404 Error එකක් දෙනවා
     if (!group) {
       res.status(404).json({ Message: "Seettu Group not found!" });
       return;
     }
+
+    // ගෲප් එකක් තිබ්බත් සාමාජිකයෝ නැත්නම් හිස් Array එකක් දෙනවා
     const allMembers = group.members || [];
 
     res.status(200).json({

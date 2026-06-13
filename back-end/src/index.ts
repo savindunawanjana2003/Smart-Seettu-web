@@ -3,6 +3,8 @@ import cors from "cors";
 import mongoose from "mongoose";
 import dotenv from "dotenv";
 import Authrouter from "./routes/auth-custormer-router";
+import Gruprouter from "./routes/group-router";
+
 import { globalErrorHandler } from "./middlewares/global-Error-Handler";
 import { connection } from "./config/db";
 // import { AppError } from "./errors/AppError";
@@ -13,7 +15,6 @@ dotenv.config();
 const PORT = process.env.PORT;
 const app = express();
 
-// =====express sitingemail
 app.set("trust proxy", 1);
 app.use(cors());
 // app.use(
@@ -24,22 +25,23 @@ app.use(cors());
 //   }),
 // );
 app.use(express.json());
-app.post("/", (req, res) => {
-  console.log(req.body.email);
-  console.log("000000000000000000000000000000000000000000000000000000000000");
-});
+app.post("/", (req, res) => {});
 app.use((req, res, next) => {
+  // console.log(req.)
   console.log(`\n================== [ NEW REQUEST ] ==================`);
   console.log(`Method: ${req.method}`);
   console.log(`URL: ${req.originalUrl}`);
-  console.log(`Body:`, req.body); // මෙතනින් තමයි email, password පේන්නේ
+  console.log(`Body:`, req.body);
+  console.log(`Body:`, req.headers);
+
   console.log(`=====================================================\n`);
   next();
 });
 
 app.use("/api/v1/auth", Authrouter);
-// app.use();
-// ============Global Error Handling Middleware (ඕනෑම Route එකක Error එකක් ආවොත්
+app.use("/api/v1/grup", Gruprouter);
+
+// ============Global Error Handling Middleware
 app.use(globalErrorHandler);
 
 const startSever = async (): Promise<void> => {

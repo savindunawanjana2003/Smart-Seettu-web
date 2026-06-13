@@ -1,0 +1,84 @@
+// import axios, { AxiosError } from "axios";
+// import { refreshTokenCall } from "./auth";
+
+// const api = axios.create({
+//   baseURL: "http://localhost:3001/api/v1",
+// });
+
+// const PUBLIC_ENDPOINT = [
+//   "/auth/login",
+//   "/auth/users/register",
+//   "/auth/callrefreshToken",
+// ];
+
+// // 1. REQUEST INTERCEPTOR
+// api.interceptors.request.use(
+//   (config) => {
+//     // 💡 FIXED: LocalStorage එකෙන් ගන්නා Key එක "ACCESS_TOKEN" ලෙස නිවැරදි කරා
+//     const token = localStorage.getItem("ACCESS_TOKEN");
+
+//     const isPublic = PUBLIC_ENDPOINT.some((url) => config.url?.includes(url));
+
+//     if (!isPublic && token) {
+//       if (!config.headers) config.headers = {} as any;
+//       // Use standard 'Authorization' header name (capitalization consistent)
+//       config.headers.Authorization = `Bearer ${token}`;
+//     }
+//     return config;
+//   },
+//   (error) => Promise.reject(error),
+// );
+
+// // 2. RESPONSE INTERCEPTOR
+// api.interceptors.response.use(
+//   (response) => {
+//     return response;
+//   },
+//   async (error: AxiosError) => {
+//     const originalRequest: any = error.config;
+
+//     // 💡 CRITICAL FIXED: originalRequest එක undefined නම්, මෙතනින්ම reject කරලා කෝඩ් එක crash වෙන එක නවත්වනවා (Safety Check)
+//     if (!originalRequest) {
+//       return Promise.reject(error);
+//     }
+
+//     // දැන් originalRequest එක ෂුවර් එකටම තියෙන නිසා බයක් නැතුව .url චෙක් කරන්න පුළුවන්
+//     const isPublic = PUBLIC_ENDPOINT.some((url) =>
+//       originalRequest.url?.includes(url),
+//     );
+
+//     if (
+//       !isPublic &&
+//       error.response?.status === 401 &&
+//       !originalRequest._retry
+//     ) {
+//       originalRequest._retry = true;
+
+//       try {
+//         const refreshToken = localStorage.getItem("REFRESH_TOKEN") as string;
+
+//         if (!refreshToken) {
+//           throw new Error("No refresh token available");
+//         }
+
+//         const refreshRespons = await refreshTokenCall(refreshToken);
+
+//         const newAccsesTocken = refreshRespons.data.accessToken;
+//         localStorage.setItem("ACCESS_TOKEN", newAccsesTocken);
+
+//         // 💡 FIXED: සාමාන්‍ය axios() වෙනුවට ඔයාගේ custom 'api' instance එකෙන්ම නැවත request එක යැවීම
+//         originalRequest.headers.Authorization = `Bearer ${newAccsesTocken}`;
+//         return api(originalRequest);
+//       } catch (refreshError) {
+//         localStorage.removeItem("ACCESS_TOKEN");
+//         localStorage.removeItem("REFRESH_TOKEN");
+//         window.location.href = "/login";
+//         console.error(refreshError);
+//         return Promise.reject(refreshError);
+//       }
+//     }
+//     return Promise.reject(error);
+//   },
+// );
+
+// export default api;

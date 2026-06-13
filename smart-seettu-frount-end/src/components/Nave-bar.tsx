@@ -1,13 +1,15 @@
 import { useState } from "react";
 import { Menu, X } from "lucide-react";
-// import { useNavigate } from "react-router-dom";
+
+import { useDispatch } from "react-redux";
+import { loginCustomer } from "../redux/slice/customerSlice";
 import Swal from "sweetalert2";
 import { loginfuntion } from "../service/auth";
+// import { type CurrentCustomerObject } from "../types/types";
 
 import userIcon from "../assets/image/userIcon.png";
 import {
   faBox,
-  faL,
   faShoppingCart,
   faUsers,
 } from "@fortawesome/free-solid-svg-icons";
@@ -49,10 +51,17 @@ export interface loginDeatils {
 }
 
 const Header = ({ sections }) => {
+  const dispatch = useDispatch();
+  // const [curentCustormer, setCurentCustormer] = useState<CurrentCustomerObject>(
+  //   {
+  //     name: "",
+  //     email: "",
+  //     phone: "",
+  //   },
+  // );
   const [open, setOpen] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [isShowUserIcon, setisShowUserIcon] = useState(false);
-
   // --------------------
 
   const [email, setEmail] = useState("");
@@ -75,13 +84,11 @@ const Header = ({ sections }) => {
   const [errors, setErrors] = useState<FormErrors>({});
   const [isLoading, setIsLoading] = useState(false);
   const [isLoginSuccsesres, setisLoginSuccsesres] = useState(false);
-
   const [isClickRegister, setIsClickRegister] = useState(false);
 
   const [isagrementShoe, setagrementshow] = useState(false);
 
   const [isClikBackground, setisClikBackground] = useState(true);
-
   const [isChecked, setIsChecked] = useState(false);
 
   const showLoginmodal = () => {
@@ -136,15 +143,23 @@ const Header = ({ sections }) => {
 
     try {
       const respons = await loginfuntion(email, password);
-      //    data: {
-      //   email: customer?.email,
-      //   accessToken,
-      //   refreshToken,
-      // },
 
       if (respons.status === 200) {
-        localStorage.setItem("accessToken", respons.data.data.accessToken);
-        localStorage.setItem("refreshToken", respons.data.data.refreshToken);
+        console.log(respons.data.data.email);
+        console.log(respons.data.data.name);
+        console.log(respons.data.data.poneNumber);
+
+        const newCustormer = {
+          id: respons.data.data.id,
+          email: respons.data.data.email,
+          name: respons.data.data.name,
+          phone: respons.data.data.poneNumber,
+        };
+
+        dispatch(loginCustomer(newCustormer));
+
+        localStorage.setItem("ACCESS_TOKEN", respons.data.data.accessToken);
+        localStorage.setItem("REFRESH_TOKEN", respons.data.data.refreshToken);
 
         Swal.fire({
           title: "Login succsessfully",
@@ -197,6 +212,7 @@ const Header = ({ sections }) => {
             popup.style.fontFamily = "'Inter', system-ui, sans-serif";
           },
         });
+        return;
       }
     } catch (error) {
       if (error.status === 429) {
@@ -411,7 +427,6 @@ const Header = ({ sections }) => {
     <div>
       <div className="fixed top-0 left-0 w-full z-50 bg-gradient-to-r from-gray-900 via-gray-800 to-gray-900 shadow-lg border-b border-gray-700">
         <nav className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex items-center justify-between">
-          {/* Logo */}
           <div className="flex items-center space-x-2">
             <div className="w-8 h-8 bg-amber-500 rounded-lg flex items-center justify-center">
               <span className="text-white font-bold text-lg">S</span>
@@ -421,7 +436,6 @@ const Header = ({ sections }) => {
             </h1>
           </div>
 
-          {/* Desktop Menu */}
           <ul className="hidden md:flex gap-8 text-gray-300 font-medium">
             <li>
               <Link
@@ -512,7 +526,6 @@ const Header = ({ sections }) => {
             </div>
           )}
 
-          {/* Login Modal overlay */}
           {isLoggedIn && (
             <div
               className="fixed inset-0 bg-black/40 backdrop-blur-sm z-50 flex items-center justify-center"
@@ -578,7 +591,6 @@ const Header = ({ sections }) => {
             </div>
           )}
 
-          {/* Mobile Menu Button */}
           <button
             className="md:hidden text-gray-300 hover:text-white transition-colors"
             onClick={() => setOpen(!open)}
@@ -587,7 +599,6 @@ const Header = ({ sections }) => {
           </button>
         </nav>
 
-        {/* Mobile Menu */}
         {open && (
           <div className="md:hidden bg-gray-900/95 backdrop-blur-md text-white border-t border-gray-800">
             <ul className="flex flex-col items-center gap-4 py-6">
@@ -625,7 +636,6 @@ const Header = ({ sections }) => {
           </div>
         )}
 
-        {/* Registration Modal Overlay */}
         {isClickRegister && (
           <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 overflow-y-auto">
             <div className="w-full max-w-md bg-gray-800 rounded-xl shadow-2xl my-8 border border-gray-700">
@@ -640,7 +650,6 @@ const Header = ({ sections }) => {
                   </div>
                 )}
 
-                {/* Full Name Field */}
                 <div className="flex flex-col gap-1">
                   <label
                     className="text-gray-300 font-semibold text-sm"
@@ -665,7 +674,6 @@ const Header = ({ sections }) => {
                   )}
                 </div>
 
-                {/* Email Field */}
                 <div className="flex flex-col gap-1">
                   <label
                     className="text-gray-300 font-semibold text-sm"
@@ -692,7 +700,6 @@ const Header = ({ sections }) => {
                   )}
                 </div>
 
-                {/* nic Field */}
                 <div className="flex flex-col gap-1">
                   <label
                     className="text-gray-300 font-semibold text-sm"
@@ -717,7 +724,6 @@ const Header = ({ sections }) => {
                   )}
                 </div>
 
-                {/* poneNumber Field */}
                 <div className="flex flex-col gap-1">
                   <label
                     className="text-gray-300 font-semibold text-sm"
@@ -746,7 +752,6 @@ const Header = ({ sections }) => {
                   )}
                 </div>
 
-                {/* address Field */}
                 <div className="flex flex-col gap-1">
                   <label
                     className="text-gray-300 font-semibold text-sm"
@@ -775,7 +780,6 @@ const Header = ({ sections }) => {
                   )}
                 </div>
 
-                {/* Password Field */}
                 <div className="flex flex-col gap-1">
                   <label
                     className="text-gray-300 font-semibold text-sm"
@@ -804,7 +808,6 @@ const Header = ({ sections }) => {
                   )}
                 </div>
 
-                {/* Confirm Password Field */}
                 <div className="flex flex-col gap-1">
                   <label
                     className="text-gray-300 font-semibold text-sm"
@@ -886,7 +889,6 @@ const Header = ({ sections }) => {
                     onClick={() => setisClikBackground(false)}
                     className={`fixed inset-0 z-50 flex items-center justify-center p-4 bg-transparent backdrop-blur-sm animate-fade-in ${isClikBackground ? "block" : "hidden"}`}
                   >
-                    {/* Modal Card */}
                     <div
                       onClick={(e) => e.stopPropagation()}
                       className="relative w-full max-w-3xl max-h-[90vh] bg-white rounded-2xl shadow-2xl flex flex-col border-t-8 border-blue-600 overflow-hidden"
@@ -912,9 +914,7 @@ const Header = ({ sections }) => {
                         </div>
                       </div>
 
-                      {/* Scrollable Content Body */}
                       <div className="p-6 overflow-y-auto space-y-6 text-sm text-gray-600 leading-relaxed text-justify">
-                        {/* Section 1 */}
                         <div>
                           <h3 className="text-base font-bold text-gray-800 border-b border-gray-100 pb-1 mb-2">
                             1. සීට්ටු ක්‍රියාවලිය හැඳින්වීම (System Process)
@@ -953,7 +953,6 @@ const Header = ({ sections }) => {
                           </div>
                         </div>
 
-                        {/* Section 2 */}
                         <div>
                           <h3 className="text-base font-bold text-gray-800 border-b border-gray-100 pb-1 mb-2">
                             2. නායකයාගේ වගකීම (Leader Role)
@@ -974,7 +973,6 @@ const Header = ({ sections }) => {
                           </ul>
                         </div>
 
-                        {/* Legal Alert Box */}
                         <div className="p-4 bg-red-50/70 border-l-4 border-red-500 rounded-r-xl space-y-2">
                           <h4 className="font-bold text-red-700 text-sm">
                             ⚠️ විශේෂ නීතිමය නිවේදනය සහ අවවාදයයි (Legal Warning)
@@ -1002,7 +1000,6 @@ const Header = ({ sections }) => {
                           </p>
                         </div>
 
-                        {/* Section 3 */}
                         <div>
                           <h3 className="text-base font-bold text-gray-800 border-b border-gray-100 pb-1 mb-2">
                             3. සාමාජික කොන්දේසි (Member Rules)
@@ -1041,7 +1038,6 @@ const Header = ({ sections }) => {
                           </ol>
                         </div>
 
-                        {/* Section 4 */}
                         <div>
                           <h3 className="text-base font-bold text-gray-800 border-b border-gray-100 pb-1 mb-2">
                             4. වගකීම් ලිමිතය (Disclaimer)
@@ -1057,9 +1053,7 @@ const Header = ({ sections }) => {
                         </div>
                       </div>
 
-                      {/* Footer Section with Checkbox and Button */}
                       <div className="p-6 border-t border-gray-100 bg-gray-50 flex flex-col gap-4">
-                        {/* Checkbox */}
                         <label className="flex items-start gap-3 p-3 bg-blue-50/50 border border-blue-100 rounded-xl cursor-pointer select-none">
                           <input
                             type="checkbox"
@@ -1076,7 +1070,6 @@ const Header = ({ sections }) => {
                           </span>
                         </label>
 
-                        {/* Buttons */}
                         <div className="flex gap-3 justify-end">
                           <button
                             // onClick={}
@@ -1107,7 +1100,6 @@ const Header = ({ sections }) => {
                   </div>
                 )}
 
-                {/* Register Button */}
                 <button
                   type="submit"
                   disabled={isLoading}
@@ -1116,7 +1108,6 @@ const Header = ({ sections }) => {
                   {isLoading ? "Creating Account..." : "Register"}
                 </button>
 
-                {/* Login Link */}
                 <button
                   type="button"
                   onClick={handleLoginRedirect}
@@ -1125,7 +1116,6 @@ const Header = ({ sections }) => {
                   Already have an account? Login
                 </button>
 
-                {/* OR Divider */}
                 <div className="relative my-1">
                   <div className="absolute inset-0 flex items-center">
                     <div className="w-full border-t border-gray-600"></div>
@@ -1136,7 +1126,6 @@ const Header = ({ sections }) => {
                   </div>
                 </div>
 
-                {/* Google Sign Up Button */}
                 <button
                   type="button"
                   onClick={handleGoogleSignUp}

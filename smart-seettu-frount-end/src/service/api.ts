@@ -10,21 +10,21 @@ const PUBLIC_ENDPOINT = [
   "/auth/users/register",
   "/auth/callrefreshToken",
 ];
+
 api.interceptors.request.use(
   (config) => {
     const token = localStorage.getItem("ACCESS_TOKEN");
+
     const isPublic = PUBLIC_ENDPOINT.some((url) => config.url?.includes(url));
 
     if (!isPublic && token) {
       if (!config.headers) config.headers = {} as any;
       config.headers.Authorization = `Bearer ${token}`;
     }
-
     return config;
   },
   (error) => Promise.reject(error),
 );
-// ============  meken aaranne yana hama reqest ekakatama token ekak set karana eka  namuth public end-point walata arenna thamai eka karanne
 
 api.interceptors.response.use(
   (response) => {
@@ -32,6 +32,10 @@ api.interceptors.response.use(
   },
   async (error: AxiosError) => {
     const originalRequest: any = error.config;
+
+    if (!originalRequest) {
+      return Promise.reject(error);
+    }
 
     const isPublic = PUBLIC_ENDPOINT.some((url) =>
       originalRequest.url?.includes(url),
@@ -56,15 +60,14 @@ api.interceptors.response.use(
         const newAccsesTocken = refreshRespons.data.accessToken;
         localStorage.setItem("ACCESS_TOKEN", newAccsesTocken);
 
-        // so now agin send the reqest   to the back end  with new  accessToken from using axios
         originalRequest.headers.Authorization = `Bearer ${newAccsesTocken}`;
-        return axios(originalRequest);
-      } catch (error) {
+        return api(originalRequest);
+      } catch (refreshError) {
         localStorage.removeItem("ACCESS_TOKEN");
         localStorage.removeItem("REFRESH_TOKEN");
         window.location.href = "/login";
-        console.error(error);
-        return Promise.reject(error);
+        console.error(refreshError);
+        return Promise.reject(refreshError);
       }
     }
     return Promise.reject(error);

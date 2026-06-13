@@ -1,15 +1,25 @@
 import React from "react";
+
 import "../hirowPage.css";
+
 import Header from "../components/Nave-bar";
 
 import img4 from "../assets/image/4.jpg";
+
 import img3 from "../assets/image/3.jpg";
+
 import img5 from "../assets/image/5.jpg";
+
 import img6 from "../assets/image/6.jpg";
+
 import img7 from "../assets/image/7.jpg";
+
 import img8 from "../assets/image/Wealthy Place.jpeg";
+
 import { Zap, Users, ArrowRight, Section } from "lucide-react";
+
 import { useNavigate } from "react-router";
+import Swal from "sweetalert2";
 
 const Home = () => {
   const naveItems = [{ id: "home" }, { id: "seettuHub" }, { id: "userReveus" }];
@@ -17,12 +27,56 @@ const Home = () => {
   const navigeter = useNavigate();
 
   const moveToTheDashbord = () => {
-    navigeter("./pages/Dashbord");
+    const atocken = localStorage.getItem("ACCESS_TOKEN");
+    const rtocken = localStorage.getItem("REFRESH_TOKEN");
+
+    if (!atocken || !rtocken) {
+      Swal.fire({
+        title: "⚠️ Access Denied",
+        text: "Please log in to the system before proceeding.",
+        icon: "error",
+        iconColor: "#dc3545",
+        confirmButtonText: "Continue",
+        confirmButtonColor: "#dc3545",
+        background: "#fefefe",
+        showConfirmButton: true,
+        showCancelButton: false,
+        allowOutsideClick: false,
+        allowEscapeKey: true,
+        timer: 4000,
+        timerProgressBar: true,
+        customClass: {
+          popup: "swal-custom-popup",
+          title: "swal-custom-title",
+          confirmButton: "swal-custom-btn",
+        },
+        didOpen: () => {
+          const popup = Swal.getPopup();
+          popup.style.borderRadius = "12px";
+          popup.style.fontFamily = "'Inter', system-ui, sans-serif";
+        },
+      });
+      return;
+    } else {
+      Swal.fire({
+        title: "Logging ...",
+        text: "Please wait a moment.",
+        icon: "info",
+        timer: 2000,
+        showConfirmButton: false,
+        didOpen: () => {
+          Swal.showLoading();
+        },
+      }).then(() => {
+        navigeter("./pages/Dashbord");
+      });
+    }
   };
 
   return (
     <div className="overflow-x-hidden">
       <Header sections={naveItems} />
+
       <section id="home">
         <div className="bg-gradient-to-br from-black via-gray-900 to-green-950 text-green-400 mt-10 px-6 py-16 md:px-16 banner-container">
           <div className="w-full max-w-7xl mx-auto flex flex-col-reverse md:flex-row items-center justify-between gap-16 md:gap-10">
@@ -47,7 +101,6 @@ const Home = () => {
               </div>
             </div>
 
-            {/* Slider Right Side */}
             <div className="w-full md:w-1/2 flex justify-center items-center py-10 md:py-0 md:pt-30 md:pb-30">
               <div
                 className="slider"
@@ -59,30 +112,35 @@ const Home = () => {
                 >
                   <img src={img4} alt="" />
                 </div>
+
                 <div
                   className="item"
                   style={{ "--position": 2 } as React.CSSProperties}
                 >
                   <img src={img3} alt="" />
                 </div>
+
                 <div
                   className="item"
                   style={{ "--position": 3 } as React.CSSProperties}
                 >
                   <img src={img5} alt="" />
                 </div>
+
                 <div
                   className="item"
                   style={{ "--position": 4 } as React.CSSProperties}
                 >
                   <img src={img6} alt="" />
                 </div>
+
                 <div
                   className="item"
                   style={{ "--position": 5 } as React.CSSProperties}
                 >
                   <img src={img7} alt="" />
                 </div>
+
                 <div
                   className="item"
                   style={{ "--position": 6 } as React.CSSProperties}
@@ -94,13 +152,17 @@ const Home = () => {
           </div>
         </div>
       </section>
+
       {/* ======================= Seettu Hub Section ======================= */}
+
       <section
         id="seettuHub"
         className="seettuWorld relative min-h-screen bg-gradient-to-br from-black via-gray-900 to-green-950 overflow-hidden py-20"
       >
         <div className="absolute top-20 left-20 w-72 h-72 bg-green-500/20 rounded-full blur-3xl animate-pulse"></div>
+
         <div className="absolute bottom-20 right-20 w-72 h-72 bg-blue-500/20 rounded-full blur-3xl animate-pulse delay-1000"></div>
+
         <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-amber-500/10 rounded-full blur-3xl"></div>
 
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -108,6 +170,7 @@ const Home = () => {
             <h2 className="bg-gradient-to-r from-amber-400 via-amber-500 to-amber-600 bg-clip-text text-transparent text-4xl sm:text-5xl lg:text-6xl font-bold">
               Access the Seettu System
             </h2>
+
             <div className="w-24 h-1 bg-gradient-to-r from-amber-500 to-transparent mx-auto mt-4"></div>
           </div>
 
@@ -131,6 +194,7 @@ const Home = () => {
 
               <h3 className="text-3xl md:text-4xl lg:text-5xl font-bold mb-4">
                 <span className="text-white">Seettu </span>
+
                 <span className="bg-gradient-to-r from-amber-400 to-amber-600 bg-clip-text text-transparent">
                   Management Hub
                 </span>
@@ -141,10 +205,12 @@ const Home = () => {
                   Manage Seettu groups and contributions easily. Handle members,
                   payments, and records in one place.
                 </p>
+
                 <p>
                   Simple way to track savings and updates. Control all Seettu
                   activities from one dashboard.
                 </p>
+
                 <p className="text-amber-400 font-medium">
                   Easy and fast Seettu management system.
                 </p>
@@ -155,22 +221,27 @@ const Home = () => {
                   <div className="text-xl sm:text-2xl md:text-3xl font-bold text-white group-hover:text-amber-400 transition-colors">
                     500+
                   </div>
+
                   <div className="text-[10px] sm:text-xs md:text-sm text-gray-400">
                     Active Groups
                   </div>
                 </div>
+
                 <div className="group cursor-pointer">
                   <div className="text-xl sm:text-2xl md:text-3xl font-bold text-white group-hover:text-amber-400 transition-colors">
                     10K+
                   </div>
+
                   <div className="text-[10px] sm:text-xs md:text-sm text-gray-400">
                     Happy Members
                   </div>
                 </div>
+
                 <div className="group cursor-pointer">
                   <div className="text-xl sm:text-2xl md:text-3xl font-bold text-white group-hover:text-amber-400 transition-colors">
                     ₿2M+
                   </div>
+
                   <div className="text-[10px] sm:text-xs md:text-sm text-gray-400">
                     Transactions
                   </div>
@@ -183,19 +254,32 @@ const Home = () => {
                   className="group bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-white px-8 py-3 rounded-lg font-semibold transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-amber-500/25 inline-flex items-center gap-2"
                 >
                   <span>Get Started</span>
+
                   {/* <svg
-                    className="w-5 h-5 group-hover:translate-x-1 transition-transform"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M13 7l5 5m0 0l-5 5m5-5H6"
-                    />
-                  </svg> */}
+
+className="w-5 h-5 group-hover:translate-x-1 transition-transform"
+
+fill="none"
+
+stroke="currentColor"
+
+viewBox="0 0 24 24"
+
+>
+
+<path
+
+strokeLinecap="round"
+
+strokeLinejoin="round"
+
+strokeWidth={2}
+
+d="M13 7l5 5m0 0l-5 5m5-5H6"
+
+/>
+
+</svg> */}
                 </button>
               </div>
             </div>
@@ -204,25 +288,31 @@ const Home = () => {
       </section>
 
       {/* ======================= Bottom Scaling Section ======================= */}
+
       <section
         id="userReveus"
         className="relative overflow-hidden bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 py-24"
       >
         <div className="absolute inset-0">
           <div className="absolute top-20 left-20 w-72 h-72 bg-green-500/20 rounded-full blur-3xl animate-pulse"></div>
+
           <div className="absolute bottom-20 right-20 w-72 h-72 bg-blue-500/20 rounded-full blur-3xl animate-pulse delay-1000"></div>
         </div>
 
         <div className="relative max-w-7xl mx-auto px-4 text-center">
           <div className="inline-flex items-center gap-2 bg-white/10 backdrop-blur-sm rounded-full px-4 py-2 mb-6">
             <Zap size={16} className="text-green-400" />
+
             <span className="text-gray-300 text-sm">
               Enterprise Grade Platform
             </span>
           </div>
+
           <h2 className="text-4xl sm:text-5xl md:text-6xl font-bold mb-6 leading-tight">
             <span className="text-white">Start scaling with</span>
+
             <br />
+
             <span className="bg-gradient-to-r from-green-400 to-emerald-500 bg-clip-text text-transparent">
               confidence
             </span>
@@ -231,10 +321,14 @@ const Home = () => {
           <div className="flex items-center justify-center gap-4 mb-8 text-sm sm:text-base">
             <div className="flex items-center gap-2">
               <Users size={20} className="text-green-400" />
+
               <span className="text-white font-bold">800,000+</span>
+
               <span className="text-gray-400">businesses</span>
             </div>
+
             <span className="text-gray-600">•</span>
+
             <span className="text-gray-300">on Upwork</span>
           </div>
 
@@ -246,6 +340,7 @@ const Home = () => {
                 className="group-hover:translate-x-1 transition"
               />
             </button>
+
             <button className="w-full sm:w-auto border border-gray-700 hover:border-green-500 text-gray-300 hover:text-white px-8 py-3 rounded-lg font-semibold transition-all hover:bg-white/5">
               Sign up
             </button>

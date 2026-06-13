@@ -16,7 +16,6 @@ export const registere = async (
     poneNumber,
     address,
   });
-  console.log(res + "================================");
 
   return res;
 };

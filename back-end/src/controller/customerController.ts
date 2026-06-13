@@ -86,18 +86,15 @@ export const login = async (req: Request, res: Response) => {
 
   const accessToken = singAccesstoken(customer);
   const refreshToken = signRefreshToken(customer);
-  //in bellow step i didi not insert user role because it's not need hear
   res.status(200).json({
     message: "Success",
     data: {
+      id: customer.id,
       email: customer?.email,
+      name: customer?.name,
+      poneNumber: customer?.poneNumber,
       accessToken,
       refreshToken,
     },
   });
-
-
-
-
-  
 };
