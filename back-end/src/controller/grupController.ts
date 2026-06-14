@@ -12,17 +12,23 @@ export const savegroup = async (req: Request, res: Response) => {
   } = req.body;
   try {
     const dateOnly = new Date().toDateString();
-    // ---------------------
-    const lastGroup = await groupModel
-      .findOne()
-      .sort({ createDate: -1, _id: -1 });
-    let nextId = "GRP-001";
-    if (lastGroup && lastGroup.id) {
-      const lastIdNumber = parseInt(lastGroup.id.split("-")[1]);
-      const nextIdNumber = lastIdNumber + 1;
-      nextId = `GRP-${String(nextIdNumber).padStart(3, "0")}`;
-    }
 
+    const allGroups = await groupModel.find({}, { id: 1 });
+
+    let maxIdNumber = 0;
+
+    allGroups.forEach((group) => {
+      if (group.id) {
+        const num = parseInt(group.id.split("-")[1]);
+
+        if (num > maxIdNumber) {
+          maxIdNumber = num;
+        }
+      }
+    });
+
+    const nextId = `GRP-${String(maxIdNumber + 1).padStart(3, "0")}`;
+    // console.log("======================= 00077 " + nextId);
     // ---------------------
 
     const group = new groupModel({
@@ -80,20 +86,25 @@ export const getNextmemberIdBygrupId = async (req: Request, res: Response) => {
 
 export const getNextGrupId = async (req: Request, res: Response) => {
   try {
-    const lastGroup = await groupModel
-      .findOne()
-      .sort({ createDate: -1, _id: -1 });
+    const allGroups = await groupModel.find({}, { id: 1 });
 
-    let nextId = "GRP-001";
+    let maxIdNumber = 0;
 
-    if (lastGroup && lastGroup.id) {
-      const lastIdNumber = parseInt(lastGroup.id.split("-")[1]);
-      const nextIdNumber = lastIdNumber + 1;
+    allGroups.forEach((group) => {
+      if (group.id) {
+        const num = parseInt(group.id.split("-")[1]);
 
-      nextId = `GRP-${String(nextIdNumber).padStart(3, "0")}`;
-    }
+        if (num > maxIdNumber) {
+          maxIdNumber = num;
+        }
+      }
+    });
 
-    res.status(200).json({ nextGroupId: nextId });
+    const nextId = `GRP-${String(maxIdNumber + 1).padStart(3, "0")}`;
+
+    res.status(200).json({
+      nextGroupId: nextId,
+    });
   } catch (error: any) {
     res.status(500).json({
       Message: "Error generating next Group ID",
@@ -121,7 +132,7 @@ export const getAllGrupmembersWholeGrup = async (
     res.status(200).json({
       Message: "Members fetched successfully!",
       count: allMembers.length,
-      data: allMembers,
+      memberslist: allMembers,
     });
   } catch (error: any) {
     console.error(error);

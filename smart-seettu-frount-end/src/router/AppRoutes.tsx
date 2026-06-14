@@ -6,6 +6,7 @@ import Dashbord from "../pages/Dashbord";
 import Main from "../layout/mainConteiner";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import { createContext } from "react";
+import GrupmanegementSecound from "../pages/CurrentgroupDetails";
 export const Xcontext = createContext<any>(null);
 export const AppRoutes = () => {
   // const marginTop = localStorage.getItem("ptop");
@@ -22,10 +23,15 @@ export const AppRoutes = () => {
           {/* ------------------------- */}
           <Route path="/pages/Dashbord" element={<Dashbord />}>
             <Route path="pages/A" element={<Apage />} />
-            <Route path="pages/B" element={<Bpage />} />
+            <Route
+              path="nextGrupmanagementGrup"
+              element={<GrupmanegementSecound />}
+            />
           </Route>
         </Routes>
       </Xcontext.Provider>
     </BrowserRouter>
   );
 };
+
+// ===============

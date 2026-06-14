@@ -3,3 +3,9 @@ export interface CurrentCustomerObject {
   email?: string;
   phone?: string;
 }
+
+export interface grupMember {
+  memberId: string;
+  name: string;
+  contact: string;
+}

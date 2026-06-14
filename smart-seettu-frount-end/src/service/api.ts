@@ -1,5 +1,6 @@
 import axios, { AxiosError } from "axios";
 import { refreshTokenCall } from "./auth";
+import Swal from "sweetalert2";
 
 const api = axios.create({
   baseURL: "http://localhost:3001/api/v1",
@@ -65,7 +66,21 @@ api.interceptors.response.use(
       } catch (refreshError) {
         localStorage.removeItem("ACCESS_TOKEN");
         localStorage.removeItem("REFRESH_TOKEN");
-        window.location.href = "/login";
+        console.error(refreshError);
+        await Swal.fire({
+          title: "Logging ...",
+          text: "Access denied. Please sign in again.",
+          icon: "info",
+          timer: 3000,
+          showConfirmButton: false,
+          allowOutsideClick: false,
+          didOpen: () => {
+            Swal.showLoading();
+          },
+        });
+
+        window.location.href = "/";
+
         console.error(refreshError);
         return Promise.reject(refreshError);
       }

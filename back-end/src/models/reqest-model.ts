@@ -1,23 +1,23 @@
-import { Document, model, Schema } from "mongoose";
+// import { Document, model, Schema } from "mongoose";
 
-export interface Ireqest extends Document {
-  reqestId: string;
-  grupId: string;
-  grupAdminId: string;
-  memberRespons: string;
-  createDateTime: string;
-}
+// export interface Ireqest extends Document {
+//   reqestId: string;
+//   grupId: string;
+//   grupAdminId: string;
+//   memberRespons: string;
+//   createDateTime: string;
+// }
 
-const reqestSchema = new Schema<Ireqest>({
-  reqestId: { type: String, required: true, unique: true },
-  grupId: { type: String, required: true, unique: true },
-  grupAdminId: { type: String, required: true },
-  memberRespons: { type: String, required: true },
-  createDateTime: { type: String, required: true },
-});
+// const reqestSchema = new Schema<Ireqest>({
+//   reqestId: { type: String, required: true, unique: true },
+//   grupId: { type: String, required: true },
+//   grupAdminId: { type: String, required: true },
+//   memberRespons: { type: String, required: true },
+//   createDateTime: { type: String, required: true },
+// });
 
-const reqestModel = model<Ireqest>("reqests", reqestSchema);
-export default reqestModel;
+// const reqestModel = model<Ireqest>("reqests", reqestSchema);
+// export default reqestModel;
 
 // reqestId ekak denn amekatath naththn unikly haduna ganna bari wenawa
 
@@ -28,3 +28,25 @@ export default reqestModel;
 // nam  row eka update karala  member grup ekata add karanawa
 
 //-  respons eka allaganna hama welema triger mena lesa   funshion ekak  thiyenna one  eken karanne   reqest ekak confirm kara nam   member grup ekata add karanawa  mekedi wenne grup collection ekata  member ge id eka dana ke
+
+import { Document, model, Schema } from "mongoose";
+
+export interface IRequest extends Document {
+  reqestId: string;
+  grupId: string;
+  grupAdminId: string;
+  memberRespons: string;
+  createDateTime: string;
+}
+
+const reqestSchema = new Schema<IRequest>({
+  reqestId: { type: String, required: true, unique: true },
+  grupId: { type: String, required: true },
+  grupAdminId: { type: String, required: true },
+  memberRespons: { type: String, required: true },
+  createDateTime: { type: String, required: true },
+});
+
+const RequestModel = model<IRequest>("Request", reqestSchema);
+
+export default RequestModel;

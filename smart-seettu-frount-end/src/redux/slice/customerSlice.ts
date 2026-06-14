@@ -31,7 +31,6 @@ const customerSlice = createSlice({
       state.currentCustomer = action.payload;
       alert(action.payload);
       state.error = null;
-
       localStorage.setItem("currentCustomer", JSON.stringify(action.payload));
     },
 

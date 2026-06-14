@@ -7,9 +7,9 @@ import { Grupstete } from "../types/types";
 
 // subSchema
 const memberSchema = new Schema<Imembers>({
-  memberId: { type: String, required: true, unique: true },
+  memberId: { type: String, required: true },
   membername: { type: String, required: true },
-  contactnumber: { type: String, required: true, unique: true },
+  contactnumber: { type: String, required: true },
   tagname: { type: String, required: true },
 });
 
