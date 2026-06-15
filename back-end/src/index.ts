@@ -4,6 +4,7 @@ import mongoose from "mongoose";
 import dotenv from "dotenv";
 import Authrouter from "./routes/auth-custormer-router";
 import Gruprouter from "./routes/group-router";
+import Reqestrouter from "./routes/reqest-router";
 
 import { globalErrorHandler } from "./middlewares/global-Error-Handler";
 import { connection } from "./config/db";
@@ -40,6 +41,7 @@ app.use((req, res, next) => {
 
 app.use("/api/v1/auth", Authrouter);
 app.use("/api/v1/grup", Gruprouter);
+app.use("/api/v1/reqest", Reqestrouter);
 
 // ============Global Error Handling Middleware
 app.use(globalErrorHandler);

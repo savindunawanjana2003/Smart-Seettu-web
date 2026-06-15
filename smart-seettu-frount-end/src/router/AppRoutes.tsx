@@ -1,12 +1,19 @@
 import Firstpage from "../pages/Web";
 import Apage from "../pages/Grupmanagement";
-import Bpage from "../pages/B";
+import Payment from "../pages/Payment";
+import Home from "../pages/Home";
+import Ongoin from "../pages/Ongoin";
+
+import AboutUs from "../pages/AboutUs";
+import Contact from "../pages/Contact";
 
 import Dashbord from "../pages/Dashbord";
 import Main from "../layout/mainConteiner";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import { createContext } from "react";
-import GrupmanegementSecound from "../pages/CurrentgroupDetails";
+import CurrentgroupDetails from "../pages/CurrentgroupDetails";
+import Grupmanagement from "../pages/Grupmanagement";
+
 export const Xcontext = createContext<any>(null);
 export const AppRoutes = () => {
   // const marginTop = localStorage.getItem("ptop");
@@ -22,11 +29,18 @@ export const AppRoutes = () => {
           </Route>
           {/* ------------------------- */}
           <Route path="/pages/Dashbord" element={<Dashbord />}>
-            <Route path="pages/A" element={<Apage />} />
+            <Route path="Grupmanagement" element={<Apage />} />
             <Route
-              path="nextGrupmanagementGrup"
-              element={<GrupmanegementSecound />}
+              path="CurrentgroupDetails"
+              element={<CurrentgroupDetails />}
             />
+            <Route path="$Payment" element={<Payment />} />
+            <Route path="Grupmanagement" element={<Grupmanagement />} />
+            <Route path="Home" element={<Home />} />
+            <Route path="Ongoin" element={<Ongoin />} />
+
+            <Route path="AboutUs" element={<AboutUs />} />
+            <Route path="Contact" element={<Contact />} />
           </Route>
         </Routes>
       </Xcontext.Provider>

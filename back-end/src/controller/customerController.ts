@@ -98,3 +98,34 @@ export const login = async (req: Request, res: Response) => {
     },
   });
 };
+
+export const updateCustomerOnlineStatus = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
+  try {
+    const { email } = req.body;
+
+    const customer = await CustormerModel.findOneAndUpdate(
+      { email },
+      { isOnline: true },
+      { new: true },
+    );
+
+    if (!customer) {
+      return res.status(404).json({
+        success: false,
+        message: "Customer not found",
+      });
+    }
+
+    return res.status(200).json({
+      success: true,
+      message: "Customer online status updated",
+      data: customer,
+    });
+  } catch (error) {
+    next(error);
+  }
+};

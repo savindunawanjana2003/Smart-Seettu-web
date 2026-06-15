@@ -8,6 +8,7 @@ export interface Icustomer extends Document {
   address: string;
   resetPasswrod?: string;
   otp?: string;
+  isOnline?: boolean;
 }
 
 const custormerSchema = new Schema<Icustomer>(
@@ -18,6 +19,7 @@ const custormerSchema = new Schema<Icustomer>(
     nic: { type: String, required: true, unique: true },
     poneNumber: { type: String, required: true, unique: true },
     address: { type: String, required: true },
+    isOnline: { type: Boolean, default: false },
     resetPasswrod: { type: String },
     otp: { type: String },
   },

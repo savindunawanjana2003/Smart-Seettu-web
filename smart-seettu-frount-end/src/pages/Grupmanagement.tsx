@@ -15,13 +15,13 @@ import { type RootState } from "../redux/store";
 import { useEffect } from "react";
 import { useNavigate } from "react-router";
 
-export let nextgrupId = "";
+// export let nextgrupId = "";
 
-const A = () => {
+const Grupmanagement = () => {
   const profailuser = useSelector(
     (state: RootState) => state.customer.currentCustomer,
   );
-
+  // const [grupId, setGrupId] = useState("");
   const navigate = useNavigate();
 
   const [groupData, setGroupData] = useState({
@@ -45,15 +45,15 @@ const A = () => {
     getmemberId();
   }, [members]);
 
-  const handleGroupInputChange = (e) => {
+  const handleGroupInputChange = (e: any) => {
     setGroupData({ ...groupData, [e.target.name]: e.target.value });
   };
 
-  const handleMemberInputChange = (e) => {
+  const handleMemberInputChange = (e: any) => {
     setNewMember({ ...newMember, [e.target.name]: e.target.value });
   };
 
-  const addMemberToList = (e) => {
+  const addMemberToList = (e: any) => {
     e.preventDefault();
     if (
       !newMember.memberId ||
@@ -111,6 +111,7 @@ const A = () => {
       // console.log(newGrup.members);
       const resp = await getNextGrupId();
       const nextGroupId = resp.nextGroupId;
+      // setGrupId(nextGroupId);
 
       console.log(
         "--------------------------------------------------------077777777777777",
@@ -132,6 +133,10 @@ const A = () => {
           showConfirmButton: false,
         });
 
+        // localStorage.setItem("curentGrupId", grupId);
+        localStorage.setItem("curentGrupId", nextGroupId);
+        await alert(" save the text id lacal storege : " + nextGroupId);
+
         const clearDeatiles = {
           adminid: "",
           memberCount: "",
@@ -144,10 +149,18 @@ const A = () => {
         setGroupData(clearDeatiles);
         setMembers([]);
 
-        navigate("../nextGrupmanagementGrup", {
+        // navigate("../nextGrupmanagementGrup", {
+        //   state: {
+        //     groupId: nextGroupId,
+        //     memberCount: groupData.memberCount,
+        //   },
+        // });
+
+        navigate("/pages/Dashbord/CurrentgroupDetails", {
+          replace: true, // මෙතන : විය යුතුයි
           state: {
             groupId: nextGroupId,
-            memberCount: newmembersList.length,
+            memberCount: groupData.memberCount,
           },
         });
       } else {
@@ -469,4 +482,4 @@ const A = () => {
   );
 };
 
-export default A;
+export default Grupmanagement;
