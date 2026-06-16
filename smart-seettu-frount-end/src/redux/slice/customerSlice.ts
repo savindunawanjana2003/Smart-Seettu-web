@@ -29,7 +29,6 @@ const customerSlice = createSlice({
   reducers: {
     loginCustomer: (state, action: PayloadAction<Customer>) => {
       state.currentCustomer = action.payload;
-      alert(action.payload);
       state.error = null;
       localStorage.setItem("currentCustomer", JSON.stringify(action.payload));
     },

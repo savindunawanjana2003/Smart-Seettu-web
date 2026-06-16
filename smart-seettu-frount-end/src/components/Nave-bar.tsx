@@ -1,10 +1,11 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Menu, X } from "lucide-react";
 
 import { useDispatch } from "react-redux";
 import { loginCustomer } from "../redux/slice/customerSlice";
 import Swal from "sweetalert2";
 import { loginfuntion } from "../service/auth";
+import { LogOut } from "lucide-react";
 // import { type CurrentCustomerObject } from "../types/types";
 
 import userIcon from "../assets/image/userIcon.png";
@@ -14,7 +15,7 @@ import {
   faUsers,
 } from "@fortawesome/free-solid-svg-icons";
 import { Link } from "react-scroll";
-import { registere } from "../service/user";
+import { registere, setOffline, setOnline } from "../service/user";
 interface RegistrationData {
   name: string;
   email: string;
@@ -50,27 +51,45 @@ export interface loginDeatils {
   password: string;
 }
 
-const Header = ({ sections }) => {
+const Header = ({ sections }: { sections: any }) => {
   const dispatch = useDispatch();
-  // const [curentCustormer, setCurentCustormer] = useState<CurrentCustomerObject>(
-  //   {
-  //     name: "",
-  //     email: "",
-  //     phone: "",
-  //   },
-  // );
+
   const [open, setOpen] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [isShowUserIcon, setisShowUserIcon] = useState(false);
-  // --------------------
+  const [isLoginSuccsesres, setisLoginSuccsesres] = useState(false);
+  const [showLogoutModal, setShowLogoutModal] = useState(false);
+
+  useEffect(() => {
+    console.log(isShowUserIcon);
+  }, [isShowUserIcon]);
+
+  useEffect(() => {
+    const checkTokens = async () => {
+      if (
+        localStorage.getItem("ACCESS_TOKEN") ||
+        localStorage.getItem("REFRESH_TOKEN")
+      ) {
+        setisShowUserIcon(true);
+        setisLoginSuccsesres(true);
+      } else {
+        setisShowUserIcon(false);
+        setisLoginSuccsesres(false);
+      }
+    };
+    checkTokens();
+  });
+
+  // ======================================v==
+  const c = localStorage.getItem("currentCustomer");
+
+  const parsedCustomer = c ? JSON.parse(c) : null;
+
+  const [userName, setUserName] = useState(parsedCustomer?.name || "User");
+  // =======================================-------------------------------------
 
   const [email, setEmail] = useState("");
   const [password, setpassword] = useState("");
-
-  // ----------------------
-
-  // const navigate = useNavigate();
-
   const [formData, setFormData] = useState<RegistrationData>({
     name: "",
     email: "",
@@ -83,7 +102,6 @@ const Header = ({ sections }) => {
 
   const [errors, setErrors] = useState<FormErrors>({});
   const [isLoading, setIsLoading] = useState(false);
-  const [isLoginSuccsesres, setisLoginSuccsesres] = useState(false);
   const [isClickRegister, setIsClickRegister] = useState(false);
 
   const [isagrementShoe, setagrementshow] = useState(false);
@@ -100,7 +118,7 @@ const Header = ({ sections }) => {
     setisClikBackground(true);
   };
 
-  const chekIsClickBackground = () => {};
+  // const chekIsClickBackground = () => {};
 
   // const handleChangeLogin = (e: any) => {
   // const name = e.target.name;
@@ -134,8 +152,10 @@ const Header = ({ sections }) => {
         },
         didOpen: () => {
           const popup = Swal.getPopup();
-          popup.style.borderRadius = "12px";
-          popup.style.fontFamily = "'Inter', system-ui, sans-serif";
+          if (popup) {
+            popup.style.borderRadius = "12px";
+            popup.style.fontFamily = "'Inter', system-ui, sans-serif";
+          }
         },
       });
       return;
@@ -156,6 +176,7 @@ const Header = ({ sections }) => {
           phone: respons.data.data.poneNumber,
         };
 
+        // -----------redux stor eke curent user deatils save karanawa logwenakotama---------------------
         dispatch(loginCustomer(newCustormer));
 
         localStorage.setItem("ACCESS_TOKEN", respons.data.data.accessToken);
@@ -182,10 +203,29 @@ const Header = ({ sections }) => {
           },
           didOpen: () => {
             const popup = Swal.getPopup();
-            popup.style.borderRadius = "12px";
-            popup.style.fontFamily = "'Inter', system-ui, sans-serif";
+            if (popup) {
+              popup.style.borderRadius = "12px";
+              popup.style.fontFamily = "'Inter', system-ui, sans-serif";
+            }
           },
         });
+
+        // =================================================/  update stetus  from usin api coll
+        const onlineStatusResponse = await setOnline(email);
+        console.log("Online status updated:", onlineStatusResponse);
+        console.log("Login response:", respons.data);
+        console.log("=======================================================");
+        setUserName(respons.data.data.name);
+
+        if (
+          localStorage.getItem("ACCESS_TOKEN") ||
+          localStorage.getItem("REFRESH_TOKEN")
+        ) {
+          await setisShowUserIcon(true);
+        }
+        await setIsLoggedIn(false);
+        await setEmail("");
+        await setpassword("");
       } else if (respons.status === 429) {
         Swal.fire({
           title: "Too Many Requests",
@@ -208,14 +248,24 @@ const Header = ({ sections }) => {
           },
           didOpen: () => {
             const popup = Swal.getPopup();
-            popup.style.borderRadius = "12px";
-            popup.style.fontFamily = "'Inter', system-ui, sans-serif";
+            if (popup) {
+              popup.style.borderRadius = "12px";
+              popup.style.fontFamily = "'Inter', system-ui, sans-serif";
+            }
           },
         });
+        const offlineStatusResponse = await setOffline(email);
+        await setisShowUserIcon(false);
+
         return;
       }
-    } catch (error) {
-      if (error.status === 429) {
+    } catch (error: unknown) {
+      if (
+        typeof error === "object" &&
+        error !== null &&
+        "status" in error &&
+        (error as { status?: number }).status === 429
+      ) {
         Swal.fire({
           title: "Too Many Requests",
           text: "You have made too many login attempts. Please try again after some time.",
@@ -237,12 +287,18 @@ const Header = ({ sections }) => {
           },
           didOpen: () => {
             const popup = Swal.getPopup();
-            popup.style.borderRadius = "12px";
-            popup.style.fontFamily = "'Inter', system-ui, sans-serif";
+            if (popup) {
+              popup.style.borderRadius = "12px";
+              popup.style.fontFamily = "'Inter', system-ui, sans-serif";
+            }
           },
         });
       }
-      console.log(error.message);
+      if (error instanceof Error) {
+        console.log(error.message);
+      } else {
+        console.log(error);
+      }
     }
   };
 
@@ -423,6 +479,69 @@ const Header = ({ sections }) => {
     },
   ];
 
+  const clilUserIcon = () => {
+    setShowLogoutModal(true);
+  };
+
+  const handleLogout = async () => {
+    const currentCustomer = localStorage.getItem("currentCustomer");
+    const emailuser: string = currentCustomer
+      ? JSON.parse(currentCustomer).email
+      : "";
+
+    const offlineStatusResponse = await setOffline(emailuser);
+    localStorage.removeItem("ACCESS_TOKEN");
+    localStorage.removeItem("REFRESH_TOKEN");
+    localStorage.removeItem("currentCustomer");
+
+    setisShowUserIcon(false);
+    setUserName("User");
+    setShowLogoutModal(false);
+  };
+
+  const setOfflinef = async () => {
+    const currentCustomer = localStorage.getItem("currentCustomer");
+    const emailuser: string = currentCustomer
+      ? JSON.parse(currentCustomer).email
+      : "";
+
+    const offlineStatusResponse = await setOffline(emailuser);
+  };
+
+  // -----------------------------
+  const setOnline1 = async () => {
+    const currentCustomer = localStorage.getItem("currentCustomer");
+    const emailuser: string = currentCustomer
+      ? JSON.parse(currentCustomer).email
+      : "";
+
+    if (emailuser == "") {
+    } else {
+      const offlineStatusResponse = await setOnline(emailuser);
+    }
+  };
+
+  // ====================================
+
+  useEffect(() => {
+    setOnline1();
+
+    const handleTabClose = (event: BeforeUnloadEvent) => {
+      console.log("Tab is closing");
+      setOfflinef();
+
+      event.preventDefault();
+    };
+
+    window.addEventListener("beforeunload", handleTabClose);
+
+    return () => {
+      window.removeEventListener("beforeunload", handleTabClose);
+    };
+  }, []);
+
+  // ====================================
+
   return (
     <div>
       <div className="fixed top-0 left-0 w-full z-50 bg-gradient-to-r from-gray-900 via-gray-800 to-gray-900 shadow-lg border-b border-gray-700">
@@ -514,18 +633,25 @@ const Header = ({ sections }) => {
             Login
           </button>
           {isShowUserIcon && (
-            <div className="w-[5vw] h-[5vw] bg-transparent-300  flex flex-col justify-center items-center">
-              <div className="w-[4vw] h-[4vw] bg-amber-300 border-4 border-emerald-600 rounded-full flex justify-center items-center">
+            <div
+              onClick={clilUserIcon}
+              className="flex flex-col items-center justify-center gap-2 w-auto"
+            >
+              <div className="w-10 h-10 sm:w-14 sm:h-14 md:w-16 md:h-16 border-4 border-emerald-600 rounded-full overflow-hidden">
                 <img
                   src={userIcon}
                   alt="Profile"
-                  className="w-full h-full object-cover rounded-full"
-                ></img>
+                  className="w-full h-full object-cover"
+                />
               </div>
-              {<h6 className="text-[6px]">saa</h6>}
+
+              <h6 className="text-sm sm:text-base md:text-lg font-medium text-center">
+                {userName}
+              </h6>
             </div>
           )}
 
+          {/* ================================================ */}
           {isLoggedIn && (
             <div
               className="fixed inset-0 bg-black/40 backdrop-blur-sm z-50 flex items-center justify-center"
@@ -575,7 +701,7 @@ const Header = ({ sections }) => {
                 <button
                   type="button"
                   onClick={reqestFromseverTologinfunshion}
-                  className={`bg-amber-500 hover:bg-amber-600 transition-colors py-2 rounded  text-black font-bold mt-2 ${isLoginSuccsesres ? "hidden" : "block"}`}
+                  className={`bg-amber-500 hover:bg-amber-600 transition-colors py-2 rounded  text-black font-bold mt-2 `}
                 >
                   Login
                 </button>
@@ -636,6 +762,164 @@ const Header = ({ sections }) => {
           </div>
         )}
 
+        {/* ==============main logout========================== */}
+        {showLogoutModal && (
+          <div
+            className="fixed inset-0 bg-black/60 backdrop-blur-sm z-[100] flex items-center justify-center p-4 animate-fadeIn"
+            onClick={() => setShowLogoutModal(false)}
+          >
+            <div
+              className="w-full max-w-md bg-gradient-to-br from-gray-800 to-gray-900 rounded-2xl shadow-2xl border border-gray-700 overflow-hidden animate-scaleIn"
+              onClick={(e) => e.stopPropagation()}
+            >
+              {/* Header with gradient */}
+              <div className="bg-gradient-to-r from-red-600 to-red-700 px-6 py-5">
+                <div className="flex items-center gap-3">
+                  <div className="w-12 h-12 bg-white/20 rounded-full flex items-center justify-center">
+                    <LogOut className="w-6 h-6 text-white" />
+                  </div>
+                  <div>
+                    <h3 className="text-white text-xl font-bold">Logout</h3>
+                    <p className="text-red-200/90 text-sm">
+                      Profile session control
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              {/* Body */}
+              <div className="p-6">
+                {/* Profile Card */}
+                <div className="bg-gradient-to-br from-gray-700/50 to-gray-800/50 rounded-2xl p-5 mb-5 border border-gray-600/30 shadow-inner">
+                  <div className="flex items-center gap-4">
+                    {/* Avatar with online status */}
+                    <div className="relative">
+                      <div className="w-16 h-16 rounded-full bg-gradient-to-br from-amber-400 to-amber-600 border-2 border-amber-500/50 flex items-center justify-center shadow-lg">
+                        <img
+                          src={userIcon}
+                          alt="Profile"
+                          className="w-14 h-14 object-cover rounded-full"
+                        />
+                      </div>
+                      <span className="absolute bottom-0 right-0 w-3.5 h-3.5 bg-green-500 border-2 border-gray-800 rounded-full animate-pulse"></span>
+                    </div>
+
+                    {/* User Info */}
+                    <div className="flex-1">
+                      <p className="text-white font-semibold text-lg">
+                        {userName || "John Doe"}
+                      </p>
+                      <p className="text-gray-400 text-sm flex items-center gap-1">
+                        <svg
+                          className="w-3 h-3"
+                          fill="none"
+                          stroke="currentColor"
+                          viewBox="0 0 24 24"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2}
+                            d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"
+                          />
+                        </svg>
+                        {email || "john@email.com"}
+                      </p>
+                      <div className="flex items-center gap-2 mt-1">
+                        <span className="text-[10px] px-2 py-0.5 bg-green-500/20 text-green-400 rounded-full border border-green-500/30">
+                          ● Online
+                        </span>
+                        <span className="text-[10px] px-2 py-0.5 bg-blue-500/20 text-blue-400 rounded-full border border-blue-500/30">
+                          Verified
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* User Details Grid */}
+                  <div className="mt-4 grid grid-cols-2 gap-2">
+                    <div className="bg-gray-800/40 p-2.5 rounded-lg border border-gray-700/30">
+                      <p className="text-[10px] text-gray-400 uppercase tracking-wider">
+                        Member ID
+                      </p>
+                      <p className="text-white text-sm font-medium">
+                        #USR-2026-001
+                      </p>
+                    </div>
+                    <div className="bg-gray-800/40 p-2.5 rounded-lg border border-gray-700/30">
+                      <p className="text-[10px] text-gray-400 uppercase tracking-wider">
+                        Role
+                      </p>
+                      <p className="text-white text-sm font-medium flex items-center gap-1">
+                        <span className="w-2 h-2 bg-amber-500 rounded-full"></span>
+                        Admin
+                      </p>
+                    </div>
+                    <div className="bg-gray-800/40 p-2.5 rounded-lg border border-gray-700/30">
+                      <p className="text-[10px] text-gray-400 uppercase tracking-wider">
+                        Joined
+                      </p>
+                      <p className="text-white text-sm font-medium">Jan 2026</p>
+                    </div>
+                    <div className="bg-gray-800/40 p-2.5 rounded-lg border border-gray-700/30">
+                      <p className="text-[10px] text-gray-400 uppercase tracking-wider">
+                        Groups
+                      </p>
+                      <p className="text-white text-sm font-medium">5 Active</p>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Warning Message */}
+                <div className="bg-amber-500/10 border border-amber-500/20 rounded-xl p-4 mb-6">
+                  <div className="flex items-start gap-3">
+                    <div className="w-8 h-8 bg-amber-500/20 rounded-full flex items-center justify-center flex-shrink-0">
+                      <span className="text-amber-500 text-lg">⚠️</span>
+                    </div>
+                    <div>
+                      <p className="text-amber-400 font-medium text-sm">
+                        Are you sure you want to logout?
+                      </p>
+                      <p className="text-gray-400 text-xs mt-1">
+                        You will need to login again to access your account and
+                        groups.
+                      </p>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Dual Logout Buttons */}
+                <div className="flex gap-3">
+                  <button
+                    onClick={() => setShowLogoutModal(false)}
+                    className="flex-1 px-4 py-2.5 bg-gray-700 hover:bg-gray-600 text-gray-300 font-medium rounded-xl transition-all duration-200 hover:shadow-lg"
+                  >
+                    Cancel
+                  </button>
+
+                  <button
+                    onClick={handleLogout}
+                    className="flex-1 px-4 py-2.5 bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 text-white font-medium rounded-xl transition-all duration-200 shadow-lg shadow-red-500/20 flex items-center justify-center gap-2"
+                  >
+                    <LogOut className="w-4 h-4" />
+                    Logout
+                  </button>
+                </div>
+
+                {/* Additional small logout option */}
+                <div className="mt-3 text-center">
+                  <button
+                    onClick={handleLogout}
+                    className="text-xs text-gray-400 hover:text-red-400 transition-colors duration-200"
+                  >
+                    Or click here to logout immediately
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+        {/* ===================================================================== */}
         {isClickRegister && (
           <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 overflow-y-auto">
             <div className="w-full max-w-md bg-gray-800 rounded-xl shadow-2xl my-8 border border-gray-700">
@@ -880,6 +1164,7 @@ const Header = ({ sections }) => {
                     <polyline points="10 9 9 9 8 9"></polyline>
                   </svg>
                 </div>
+
                 {/* ============================== */}
 
                 {isagrementShoe && (

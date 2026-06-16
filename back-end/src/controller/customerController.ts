@@ -107,16 +107,16 @@ export const updateCustomerOnlineStatus = async (
   try {
     const { email } = req.body;
 
-    const customer = await CustormerModel.findOneAndUpdate(
+    const customer = await customerModal.findOneAndUpdate(
       { email },
       { isOnline: true },
-      { new: true },
+      { new: true }, // updated document will be return in hear
     );
 
     if (!customer) {
       return res.status(404).json({
         success: false,
-        message: "Customer not found",
+        message: "Customer not found plesae register firstly",
       });
     }
 
@@ -126,6 +126,54 @@ export const updateCustomerOnlineStatus = async (
       data: customer,
     });
   } catch (error) {
+    console.error(error);
+  }
+};
+
+export const updateCustomerOfflineStatus = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
+  try {
+    const { email } = req.body;
+
+    const customer = await customerModal.findOneAndUpdate(
+      { email },
+      { isOnline: false },
+      { new: true }, // updated document එක return කරනවා
+    );
+
+    if (!customer) {
+      return res.status(404).json({
+        success: false,
+        message: "Customer not found plesae register in the sait",
+      });
+    }
+
+    return res.status(200).json({
+      success: true,
+      message: "Customer online status updated",
+      data: customer,
+    });
+  } catch (error) {
+    console.error(error);
     next(error);
+  }
+};
+
+export const getAllCustomers = async (req: Request, res: Response) => {
+  try {
+    const customers = await customerModal.find();
+    res.status(200).json({
+      success: true,
+      data: customers,
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({
+      success: false,
+      message: "Failed to retrieve customers",
+    });
   }
 };

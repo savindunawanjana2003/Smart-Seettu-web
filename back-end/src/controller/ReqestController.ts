@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import RequestModel from "../models/reqest-model"; // ඔයාගේ Model එක තියෙන තැන නිවැරදිව දාන්න
+import RequestModel from "../models/reqest-model"; 
 
 const getNextRequestId = async (): Promise<string> => {
   try {

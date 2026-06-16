@@ -133,7 +133,6 @@ const Grupmanagement = () => {
           showConfirmButton: false,
         });
 
-        // localStorage.setItem("curentGrupId", grupId);
         localStorage.setItem("curentGrupId", nextGroupId);
         await alert(" save the text id lacal storege : " + nextGroupId);
 
@@ -157,7 +156,7 @@ const Grupmanagement = () => {
         // });
 
         navigate("/pages/Dashbord/CurrentgroupDetails", {
-          replace: true, // මෙතන : විය යුතුයි
+          replace: true,
           state: {
             groupId: nextGroupId,
             memberCount: groupData.memberCount,

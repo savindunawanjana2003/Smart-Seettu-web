@@ -7,7 +7,7 @@ import Ongoin from "../pages/Ongoin";
 import AboutUs from "../pages/AboutUs";
 import Contact from "../pages/Contact";
 
-import Dashbord from "../pages/Dashbord";
+import Dashbord from "../layout/Dashbord";
 import Main from "../layout/mainConteiner";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import { createContext } from "react";
@@ -36,7 +36,7 @@ export const AppRoutes = () => {
             />
             <Route path="$Payment" element={<Payment />} />
             <Route path="Grupmanagement" element={<Grupmanagement />} />
-            <Route path="Home" element={<Home />} />
+            <Route  path="Home" element={<Home />} />
             <Route path="Ongoin" element={<Ongoin />} />
 
             <Route path="AboutUs" element={<AboutUs />} />

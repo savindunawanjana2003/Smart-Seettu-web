@@ -2,8 +2,6 @@ import React from "react";
 
 import "../hirowPage.css";
 
-import Header from "../components/Nave-bar";
-
 import img4 from "../assets/image/4.jpg";
 
 import img3 from "../assets/image/3.jpg";
@@ -22,7 +20,7 @@ import { useNavigate } from "react-router";
 import Swal from "sweetalert2";
 
 const Home = () => {
-  const naveItems = [{ id: "home" }, { id: "seettuHub" }, { id: "userReveus" }];
+  // const naveItems = [{ id: "home" }, { id: "seettuHub" }, { id: "userReveus" }];
 
   const navigeter = useNavigate();
 
@@ -52,8 +50,10 @@ const Home = () => {
         },
         didOpen: () => {
           const popup = Swal.getPopup();
-          popup.style.borderRadius = "12px";
-          popup.style.fontFamily = "'Inter', system-ui, sans-serif";
+          if (popup) {
+            popup.style.borderRadius = "12px";
+            popup.style.fontFamily = "'Inter', system-ui, sans-serif";
+          }
         },
       });
       return;
@@ -75,7 +75,7 @@ const Home = () => {
 
   return (
     <div className="overflow-x-hidden">
-      <Header sections={naveItems} />
+      {/* <Header sections={naveItems} /> */}
 
       <section id="home">
         <div className="bg-gradient-to-br from-black via-gray-900 to-green-950 text-green-400 mt-10 px-6 py-16 md:px-16 banner-container">
@@ -254,8 +254,6 @@ const Home = () => {
                   className="group bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-white px-8 py-3 rounded-lg font-semibold transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-amber-500/25 inline-flex items-center gap-2"
                 >
                   <span>Get Started</span>
-
-
                 </button>
               </div>
             </div>

@@ -15,7 +15,6 @@ export interface resmember {
   accept: string;
   cansal: string;
 }
-
 export interface reqestDeatiles {
   grupId: string;
   grupAdminId: string;

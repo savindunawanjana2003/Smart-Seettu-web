@@ -17,24 +17,45 @@ import GrupReqest from "../components/NotificetionModal";
 import type { RootState } from "../redux/store";
 import type { notifecetion } from "../types/types";
 import { getRequestsBymemberEmail } from "../service/reqest";
+import { getAllcustormer, setOffline } from "../service/user";
 const Dashboard = () => {
   // --------------------methanin acountUserge Email eka ganna-----------------------
   const currentCustomer = useSelector(
     (state: RootState) => state.customer.currentCustomer,
   );
   const userEmail: string = currentCustomer?.email ?? "No email found";
-
-  // -----------------------------------------------
-
-  const [isShowGrupreq, setisShowGrupreq] = useState(false);
-  // const [isShowGrupreq, setisShowGrupreq] = useState(false);
-  // const [isShowGrupreq, setisShowGrupreq] = useState(false);
-
-  const [notificetions, setNotyficetions] = useState<notifecetion[]>([]);
-
   const dispatch = useDispatch();
   const location = useLocation();
   const navigate = useNavigate();
+  // -----------------------------------------------
+  const [systemMembers, setSystemMembers] = useState<any>([]);
+
+  useEffect(() => {
+    navigate("/pages/Dashbord/Home");
+    getAllcustormerfuntion();
+  }, []);
+
+  const getAllcustormerfuntion = async () => {
+    try {
+      const custormerList = await getAllcustormer();
+
+      const formatted = custormerList.map((c: any) => ({
+        id: c._id,
+        name: c.name,
+        email: c.email,
+        isOnline: c.isOnline,
+      }));
+
+      setSystemMembers(formatted);
+    } catch (error) {
+      console.error("Error fetching customers:", error);
+    }
+  };
+
+  const [isShowGrupreq, setisShowGrupreq] = useState(false);
+
+  const [notificetions, setNotyficetions] = useState<notifecetion[]>([]);
+
   const navItems = [
     { path: "Home", name: "Home", icon: <AiOutlineDashboard /> },
     {
@@ -55,19 +76,6 @@ const Dashboard = () => {
 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedUser, setSelectedUser] = useState(null);
-
-  const activeUsers = [
-    {
-      id: 1,
-      name: "Kavindu Sandeepa",
-      email: "asas@gmail.com",
-      isOnline: true,
-    },
-    { id: 2, name: "Ishan Chinthaka", email: "asas@gmail.com", isOnline: true },
-    { id: 3, name: "Indummm", email: "asas@gmail.com", isOnline: true },
-    { id: 4, name: "lklkl", email: "asas@gmail.com", isOnline: true },
-    { id: 5, name: "Chiky Thu Marga", email: "asas@gmail.com", isOnline: true },
-  ];
 
   // user kenek wa clik karana kota danata inna page eka anuwa  wa dakarana funshion ekak denna puluwan
   const handleUserClick = (user: any) => {
@@ -107,7 +115,6 @@ const Dashboard = () => {
   // };
 
   const logout = () => {
-    dispatch(logoutCustomer());
     Swal.fire({
       title: "Logging Out...",
       text: "Please wait a moment.",
@@ -117,7 +124,11 @@ const Dashboard = () => {
       didOpen: () => {
         Swal.showLoading();
       },
-    }).then(() => {
+    }).then(async () => {
+      const email: string = currentCustomer?.email || "";
+      // wampaththe paththa valu eka false,null,undifain wage nam dakunu paththa value eka use karanna
+      const offlineStatusResponse = await setOffline(email);
+      dispatch(logoutCustomer());
       navigate("/", { replace: true });
       localStorage.removeItem("ACCESS_TOKEN");
       localStorage.removeItem("REFRESH_TOKEN");
@@ -297,7 +308,10 @@ const Dashboard = () => {
         {/* ===========chengable content Ariya=================== */}
         <main className="flex-1 bg-amber-50 p-4 min-h-[calc(100vh-3.5rem)] overflow-y-auto flex justify-center">
           <div className="w-[100vw] bg-amber-100 rounded-lg shadow border border-gray-200 p-2">
+            {/* =================content Ariya===== */}
             <Outlet />
+
+            {/* ===================== */}
           </div>
         </main>
         {/* ============ right aside========================== */}
@@ -306,7 +320,7 @@ const Dashboard = () => {
             Contacts / Active Users
           </h3>
           <div className="space-y-2">
-            {activeUsers.map((user) => (
+            {systemMembers.map((user: any) => (
               <div
                 key={user.id}
                 onClick={() => handleUserClick(user)}

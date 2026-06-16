@@ -68,7 +68,7 @@ api.interceptors.response.use(
         localStorage.removeItem("REFRESH_TOKEN");
         console.error(refreshError);
         await Swal.fire({
-          title: "Logging ...",
+          title: "Logging out..",
           text: "Access denied. Please sign in again.",
           icon: "info",
           timer: 3000,
