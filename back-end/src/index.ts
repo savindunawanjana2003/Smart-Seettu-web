@@ -6,6 +6,7 @@ import Authrouter from "./routes/auth-custormer-router";
 import Gruprouter from "./routes/group-router";
 import Reqestrouter from "./routes/reqest-router";
 import Custormerouter from "./routes/customer-router";
+import Airouter from "./routes/ai-router";
 
 import { globalErrorHandler } from "./middlewares/global-Error-Handler";
 import { connection } from "./config/db";
@@ -21,7 +22,7 @@ app.set("trust proxy", 1);
 app.use(cors());
 // app.use(
 //   cors({
-//     origin: "http://localhost:5173", // Frontend එකේ URL එක මෙතනට දෙන්න
+//     origin: "http://localhost:5173", 
 //     methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
 //     credentials: true,
 //   }),
@@ -44,6 +45,8 @@ app.use("/api/v1/auth", Authrouter);
 app.use("/api/v1/grup", Gruprouter);
 app.use("/api/v1/reqest", Reqestrouter);
 app.use("/api/v1/customer", Custormerouter);
+app.use("/api/v1/ai", Airouter);
+
 // ============Global Error Handling Middleware
 app.use(globalErrorHandler);
 
