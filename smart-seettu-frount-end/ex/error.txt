@@ -1,0 +1,19 @@
+
+nav-bar.tsx eke meka thiyena kota error ekak enawa page eka eka digata refresh wena wa 
+
+  useEffect(() => {
+    setOnline1();
+
+    const handleTabClose = (event: BeforeUnloadEvent) => {
+      console.log("Tab is closing");
+      setOfflinef();
+
+      // event.preventDefault();
+    };
+
+    window.addEventListener("beforeunload", handleTabClose);
+
+    return () => {
+      window.removeEventListener("beforeunload", handleTabClose);
+    };
+  });

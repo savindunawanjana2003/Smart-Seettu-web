@@ -142,3 +142,22 @@ export const getAllGrupmembersWholeGrup = async (
     });
   }
 };
+
+export const getAllGroups = async (req: Request, res: Response) => {
+  try {
+    const groups = await groupModel.find();
+
+    res.status(200).json({
+      message: "Groups fetched successfully!",
+      count: groups.length,
+      data: groups,
+    });
+  } catch (error: any) {
+    console.error(error);
+
+    res.status(500).json({
+      message: "Error fetching groups!",
+      error: error.message,
+    });
+  }
+};

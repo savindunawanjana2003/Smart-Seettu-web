@@ -530,7 +530,7 @@ const Header = ({ sections }: { sections: any }) => {
       console.log("Tab is closing");
       setOfflinef();
 
-      // event.preventDefault();
+      event.preventDefault();
     };
 
     window.addEventListener("beforeunload", handleTabClose);

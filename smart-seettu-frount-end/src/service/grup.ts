@@ -19,4 +19,9 @@ export const getNextGrupId = async () => {
   const res = await api.get("/grup/getNextGrupId");
   return res.data;
 };
+
+export const getAllGroups = async () => {
+  const res = await api.get("/grup/getAllGroups");
+  return res.data;
+};
 // =======================

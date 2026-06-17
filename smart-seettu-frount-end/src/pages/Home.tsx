@@ -1,6 +1,8 @@
-
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import img1 from "../assets/image/lankaSeetuHeder.png";
+import { getAllcustormer } from "../service/user";
+import { getOnlineMembers } from "../service/user";
+import { getAllGroups } from "../service/grup";
 
 const Home = () => {
   const [showChat, setShowChat] = useState(false);
@@ -12,6 +14,22 @@ const Home = () => {
       time: "10:30 AM",
     },
   ]);
+  const [activeMembers, setactiveMembers] = useState("");
+  const [grupCount, setGrupcount] = useState("");
+
+  const f = async () => {
+    const res1 = await getOnlineMembers();
+    const res2 = await getAllGroups();
+    // console.log(res.count); res2.count
+
+    setGrupcount(String(res2.count));
+
+    setactiveMembers(String(res1.count));
+  };
+  useEffect(() => {
+    f();
+  }, []);
+
   const [newMessage, setNewMessage] = useState("");
 
   const handleSendMessage = () => {
@@ -76,7 +94,9 @@ const Home = () => {
                 </svg>
               </div>
               <div>
-                <p className="text-2xl font-bold text-gray-800">124</p>
+                <p className="text-2xl font-bold text-gray-800">
+                  {activeMembers}
+                </p>
                 <p className="text-xs text-gray-500">Active Users</p>
               </div>
             </div>
@@ -100,7 +120,7 @@ const Home = () => {
                 </svg>
               </div>
               <div>
-                <p className="text-2xl font-bold text-gray-800">85</p>
+                <p className="text-2xl font-bold text-gray-800">{grupCount}</p>
                 <p className="text-xs text-gray-500">Total Groups</p>
               </div>
             </div>

@@ -3,6 +3,7 @@ import { format } from "node:path";
 
 import {
   getAllCustomers,
+  getAllOnlineMembers,
   registerCustomer,
   updateCustomerOfflineStatus,
   updateCustomerOnlineStatus,
@@ -17,4 +18,6 @@ router.put("/setonline", authenticate, updateCustomerOnlineStatus);
 
 router.put("/setOffline", authenticate, updateCustomerOfflineStatus);
 router.get("/getcustomer", authenticate, getAllCustomers);
+router.get("/getOnlinemembers", getAllOnlineMembers);
+
 export default router;

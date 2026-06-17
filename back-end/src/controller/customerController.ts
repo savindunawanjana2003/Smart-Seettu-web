@@ -3,6 +3,7 @@ import customerModal from "../models/customer-modal";
 import { AppError } from "../errors/AppError";
 import bcrypt from "bcryptjs";
 import { singAccesstoken, signRefreshToken } from "../utils/token";
+import CustormerModel from "../models/customer-modal";
 
 export const registerCustomer = async (req: Request, res: Response) => {
   const { id, name, email, password, nic, poneNumber, address } = req.body;
@@ -174,6 +175,26 @@ export const getAllCustomers = async (req: Request, res: Response) => {
     res.status(500).json({
       success: false,
       message: "Failed to retrieve customers",
+    });
+  }
+};
+
+export const getAllOnlineMembers = async (req: Request, res: Response) => {
+  try {
+    const members = await customerModal.find({
+      isOnline: true,
+    });
+
+    res.status(200).json({
+      Message: "Online members fetched successfully!",
+      count: members.length,
+      data: members,
+    });
+  } catch (error: any) {
+    console.error(error);
+    res.status(500).json({
+      Message: "Error fetching online members!",
+      Error: error.message,
     });
   }
 };

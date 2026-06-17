@@ -6,6 +6,7 @@ import {
   savegroup,
   getNextmemberIdBygrupId,
   getNextGrupId,
+  getAllGroups,
 } from "../controller/grupController";
 
 const router = Router();
@@ -27,4 +28,8 @@ router.get(
   getAllGrupmembersWholeGrup,
 );
 
+router.get("/getAllGroups", getAllGroups);
+
 export default router;
+
+// /grup/getAllGroups

@@ -34,3 +34,8 @@ export const getAllcustormer = async () => {
   const rsp = await api.get("customer/getcustomer");
   return rsp.data.data;
 };
+
+export const getOnlineMembers = async () => {
+  const res = await api.get("/customer/getOnlinemembers");
+  return res.data;
+};
