@@ -523,22 +523,22 @@ const Header = ({ sections }: { sections: any }) => {
 
   // ====================================
 
-  useEffect(() => {
-    setOnline1();
+  // useEffect(() => {
+  //   setOnline1();
 
-    const handleTabClose = (event: BeforeUnloadEvent) => {
-      console.log("Tab is closing");
-      setOfflinef();
+  //   const handleTabClose = (event: BeforeUnloadEvent) => {
+  //     console.log("Tab is closing");
+  //     setOfflinef();
 
-      event.preventDefault();
-    };
+  //     event.preventDefault();
+  //   };
 
-    window.addEventListener("beforeunload", handleTabClose);
+  //   window.addEventListener("beforeunload", handleTabClose);
 
-    return () => {
-      window.removeEventListener("beforeunload", handleTabClose);
-    };
-  });
+  //   return () => {
+  //     window.removeEventListener("beforeunload", handleTabClose);
+  //   };
+  // });
 
   // ====================================
 
