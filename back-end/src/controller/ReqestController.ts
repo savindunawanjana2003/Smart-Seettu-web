@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import RequestModel from "../models/reqest-model"; 
+import RequestModel from "../models/reqest-model";
 
 const getNextRequestId = async (): Promise<string> => {
   try {
@@ -137,3 +137,27 @@ export const getPendingRequestsByMemberEmail = async (
     });
   }
 };
+
+// export const getPendingRequestsByMemberEmail = async (
+//   req: Request,
+//   res: Response,
+// ) => {
+//   try {
+//     const { memberEmail } = req.body;
+
+//     console.log("\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\");
+//     console.log(memberEmail);
+
+//     const requests = await RequestModel.find({ memberEmail });
+//     if (!requests || requests.length == 0) {
+//       return { message: "ඔබට කිසිදු සීට්ටු ආරාධනාවක් (Requests) ලැබී නැත." };
+//     }
+//     return res.status(200).json({
+//       message: "Data fetched successfully 🎯",
+//       data: requests,
+//     });
+//   } catch (err) {
+//     console.error("Database Error (getUserSeetuRequests):", err);
+//     return { error: "Requests සෙවීමේදී ගැටලුවක් ඇතිවිය." };
+//   }
+// };

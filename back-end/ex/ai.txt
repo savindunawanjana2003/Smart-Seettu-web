@@ -1,0 +1,206 @@
+import { Request, Response } from "express";
+import { GoogleGenerativeAI, Type, FunctionCall } from "@google/generative-ai";
+import dotenv from "dotenv";
+import customerModal from "../models/customer-modal";
+
+dotenv.config();
+
+// API Key එක දීලා Gemini එක initialize කරගන්නවා
+const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY as string);
+
+// ── DATABASE FUNCTIONS ───────────────────────────────────────────────────
+
+const getAllOnlineMembers = async (): Promise<number> => {
+  try {
+    const members = await customerModal.find({ isOnline: true });
+    return members.length;
+  } catch (err) {
+    console.error("Database Error (getAllOnlineMembers):", err);
+    return 0;
+  }
+};
+
+const getSeetuStatusOfUser = async (userId: string) => {
+  // දැනට ටෙස්ට් කරලා බලන්න Mock Data එකක් (2026 වසරට ගැලපෙන ලෙස)
+  return {
+    userId: userId,
+    status: "Active",
+    nextPaymentAmount: "LKR 5,000.00",
+    dueDate: "2026-07-10",
+    totalPaid: "LKR 25,000.00",
+    remarks: "සියලුම වාරික වෙලාවට ගෙවා ඇත.",
+  };
+};
+
+// ── SYSTEM PROMPT & TOOLS CONFIGURATION ───────────────────────────────────
+
+// ඔයා මුලින්ම ලියපු නීති රීති මාලාව සහ Agent instruction එක එකතු කර හදපු ප්‍රධාන System Prompt එක
+const SYSTEM_INSTRUCTION = `You are 'Smart Seetu AI Agent', an expert AI Assistant specifically built for the 'Lanka Seetu' mobile/web application (a Chit Fund Management System). 
+
+Strictly adhere to the following guidelines and persona rules for every user interaction:
+
+1. SCOPE OF KNOWLEDGE & RESPONSES:
+- You must ONLY respond to queries related to: Global money/finance, current world economic situations, general knowledge, and anything related to Sri Lankan 'Seetu' (සීටු) systems.
+- If a user asks something completely out of this scope (e.g., entertainment, cooking, coding, etc.), politely decline to answer, stating that you are only specialized in Seetu and financial queries.
+
+2. PROJECT CONTEXT (Lanka Seetu App):
+- Always remember that this app is created to make the traditional Sri Lankan 'Seetu' process digital, transparent, and easy for people.
+- Current Features: Users can create Seetu groups, manage time durations, and handle the distribution of money among members.
+- CURRENT LIMITATION: Currently, the app ONLY supports 'Cash Seetu' (මූල්‍ය සීටු).
+- Future Scope: In future updates, other traditional types of Sri Lankan Seetu (like Gold Seetu, Goods Seetu) will be introduced. You should know about these traditional methods to answer user questions, but clarify that currently only Cash Seetu is available in the app.
+
+3. SECURITY & LEGAL INQUIRIES:
+- If a user asks about the app's security, privacy, or legal guarantees, give this exact answer: 'Every user has read and agreed to the strict Terms and Conditions of the software before registering and logging into their account. During the registration process, a detailed PDF containing all security protocols and legal terms was provided for your review. Your data and transactions are governed by those agreed terms.'
+
+4. TOOL USAGE:
+- Use the 'getSeetuStatusOfUser' tool whenever a user asks about their personal seetu status, payments, or balance, by extracting their User ID.
+- Use the 'getAllOnlineMembers' tool whenever a user asks about how many members or users are online right now.
+
+5. LANGUAGE ADAPTABILITY (CRITICAL):
+- Detect the user's language automatically.
+- If the user asks a question in Sinhala (or Singlish), you MUST reply in clear, helpful Sinhala.
+- If the user asks a question in English, you MUST reply in English.
+- Maintain a friendly, professional, and helpful tone suitable for Sri Lankan users.`;
+
+// Tools (Functions) Declarations
+const TOOLS_CONFIG = [
+  {
+    functionDeclarations: [
+      {
+        name: "getSeetuStatusOfUser",
+        description: "Fetches real-time Seetu status, next payment amount, due date, and payment history for a given unique User ID.",
+        parameters: {
+          type: Type.OBJECT,
+          properties: {
+            userId: {
+              type: Type.STRING,
+              description: "The unique registration number or ID of the user (e.g., U123, CUST-01).",
+            },
+          },
+          required: ["userId"],
+        },
+      },
+      {
+        name: "getAllOnlineMembers",
+        description: "Fetches the count of all currently online members in the system.",
+        parameters: {
+          type: Type.OBJECT,
+          properties: {},
+        },
+      },
+    ],
+  },
+];
+
+// ── CORE LOGIC FOR RUNNING THE AGENT (REUSABLE) ──────────────────────────
+
+/**
+ * දීපු Model name එකකට අනුව මුළු Gemini process එකම handle කරන පොදු function එකක්.
+ * මෙයින් කේතය නැවත නැවත ලිවීම (Code duplication) වැළකේ.
+ */
+const executeGeminiAgent = async (modelName: string, message: string): Promise<string> => {
+  const model = genAI.getGenerativeModel({
+    model: modelName,
+    systemInstruction: SYSTEM_INSTRUCTION,
+    tools: TOOLS_CONFIG,
+  });
+
+  // STEP A: User message එක Model එකට යවනවා
+  const result = await model.generateContent(message);
+  const response = result.response;
+  const functionCalls = response.functionCalls as FunctionCall[] | undefined;
+
+  // Gemini එකෙන් Function Call එකක් ආවොත් මීළඟ පියවර ක්‍රියාත්මක කරනවා
+  if (functionCalls && functionCalls.length > 0) {
+    const call = functionCalls[0];
+    let databaseResult: any = null;
+
+    // 1. අදාළ Function එක මොකක්ද කියලා හඳුනාගෙන Database එකෙන් ඩේටා ගන්නවා
+    if (call.name === "getSeetuStatusOfUser") {
+      const args = call.args as { userId: string };
+      databaseResult = await getSeetuStatusOfUser(args.userId);
+    } else if (call.name === "getAllOnlineMembers") {
+      const count = await getAllOnlineMembers();
+      databaseResult = { onlineMembersCount: count };
+    }
+
+    // 2. STEP B: Database එකෙන් ආපු දත්ත නැවත Gemini එකට දී අවසන් පිළිතුර සකස් කරගන්නවා
+    if (databaseResult !== null) {
+      const chat = model.startChat({
+        history: [
+          { role: "user", parts: [{ text: message }] },
+          { role: "model", parts: [{ functionCall: call }] },
+        ],
+      });
+
+      const finalResult = await chat.sendMessage([
+        {
+          functionResponse: {
+            name: call.name,
+            response: { result: databaseResult },
+          },
+        },
+      ]);
+
+      return finalResult.response.text();
+    }
+  }
+
+  // සාමාන්‍ය ප්‍රශ්නයක් නම් (Tool එකක් අවශ්‍ය නැත්නම්) කෙලින්ම text එක දෙනවා
+  return response.text();
+};
+
+// ── MAIN EXPORT CONTROLLER ───────────────────────────────────────────────
+
+/**
+ * ප්‍රධාන AI Controller එක - මෙතනින් තමයි Fallback (Pro -> Flash) එක සිද්ද වෙන්නේ
+ */
+export const generateContent = async (req: Request, res: Response): Promise<void> => {
+  try {
+    const { message } = req.body;
+
+    if (!message) {
+      res.status(400).json({ error: "Message is required" });
+      return;
+    }
+
+    try {
+      // 1. මුලින්ම උපරිම මොළයක් තියෙන 'gemini-1.5-pro' එකෙන් Run කරන්න උත්සාහ කරනවා
+      console.log("⚡ Trying with Gemini 1.5 Pro...");
+      const reply = await executeGeminiAgent("gemini-1.5-pro", message);
+      
+      res.status(200).json({ reply });
+      return;
+
+    } catch (proError: any) {
+      // 2. Pro එකේ Rate limit පැන්නොත් හෝ වෙනත් Error එකක් ආවොත් මෙතනට එනවා
+      console.warn("⚠️ Gemini 1.5 Pro Failed or Rate Limited! Switching to Gemini 1.5 Flash...");
+      console.error("Pro Error Details:", proError?.message || proError);
+
+      // 3. දැන් autoම වේගවත් 'gemini-1.5-flash' එකෙන් වැඩේ කරලා දෙනවා
+      const reply = await executeGeminiAgent("gemini-1.5-flash", message);
+      
+      res.status(200).json({ 
+        reply,
+        note: "Processed using fallback model due to high demand." // අවශ්‍ය නම් විතරක් Frontend එකට දැනුම් දෙන්න ගන්න පුළුවන්
+      });
+      return;
+    }
+
+  } catch (error: any) {
+    // 4. Models දෙකම fail වුනොත් (උදා: Internet/API Key අවුල් නම්)
+    console.error("❌ Both Gemini Models Failed:", error);
+    res.status(500).json({ 
+      error: "Internal Server Error", 
+      details: error?.message || error 
+    });
+  }
+};
+
+
+
+  "scripts": {
+    "dev": "ts-node-dev --respawn --transpile-only src/index.ts",
+    "build": "tsc",
+    "start": "node dist/index.js"
+  },
