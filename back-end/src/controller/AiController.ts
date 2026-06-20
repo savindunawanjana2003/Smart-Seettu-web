@@ -331,14 +331,14 @@ export const generateContent = async (
     try {
       console.log("Processing with Gemini 2.5 Flash...");
       const reply = await executeGeminiAgent("gemini-2.5-flash", message);
-      res.status(200).json({ reply });
+      res.status(200).json({ data: reply });
       return;
     } catch (error: any) {
       console.warn("Gemini 2.5 Flash Failed! Trying Gemini 2.5 Pro...");
       console.error("Flash Error Details:", error?.message || error);
 
       const reply = await executeGeminiAgent("gemini-2.5-pro", message);
-      res.status(200).json({ reply });
+      res.status(200).json({ data: reply });
       return;
     }
   } catch (finalError: any) {

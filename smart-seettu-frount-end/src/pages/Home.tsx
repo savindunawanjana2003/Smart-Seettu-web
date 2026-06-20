@@ -1,17 +1,20 @@
 import React, { useEffect, useState } from "react";
 import img1 from "../assets/image/lankaSeetuHeder.png";
-import { getAllcustormer } from "../service/user";
+// import { getAllcustormer } from "../service/user";
 import { getOnlineMembers } from "../service/user";
 import { getAllGroups } from "../service/grup";
+import { sendMassegetoAi } from "../service/ai";
+import { useSocket } from "../context/SocketContext";
 
-const Home = () => {
+const Home: React.FC = () => {
+  const socket = useSocket();
   const [showChat, setShowChat] = useState(false);
   const [messages, setMessages] = useState([
     {
       id: 1,
       user: "Admin",
       text: "Welcome to Lanka Seetu! How can I help you?",
-      time: "10:30 AM",
+      time: new Date().toLocaleTimeString(),
     },
   ]);
   const [activeMembers, setactiveMembers] = useState("");
@@ -20,7 +23,7 @@ const Home = () => {
   const f = async () => {
     const res1 = await getOnlineMembers();
     const res2 = await getAllGroups();
-    // console.log(res.count); res2.count
+  
 
     setGrupcount(String(res2.count));
 
@@ -30,9 +33,35 @@ const Home = () => {
     f();
   }, []);
 
+  useEffect(() => {
+    if (!socket) {
+      console.log("🔌 SOCKET STATUS: තවම Socket එක Connect වෙලා නැහැ මචං!");
+      return;
+    }
+
+    console.log(
+      "✅ SOCKET STATUS: Socket එක සාර්ථකව Connect වෙලා තියෙන්නේ! Listening...",
+    );
+
+    socket.on("backend-updated", (data: { message: string; type: any }) => {
+      if (data.type === "CUSTOMER_ADDED") {
+        f();
+      } else if (data.type === "CUSTOMER_LOGED") {
+        alert("Customer kenek log una dan stetus eka  maru karanna one ");
+        f();
+      }
+    });
+
+    return () => {
+      socket.off("backend-updated");
+    };
+  }, [socket]);
+
+  // =======================================
+
   const [newMessage, setNewMessage] = useState("");
 
-  const handleSendMessage = () => {
+  const handleSendMessage = async () => {
     if (newMessage.trim()) {
       setMessages([
         ...messages,
@@ -43,7 +72,32 @@ const Home = () => {
           time: new Date().toLocaleTimeString(),
         },
       ]);
+      const msg = newMessage.trim();
       setNewMessage("");
+      const respons = await sendMassegetoAi(msg);
+      // alert(respons.data);
+
+      if (respons.data.data) {
+        setMessages([
+          ...messages,
+          {
+            id: Date.now(),
+            user: "Admin",
+            text: respons.data.data,
+            time: new Date().toLocaleTimeString(),
+          },
+        ]);
+      } else if (respons.status == 429) {
+        setMessages([
+          ...messages,
+          {
+            id: Date.now(),
+            user: "Admin",
+            text: "Error cheak your internet Connection",
+            time: new Date().toLocaleTimeString(),
+          },
+        ]);
+      }
     }
   };
 
@@ -298,14 +352,14 @@ const Home = () => {
 
           {/* Chat/Support Sidebar */}
           <div className="lg:col-span-1">
-            <div className="bg-white rounded-xl shadow-sm overflow-hidden sticky top-4">
+            <div className="bg-amber-400 rounded-xl shadow-sm overflow-hidden sticky top-4">
               {/* Chat Header */}
               <div className="bg-gradient-to-r from-blue-600 to-blue-700 px-4 py-3">
                 <div className="flex justify-between items-center">
                   <div className="flex items-center gap-2">
                     <div className="w-8 h-8 rounded-full bg-white/20 flex items-center justify-center">
                       <svg
-                        className="w-4 h-4 text-white"
+                        className="w-4 h-4 text-amber-800"
                         fill="none"
                         stroke="currentColor"
                         viewBox="0 0 24 24"
@@ -336,8 +390,8 @@ const Home = () => {
 
               {/* Chat Messages */}
               {showChat && (
-                <div className="h-80 flex flex-col">
-                  <div className="flex-1 p-3 space-y-2 overflow-y-auto bg-gray-50">
+                <div className="h-120  flex flex-col">
+                  <div className="flex-1 p-3 space-y-2 overflow-y-auto bg-amber-100 ">
                     {messages.map((msg) => (
                       <div
                         key={msg.id}

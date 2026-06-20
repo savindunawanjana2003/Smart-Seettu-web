@@ -7,27 +7,107 @@ import Gruprouter from "./routes/group-router";
 import Reqestrouter from "./routes/reqest-router";
 import Custormerouter from "./routes/customer-router";
 import Airouter from "./routes/ai-router";
+import http from "http";
+import { Server } from "socket.io";
 
 import { globalErrorHandler } from "./middlewares/global-Error-Handler";
 import { connection } from "./config/db";
-// import { AppError } from "./errors/AppError";
+import customerModal from "./models/customer-modal";
 
-// ===
 dotenv.config();
-
 const PORT = process.env.PORT;
 const app = express();
 
 app.set("trust proxy", 1);
 app.use(cors());
-// app.use(
-//   cors({
-//     origin: "http://localhost:5173", 
-//     methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
-//     credentials: true,
-//   }),
-// );
 app.use(express.json());
+// ====================
+const server = http.createServer(app);
+const io = new Server(server, {
+  cors: {
+    origin: "http://localhost:5173",
+    methods: ["GET", "POST"],
+  },
+  transports: ["websocket", "polling"],
+});
+
+// ==============Socket.io setup==============
+const getUser = async (email: any) => {
+  const user = await customerModal.findOne({ email });
+  if (user) return user;
+};
+
+const updatecustomerOfflineStetus = async (email: any) => {
+  await customerModal.findOneAndUpdate(
+    { email },
+    { isOnline: false },
+    { returnDocument: "after" },
+  );
+};
+
+const updatecustomerOnelineStetus = async (email: any) => {
+  await customerModal.findOneAndUpdate(
+    { email },
+    { isOnline: true },
+    { returnDocument: "after" },
+  );
+};
+
+app.set("io", io);
+
+const onlineUsers: { [email: string]: number } = {};
+
+io.on("connection", async (socket) => {
+  const curentUseremail: any = socket.handshake.query.userEmail;
+
+  if (!curentUseremail) {
+    console.log(" Connection rejected: No userEmail provided");
+    return socket.disconnect();
+  }
+
+  (socket as any).email = curentUseremail;
+  console.log(`Tab connected: ${socket.id} for ${curentUseremail}`);
+
+  if (!onlineUsers[curentUseremail]) {
+    onlineUsers[curentUseremail] = 0;
+  }
+  onlineUsers[curentUseremail]++;
+
+  if (onlineUsers[curentUseremail] === 1) {
+    await updatecustomerOnelineStetus(curentUseremail);
+    io.emit("backend-updated", { message: "User online status updated" });
+    console.log(`User ${curentUseremail} is now fully ONLINE`);
+  }
+
+  socket.on("disconnect", async () => {
+    const email = (socket as any).email;
+    console.log(` Tab disconnected: ${socket.id}`);
+
+    if (email && onlineUsers[email]) {
+      onlineUsers[email]--;
+
+      if (onlineUsers[email] === 0) {
+        const curuntUser: any = await getUser(email);
+
+        if (curuntUser) {
+          await updatecustomerOfflineStetus(email);
+          delete onlineUsers[email];
+
+          io.emit("backend-updated", {
+            message: "User offline status updated",
+          });
+          console.log(`User ${email} is now fully OFFLINE (All tabs closed)`);
+        }
+      } else {
+        console.log(
+          ` User ${email} still has ${onlineUsers[email]} tab(s) open.`,
+        );
+      }
+    }
+  });
+});
+
+// =========== setup==============
 app.post("/", (req, res) => {});
 app.use((req, res, next) => {
   // console.log(req.)
@@ -54,7 +134,8 @@ const startSever = async (): Promise<void> => {
   try {
     await connection();
 
-    const server = app.listen(PORT, () => {
+    // const server1 =
+    server.listen(PORT, () => {
       console.log(`Server is running on port: ${PORT} `);
     });
 

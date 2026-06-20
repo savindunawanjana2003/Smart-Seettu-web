@@ -4,5 +4,7 @@
         "Deatils",
         "Respons",
         "Swal"
-    ]
+    ],
+    "js/ts.experimental.useTsgo": false,
+    "js/ts.suggest.completeFunctionCalls": true
 }

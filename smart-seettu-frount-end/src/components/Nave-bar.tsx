@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 import { Menu, X } from "lucide-react";
-
 import { useDispatch } from "react-redux";
 import { loginCustomer } from "../redux/slice/customerSlice";
 import Swal from "sweetalert2";
@@ -16,6 +15,7 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { Link } from "react-scroll";
 import { registere, setOffline, setOnline } from "../service/user";
+import { useSocket } from "../context/SocketContext";
 interface RegistrationData {
   name: string;
   email: string;
@@ -53,7 +53,7 @@ export interface loginDeatils {
 
 const Header = ({ sections }: { sections: any }) => {
   const dispatch = useDispatch();
-
+  const socket = useSocket();
   const [open, setOpen] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [isShowUserIcon, setisShowUserIcon] = useState(false);
@@ -117,17 +117,30 @@ const Header = ({ sections }: { sections: any }) => {
     setagrementshow(true);
     setisClikBackground(true);
   };
+  // =======================cath from lissing =====================
+  // useEffect(() => {
+  //   if (!socket) {
+  //     console.log("SOCKET STATUS: thawama conect wela na !");
+  //     return;
+  //   }
 
-  // const chekIsClickBackground = () => {};
+  //   console.log(
+  //     "SOCKET STATUS: Socket hariyatama connect wela thinnen Listening...",
+  //   );
 
-  // const handleChangeLogin = (e: any) => {
-  // const name = e.target.name;
-  // const { value } = e.target;
-  // setLoginDeatiles((prev) => ({
-  //   ...prev,
-  //   [name]: value,
-  // }));
-  // };
+  //
+  //   socket.on("backend-updated", (data: { message: string,type:string }) => {
+  //     // alert("Backend masege eka awa " + data.message);
+
+  //     alert(data.type);
+  //   });
+
+  //   return () => {
+  //     socket.off("backend-updated");
+  //   };
+  // }, [socket]);
+
+  // =================================================
 
   const reqestFromseverTologinfunshion = async () => {
     if (email == "" || password == "") {

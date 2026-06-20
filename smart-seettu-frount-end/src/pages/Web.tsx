@@ -73,6 +73,7 @@ const Home = () => {
     }
   };
 
+ 
   return (
     <div className="overflow-x-hidden">
       {/* <Header sections={naveItems} /> */}

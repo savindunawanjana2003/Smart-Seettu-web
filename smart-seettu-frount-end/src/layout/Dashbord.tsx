@@ -19,6 +19,8 @@ import type { notifecetion } from "../types/types";
 import { getRequestsBymemberEmail } from "../service/reqest";
 import { getAllcustormer, setOffline } from "../service/user";
 const Dashboard = () => {
+  // const navigeter = useNavigate();
+
   // --------------------methanin acountUserge Email eka ganna-----------------------
   const currentCustomer = useSelector(
     (state: RootState) => state.customer.currentCustomer,
@@ -31,9 +33,28 @@ const Dashboard = () => {
   const [systemMembers, setSystemMembers] = useState<any>([]);
 
   useEffect(() => {
-    navigate("/pages/Dashbord/Home");
+    if (location.pathname === "/pages/Dashbord") {
+      navigate("/pages/Dashbord/Home", { replace: true });
+    }
     getAllcustormerfuntion();
   }, []);
+
+  // ===================dashbord ekak kothana page eke hitiyath / path eata enawa ===============
+  useEffect(() => {
+    const handlePopState = () => {
+      navigate("/", { replace: true });
+    };
+
+    // Browser back button event eka listen karanawa
+    window.addEventListener("popstate", handlePopState);
+
+    // Component eken ain weddi lisener eka ain wenawa
+    return () => {
+      window.removeEventListener("popstate", handlePopState);
+    };
+  }, [navigate]);
+
+  // ===================================
 
   const getAllcustormerfuntion = async () => {
     try {
@@ -77,7 +98,7 @@ const Dashboard = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedUser, setSelectedUser] = useState(null);
 
-  // user kenek wa clik karana kota danata inna page eka anuwa  wa dakarana funshion ekak denna puluwan
+  // user kenek wa clik karana kota danata inna page eka anuwa  wadakarana funshion ekak denna puluwan
   const handleUserClick = (user: any) => {
     const currentPath = location.pathname; // dan  lode wela thiyena url path eka ganne meken
     console.log(`Clicked User: ${user.name} | Current Path: ${currentPath}`);
@@ -297,12 +318,12 @@ const Dashboard = () => {
               </Link>
             ))}
 
-            <button
+            {/* <button
               onClick={logout}
               className="flex justify-center items-center gap-10 px-3 py-2 rounded-lg text-gray-400 hover:bg-gray-200 hover:text-gray-900 font-medium text-sm transition-colors"
             >
               Log out
-            </button>
+            </button> */}
           </div>
         </nav>
         {/* ===========chengable content Ariya=================== */}
