@@ -3,7 +3,6 @@ import customerModal from "../models/customer-modal";
 import { AppError } from "../errors/AppError";
 import bcrypt from "bcryptjs";
 import { singAccesstoken, signRefreshToken } from "../utils/token";
-import CustormerModel from "../models/customer-modal";
 
 export const registerCustomer = async (req: Request, res: Response) => {
   const { id, name, email, password, nic, poneNumber, address } = req.body;
@@ -33,9 +32,8 @@ export const registerCustomer = async (req: Request, res: Response) => {
     const salt = bcrypt.genSaltSync(10);
     const hashedPassword = bcrypt.hashSync(password, salt);
 
-   
     const customer = new customerModal({
-      id: id || `CUST-${Date.now()}`, 
+      id: id || `CUST-${Date.now()}`,
       name,
       email,
       password: hashedPassword,
@@ -46,6 +44,10 @@ export const registerCustomer = async (req: Request, res: Response) => {
 
     const saveCustormer = await customer.save();
 
+    return res.status(201).json({
+      Message: "Save successfully!",
+      data: saveCustormer,
+    });
     console.log("++++++++++++++++++ emite START +++++++++++++++++++++++++++++");
     const io = req.app.get("io");
     if (io) {
@@ -56,14 +58,8 @@ export const registerCustomer = async (req: Request, res: Response) => {
       console.log("Broadcasting Success!");
     }
     console.log("++++++++++++++++++ emite END +++++++++++++++++++++++++++++");
-
-    return res.status(201).json({
-      Message: "Save successfully!",
-      data: saveCustormer,
-    });
   } catch (error: any) {
-    //  මෙතනදි throw කරන්නේ නැතුව ලස්සනට response එකක් දෙනවා, එතකොට සර්වර් එක crash වෙන්නේ නැහැ!
- 
+
     console.error(error.message || error);
 
     return res.status(500).json({
@@ -74,9 +70,6 @@ export const registerCustomer = async (req: Request, res: Response) => {
 };
 
 export const login = async (req: Request, res: Response) => {
-  console.log(
-    "login ekata enawa ===========================================0000000000000000",
-  );
   console.log(req.body);
   const { email, password } = req.body;
   const customer = await customerModal.findOne({ email });
@@ -95,6 +88,9 @@ export const login = async (req: Request, res: Response) => {
 
   const accessToken = singAccesstoken(customer);
   const refreshToken = signRefreshToken(customer);
+
+  await customerModal.findOneAndUpdate({ email }, { isOnline: true });
+
   console.log("++++++++++++++++++ emite START +++++++++++++++++++++++++++++");
   const io = req.app.get("io");
   if (io) {
@@ -169,8 +165,18 @@ export const updateCustomerOfflineStatus = async (
         message: "Customer not found plesae register in the sait",
       });
     }
+    console.log("++++++++++++++++++ emite START +++++++++++++++++++++++++++++");
+    const io = req.app.get("io");
+    if (io) {
+      io.emit("backend-updated", {
+        message: "A new customer was Loged! Please refresh.",
+        type: "UPDATE_AS_OFFLINE",
+      });
+      console.log("Broadcasting Success!");
+    }
+    console.log("++++++++++++++++++ emite END +++++++++++++++++++++++++++++");
 
-    return res.status(200).json({
+    res.status(200).json({
       success: true,
       message: "Customer online status updated",
       data: customer,
@@ -208,6 +214,17 @@ export const getAllOnlineMembers = async (req: Request, res: Response) => {
       count: members.length,
       data: members,
     });
+
+    // console.log("++++++++++++++++++ emite START +++++++++++++++++++++++++++++");
+    // const io = req.app.get("io");
+    // if (io) {
+    //   io.emit("backend-updated", {
+    //     message: "A new customer was Loged! Please refresh.",
+    //     type: "GET_ONLINE_MEMBER",
+    //   });
+    //   console.log("Broadcasting Success!");
+    // }
+    // console.log("++++++++++++++++++ emite END +++++++++++++++++++++++++++++");
   } catch (error: any) {
     console.error(error);
     res.status(500).json({
@@ -237,7 +254,6 @@ export const getAllOnlineMembers = async (req: Request, res: Response) => {
 // };
 
 export const moveToTheDashBod = async (req: Request, res: Response) => {
-
   console.log("++++++++++++++++++ emite START +++++++++++++++++++++++++++++");
   const io = req.app.get("io");
   if (io) {

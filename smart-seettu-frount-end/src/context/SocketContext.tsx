@@ -171,14 +171,16 @@ export const SocketProvider: React.FC<SocketProviderProps> = ({ children }) => {
     };
 
     checkUser();
-    const interval = setInterval(checkUser, 1000); // 1s n 1s chek karanawa login chek karanna 
+    const interval = setInterval(checkUser, 1000); // 1s n 1s chek karanawa login chek karanna
     return () => clearInterval(interval);
   }, [userEmail]);
 
-  // Effect 2: 💡 email ekak stet ekata set wechcha gaman socket eka conect wenawa 
+  // Effect 2:email ekak stet ekata set wechcha gaman socket eka conect wenawa
   useEffect(() => {
     if (!userEmail) {
-      console.log("SOCKET INFO: if user is not avelable  so does;not create a socket.");
+      console.log(
+        "SOCKET INFO: if user is not avelable  so does;not create a socket.",
+      );
       return;
     }
 
@@ -209,7 +211,7 @@ export const SocketProvider: React.FC<SocketProviderProps> = ({ children }) => {
       socket.disconnect();
       setSocketInstance(null);
     };
-  }, [userEmail]); // email eka wenas weddi witharai socket eka hadenne saha ainwenne 
+  }, [userEmail]); // email eka wenas weddi witharai socket eka hadenne saha ainwenne
 
   return (
     <SocketContext.Provider value={socketInstance}>

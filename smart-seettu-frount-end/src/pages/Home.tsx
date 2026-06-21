@@ -23,7 +23,6 @@ const Home: React.FC = () => {
   const f = async () => {
     const res1 = await getOnlineMembers();
     const res2 = await getAllGroups();
-  
 
     setGrupcount(String(res2.count));
 
@@ -35,19 +34,27 @@ const Home: React.FC = () => {
 
   useEffect(() => {
     if (!socket) {
-      console.log("🔌 SOCKET STATUS: තවම Socket එක Connect වෙලා නැහැ මචං!");
       return;
     }
 
-    console.log(
-      "✅ SOCKET STATUS: Socket එක සාර්ථකව Connect වෙලා තියෙන්නේ! Listening...",
-    );
+ 
 
     socket.on("backend-updated", (data: { message: string; type: any }) => {
       if (data.type === "CUSTOMER_ADDED") {
         f();
       } else if (data.type === "CUSTOMER_LOGED") {
-        alert("Customer kenek log una dan stetus eka  maru karanna one ");
+        f();
+      } else if (data.type === "NEW_GRUP_ADD") {
+        f();
+      } else if (data.type === "UPDATE_AS_OFFLINE") {
+        f();
+      }
+
+      if (data.type === "CUSTOMER_ONLINE") {
+        f();
+      }
+
+      if (data.type === "SHOCKET_DISCONECTED") {
         f();
       }
     });

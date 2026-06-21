@@ -18,8 +18,9 @@ import type { RootState } from "../redux/store";
 import type { notifecetion } from "../types/types";
 import { getRequestsBymemberEmail } from "../service/reqest";
 import { getAllcustormer, setOffline } from "../service/user";
+import { useSocket } from "../context/SocketContext";
 const Dashboard = () => {
-  // const navigeter = useNavigate();
+  const socket = useSocket();
 
   // --------------------methanin acountUserge Email eka ganna-----------------------
   const currentCustomer = useSelector(
@@ -54,7 +55,7 @@ const Dashboard = () => {
     };
   }, [navigate]);
 
-  // ===================================
+  // ====================================
 
   const getAllcustormerfuntion = async () => {
     try {
@@ -73,6 +74,46 @@ const Dashboard = () => {
     }
   };
 
+  // ===================================
+
+  useEffect(() => {
+    if (!socket) {
+      return;
+    }
+
+
+    socket.on("backend-updated", (data: { message: string; type: any }) => {
+      if (data.type === "CUSTOMER_ADDED") {
+        // alert("Custormer Offline 1");
+      } else if (data.type === "CUSTOMER_LOGED") {
+        getAllcustormerfuntion();
+      } else if (data.type === "SHOCKET_DISCONECTED") {
+        // alert("Custormer SHOCKET_DISCONECTED 2");
+
+        getAllcustormerfuntion();
+
+        // alert("Custormer Offline");
+        // f();
+      } else if (data.type === "NEW_GRUP_ADD") {
+      }
+
+      if (data.type == "UPDATE_AS_OFFLINE") {
+        // alert("Custormer UPDATE_AS_OFFLINE 5");
+        getAllcustormerfuntion();
+      }
+
+      if (data.type === "CUSTOMER_ONLINE") {
+        // alert("Custormer Online awa 6");
+        getAllcustormerfuntion();
+      }
+    });
+
+    return () => {
+      socket.off("backend-updated");
+    };
+  }, [socket]);
+
+  // ===================================
   const [isShowGrupreq, setisShowGrupreq] = useState(false);
 
   const [notificetions, setNotyficetions] = useState<notifecetion[]>([]);

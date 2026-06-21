@@ -41,12 +41,21 @@ export const savegroup = async (req: Request, res: Response) => {
       members,
       createDate: dateOnly,
     });
-
     const sgroup = await group.save();
     res.status(201).json({
       Message: "Save succsess fully !",
       data: sgroup,
     });
+    console.log("++++++++++++++++++ emite START +++++++++++++++++++++++++++++");
+    const io = req.app.get("io");
+    if (io) {
+      io.emit("backend-updated", {
+        message: "A new grup was Loged! Please refresh.",
+        type: "NEW_GRUP_ADD",
+      });
+      console.log("Broadcasting Success!");
+    }
+    console.log("++++++++++++++++++ emite END +++++++++++++++++++++++++++++");
   } catch (error) {
     console.error(error);
     res.status(500).json({

@@ -75,34 +75,53 @@ io.on("connection", async (socket) => {
 
   if (onlineUsers[curentUseremail] === 1) {
     await updatecustomerOnelineStetus(curentUseremail);
-    io.emit("backend-updated", { message: "User online status updated" });
+    // io.emit("backend-updated", {
+    //   message: "User online status updated",
+    // });
+
+    io.emit("backend-updated", {
+      message: "User offline status updated",
+      type: "CUSTOMER_ONLINE",
+    });
+
     console.log(`User ${curentUseremail} is now fully ONLINE`);
   }
+  // https://docs.google.com/document/d/1_7_9q883s3peAz4eapU3EkjaEzguesesUzomGk6F5WE/edit?tab=t.0
 
   socket.on("disconnect", async () => {
     const email = (socket as any).email;
-    console.log(` Tab disconnected: ${socket.id}`);
+    console.log(`📡 Tab disconnected: ${socket.id} for ${email}`);
 
     if (email && onlineUsers[email]) {
       onlineUsers[email]--;
 
-      if (onlineUsers[email] === 0) {
-        const curuntUser: any = await getUser(email);
+      setTimeout(async () => {
+        
+        if (onlineUsers[email] === 0) {
+          const curuntUser = await getUser(email);
 
-        if (curuntUser) {
-          await updatecustomerOfflineStetus(email);
-          delete onlineUsers[email];
+          if (curuntUser) {
+            await updatecustomerOfflineStetus(email);
+            delete onlineUsers[email];
 
-          io.emit("backend-updated", {
-            message: "User offline status updated",
-          });
-          console.log(`User ${email} is now fully OFFLINE (All tabs closed)`);
+            io.emit("backend-updated", {
+              message: "User is now offline",
+              type: "UPDATE_AS_OFFLINE", 
+            });
+            console.log(`User ${email} is now fully OFFLINE`);
+          }
         }
-      } else {
-        console.log(
-          ` User ${email} still has ${onlineUsers[email]} tab(s) open.`,
-        );
-      }
+     
+        else {
+          console.log(
+            ` User ${email} still has ${onlineUsers[email]} tab(s) open.`,
+          );
+          io.emit("backend-updated", {
+            message: "Active tabs updated",
+            type: "CUSTOMER_ONLINE",
+          });
+        }
+      }, 7000); 
     }
   });
 });
