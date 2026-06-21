@@ -34,6 +34,10 @@ const Dashboard = () => {
   const [systemMembers, setSystemMembers] = useState<any>([]);
 
   useEffect(() => {
+    getAllcustormerfuntion();
+  }, [systemMembers]);
+
+  useEffect(() => {
     if (location.pathname === "/pages/Dashbord") {
       navigate("/pages/Dashbord/Home", { replace: true });
     }
@@ -80,7 +84,6 @@ const Dashboard = () => {
     if (!socket) {
       return;
     }
-
 
     socket.on("backend-updated", (data: { message: string; type: any }) => {
       if (data.type === "CUSTOMER_ADDED") {

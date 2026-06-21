@@ -41,7 +41,8 @@ const updatecustomerOfflineStetus = async (email: any) => {
   await customerModal.findOneAndUpdate(
     { email },
     { isOnline: false },
-    { returnDocument: "after" },
+    { new: true },
+    // { returnDocument: "after" },
   );
 };
 
@@ -49,7 +50,9 @@ const updatecustomerOnelineStetus = async (email: any) => {
   await customerModal.findOneAndUpdate(
     { email },
     { isOnline: true },
-    { returnDocument: "after" },
+    { new: true },
+
+    // { returnDocument: "after" },
   );
 };
 
@@ -75,9 +78,6 @@ io.on("connection", async (socket) => {
 
   if (onlineUsers[curentUseremail] === 1) {
     await updatecustomerOnelineStetus(curentUseremail);
-    // io.emit("backend-updated", {
-    //   message: "User online status updated",
-    // });
 
     io.emit("backend-updated", {
       message: "User offline status updated",
@@ -87,16 +87,14 @@ io.on("connection", async (socket) => {
     console.log(`User ${curentUseremail} is now fully ONLINE`);
   }
   // https://docs.google.com/document/d/1_7_9q883s3peAz4eapU3EkjaEzguesesUzomGk6F5WE/edit?tab=t.0
-
   socket.on("disconnect", async () => {
     const email = (socket as any).email;
-    console.log(`📡 Tab disconnected: ${socket.id} for ${email}`);
+    console.log(` Tab disconnected: ${socket.id} for ${email}`);
 
     if (email && onlineUsers[email]) {
       onlineUsers[email]--;
 
       setTimeout(async () => {
-        
         if (onlineUsers[email] === 0) {
           const curuntUser = await getUser(email);
 
@@ -106,13 +104,11 @@ io.on("connection", async (socket) => {
 
             io.emit("backend-updated", {
               message: "User is now offline",
-              type: "UPDATE_AS_OFFLINE", 
+              type: "SHOCKET_DISCONECTED",
             });
             console.log(`User ${email} is now fully OFFLINE`);
           }
-        }
-     
-        else {
+        } else {
           console.log(
             ` User ${email} still has ${onlineUsers[email]} tab(s) open.`,
           );
@@ -121,7 +117,7 @@ io.on("connection", async (socket) => {
             type: "CUSTOMER_ONLINE",
           });
         }
-      }, 7000); 
+      }, 7000);
     }
   });
 });
@@ -135,7 +131,6 @@ app.use((req, res, next) => {
   console.log(`URL: ${req.originalUrl}`);
   console.log(`Body:`, req.body);
   console.log(`Body:`, req.headers);
-
   console.log(`=====================================================\n`);
   next();
 });
@@ -153,7 +148,6 @@ const startSever = async (): Promise<void> => {
   try {
     await connection();
 
-    // const server1 =
     server.listen(PORT, () => {
       console.log(`Server is running on port: ${PORT} `);
     });
