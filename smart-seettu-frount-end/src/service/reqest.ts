@@ -17,3 +17,18 @@ export const getRequestsBymemberEmail = async (memberEmail: string) => {
 
   return res.data;
 };
+
+export const reactionForGrupReqest = async (
+  grupId: string,
+  memberEmail: string,
+  memberRespons: string,
+  reqestId: string,
+) => {
+  const res = await api.post("/reqest/reactionForGrupReqest", {
+    grupId,
+    memberEmail,
+    memberRespons,
+    reqestId,
+  });
+  return res;
+};

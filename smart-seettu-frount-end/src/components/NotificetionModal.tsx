@@ -1,5 +1,7 @@
 import { useEffect, useState } from "react";
 import type { notifecetion } from "../types/types";
+import { reactionForGrupReqest } from "../service/reqest";
+import Swal from "sweetalert2";
 
 interface GrupReqestProps {
   isShow: boolean;
@@ -27,9 +29,89 @@ const GrupReqest = ({
       return () => clearTimeout(timer);
     }
   }, [isShow]);
+  // =========================
+
+  const getEmailAvailableAdmins = (data: notifecetion): string => {
+    return data.email || "admin@example.com";
+  };
+  // =========================
 
   if (!show) return null;
+  // =================================action fro grup reqest ===================
+  const handleAccept = async (
+    id: string,
+    email: string,
+    reqestid: string,
+  ): Promise<void> => {
+    const grupId = id;
+    const memberEmail = email;
+    const reqestId = reqestid;
+    // alert("lsdjksks");
+    const memberRespons = "accept";
 
+    try {
+      // alert(`${grupId, memberEmail, reqestId}`)
+      console.log(
+        grupId + "//" + memberEmail + "//" + reqestId + "////////////////////",
+      );
+      const res = await reactionForGrupReqest(
+        grupId,
+        memberEmail,
+        memberRespons,
+        reqestId,
+      );
+
+      if (res.status === 201) {
+        Swal.fire({
+          title: "Request Confirmed Successfully",
+          icon: "success",
+          toast: true,
+          position: "top-end",
+          showConfirmButton: false,
+          timer: 3000, 
+          timerProgressBar: true,
+          width: "400px", 
+          customClass: {
+            popup: "custom-toast-class",
+          },
+        });
+
+        return;
+      } else {
+        Swal.fire({
+          title: "Request Confirmation Failed",
+          icon: "error",
+          toast: true,
+          position: "top-end",
+          showConfirmButton: false,
+          timer: 3000,
+          timerProgressBar: true,
+          width: "400px",
+        });
+        return;
+      }
+    } catch (error) {
+      console.error(error);
+      Swal.fire({
+        title: "Request Confirmation Failed",
+        icon: "error",
+        toast: true,
+        position: "top-end",
+        showConfirmButton: false,
+        timer: 3000,
+        timerProgressBar: true,
+        width: "400px",
+      });
+      return;
+    }
+
+    // throw new Error("Function not implemented.");
+  };
+
+  function handleReject(id: string): void {
+    throw new Error("Function not implemented.");
+  }
+  // ===========================================================================
   return (
     <div className="fixed inset-0 z-[999]">
       {/* Backdrop with blur */}
@@ -118,17 +200,28 @@ const GrupReqest = ({
                               d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"
                             />
                           </svg>
-                          {req.email}
+
+                          {req.grupAdminEmail}
+                          {/* ----------------------- */}
                         </p>
                       </div>
                     </div>
 
                     {/* Stylish Buttons */}
+
                     <div className="flex gap-2 mt-3">
-                      <button className="flex-1 text-xs px-3 py-1.5 bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-lg hover:from-blue-600 hover:to-blue-700 transition-all duration-200 shadow-sm hover:shadow font-medium">
+                      <button
+                        onClick={() =>
+                          handleAccept(req.id, req.email, req.reqestid)
+                        }
+                        className="flex-1 text-xs px-3 py-1.5 bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-lg hover:from-blue-600 hover:to-blue-700 transition-all duration-200 shadow-sm hover:shadow font-medium"
+                      >
                         ✓ Accept
                       </button>
-                      <button className="flex-1 text-xs px-3 py-1.5 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-all duration-200 border border-gray-200 font-medium">
+                      <button
+                        onClick={() => handleReject(req.id)}
+                        className="flex-1 text-xs px-3 py-1.5 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-all duration-200 border border-gray-200 font-medium"
+                      >
                         ✗ Reject
                       </button>
                     </div>

@@ -24,7 +24,8 @@ export interface reqestDeatiles {
 }
 
 export interface notifecetion {
-  id: string;
+  id: string; //
+  grupAdminEmail: string;
   reqestid: string;
   email: string;
   grupId: string;

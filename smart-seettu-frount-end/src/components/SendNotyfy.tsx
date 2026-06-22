@@ -26,7 +26,8 @@ const SendNotyfy = ({ isOpen, onClose, user }: SendNotyfyProps) => {
     (state: RootState) => state.customer.currentCustomer,
   );
 
-  const adminid = profailuser?.id ?? "";
+  // const adminid = profailuser?.id ?? "";
+  const adminEmial = profailuser?.email ?? "";
 
   const [grupid, setGrupId] = useState("");
 
@@ -79,7 +80,7 @@ const SendNotyfy = ({ isOpen, onClose, user }: SendNotyfyProps) => {
 
     const reqestDeatiles: reqestDeatiles = {
       grupId: grupid,
-      grupAdminId: adminid,
+      grupAdminId: adminEmial,
       memberEmail: user.email,
       memberRespons: "pending",
       createDateTime: formattedDateTime,

@@ -1,0 +1,180 @@
+// import React, { useRef } from "react";
+// import { JitsiMeeting } from "@jitsi/react-sdk";
+
+// // Props types define karamu
+// interface VideoCallProps {
+//   roomName: string;
+//   userName: string;
+//   onCallLeave: () => void;
+// }
+
+// const VideoCall: React.FC<VideoCallProps> = ({
+//   roomName,
+//   userName,
+//   onCallLeave,
+// }) => {
+//   // IFrame element eka reference karanna useRef use karanawa (HTMLIFrameElement type)
+//   const iframeRef = useRef<HTMLIFrameElement | null>(null);
+
+//   return (
+//     <div
+//       style={{
+//         height: "80vh",
+//         width: "100%",
+//         maxWidth: "1200px",
+//         margin: "0 auto",
+//       }}
+//     >
+//       <JitsiMeeting
+//         domain="meet.jit.si"
+//         roomName={roomName}
+//         configOverwrite={{
+//           startWithAudioMuted: false,
+//           startWithVideoMuted: false,
+//           prejoinPageEnabled: false, // Pre-join screen skip karanna
+//           disableThirdPartyRequests: true,
+//         }}
+//         interfaceConfigOverwrite={{
+//           SHOW_JITSI_WATERMARK: false, // Jitsi Logo eka script eken high karන්න
+//           HIDE_INVITE_YOUR_TEAM: true,
+//         }}
+//         userInfo={{
+//           displayName: userName,
+//         }}
+//         onReadyToClose={() => {
+//           if (onCallLeave) onCallLeave();
+//         }}
+//         getIFrameRef={(iframe: HTMLIFrameElement) => {
+//           iframeRef.current = iframe;
+//           if (iframe) {
+//             iframe.style.height = "100%";
+//             iframe.style.width = "100%";
+//           }
+//         }}
+//       />
+//     </div>
+//   );
+// };
+
+// export default VideoCall;
+// ==========================================
+// import React, { useRef } from "react";
+// import { JitsiMeeting } from "@jitsi/react-sdk";
+// import { useNavigate } from "react-router-dom";
+
+// const Videocall: React.FC = () => {
+//   const jitsiApiRef = useRef<any>(null);
+//   const navigate = useNavigate();
+
+//   const roomName = "dental-care-room-xyz987";
+//   const userName = "Savindu Dev";
+//   const userEmail = "savindu@example.com";
+
+//   return (
+//     // ✅ 1. මේ outer div එක දැන් මුළු ඉඩම ලස්සනට ගන්නවා
+//     <div
+
+//       style={{
+//         height: "100%",
+//         width: "100%",
+//         maxWidth: "100%",
+//         margin: "0 auto",
+//       }}
+//     >
+//       <JitsiMeeting
+//         domain="meet.jit.si"
+//         roomName={roomName}
+//         configOverwrite={{
+//           startWithAudioMuted: false,
+//           startWithVideoMuted: false,
+//           prejoinPageEnabled: false,
+//           disableThirdPartyRequests: true,
+//         }}
+//         interfaceConfigOverwrite={{
+//           SHOW_JITSI_WATERMARK: false,
+//           HIDE_INVITE_YOUR_TEAM: true,
+//         }}
+//         userInfo={{
+//           displayName: userName,
+//           email: userEmail,
+//         }}
+//         onReadyToClose={() => {
+//           navigate("/");
+//         }}
+//         onApiReady={(externalApi) => {
+//           jitsiApiRef.current = externalApi;
+//           console.log("Jitsi Meet API is ready");
+//         }}
+//         // ✅ 2. අන්න ඒ ලෙඩේ දෙන iframe එක 100% ක් stretch කරන්නේ මෙන්න මේ කෑල්ලෙන්!
+//         getIFrameRef={(iframeRef) => {
+//           iframeRef.style.height = "100%";
+//           iframeRef.style.width = "100%";
+//           iframeRef.style.flex = "1";
+//         }}
+//       />
+//     </div>
+//   );
+// };
+
+// export default Videocall;
+
+// ===========================================
+
+import React, { useRef } from "react";
+import { JitsiMeeting } from "@jitsi/react-sdk";
+import { useNavigate } from "react-router-dom";
+
+const Videocall: React.FC = () => {
+  const jitsiApiRef = useRef<any>(null);
+  const navigate = useNavigate();
+
+  const jaasAppId = "vpaas-magic-cookie-afa8f7c5e8ea414e86cbf77fd2b6cc23";
+
+  const roomName = `${jaasAppId}/dental-care-room-xyz987`;
+  const userName = "Savindu Dev";
+  const userEmail = "savindu@example.com";
+
+  return (
+    <div
+      style={{
+        height: "100%",
+        width: "100%",
+        maxWidth: "100%",
+        margin: "0 auto",
+      }}
+    >
+      <JitsiMeeting
+        domain="8x8.vc"
+        roomName={roomName}
+        configOverwrite={{
+          startWithAudioMuted: false,
+          startWithVideoMuted: false,
+          prejoinPageEnabled: false,
+          disableThirdPartyRequests: true,
+        }}
+        interfaceConfigOverwrite={{
+          SHOW_JITSI_WATERMARK: false,
+          HIDE_INVITE_YOUR_TEAM: true,
+        }}
+        userInfo={{
+          displayName: userName,
+          email: userEmail,
+        }}
+        onReadyToClose={() => {
+          navigate("/");
+        }}
+        onApiReady={(externalApi) => {
+          jitsiApiRef.current = externalApi;
+          console.log("Jitsi Meet API via JaaS is ready");
+        }}
+        getIFrameRef={(iframeRef) => {
+          iframeRef.style.height = "100%";
+          iframeRef.style.width = "100%";
+          iframeRef.style.flex = "1";
+        }}
+      />
+    </div>
+  );
+};
+
+export default Videocall;

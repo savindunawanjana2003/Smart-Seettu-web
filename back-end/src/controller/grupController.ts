@@ -26,7 +26,6 @@ export const savegroup = async (req: Request, res: Response) => {
         }
       }
     });
-
     const nextId = `GRP-${String(maxIdNumber + 1).padStart(3, "0")}`;
     // console.log("======================= 00077 " + nextId);
     // ---------------------

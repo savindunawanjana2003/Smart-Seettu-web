@@ -51,7 +51,6 @@ const updatecustomerOnelineStetus = async (email: any) => {
     { email },
     { isOnline: true },
     { new: true },
-
     // { returnDocument: "after" },
   );
 };
@@ -123,7 +122,7 @@ io.on("connection", async (socket) => {
 });
 
 // =========== setup==============
-app.post("/", (req, res) => {});
+// app.post("/", (req, res) => {});
 app.use((req, res, next) => {
   // console.log(req.)
   console.log(`\n================== [ NEW REQUEST ] ==================`);

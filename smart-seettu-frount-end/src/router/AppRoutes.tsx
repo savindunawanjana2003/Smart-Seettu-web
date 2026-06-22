@@ -2,6 +2,8 @@ import Firstpage from "../pages/Web";
 import Apage from "../pages/Grupmanagement";
 import Payment from "../pages/Payment";
 import Home from "../pages/Home";
+import Vidocollae from "../pages/Vidiocole";
+
 import Ongoin from "../pages/Ongoin";
 
 import AboutUs from "../pages/AboutUs";
@@ -36,11 +38,12 @@ export const AppRoutes = () => {
             />
             <Route path="$Payment" element={<Payment />} />
             <Route path="Grupmanagement" element={<Grupmanagement />} />
-            <Route  path="Home" element={<Home />} />
+            <Route path="Home" element={<Home />} />
             <Route path="Ongoin" element={<Ongoin />} />
 
             <Route path="AboutUs" element={<AboutUs />} />
             <Route path="Contact" element={<Contact />} />
+            <Route path="Vidiocoll" element={<Vidocollae />} />
           </Route>
         </Routes>
       </Xcontext.Provider>

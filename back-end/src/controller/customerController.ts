@@ -43,11 +43,6 @@ export const registerCustomer = async (req: Request, res: Response) => {
     });
 
     const saveCustormer = await customer.save();
-
-    return res.status(201).json({
-      Message: "Save successfully!",
-      data: saveCustormer,
-    });
     console.log("++++++++++++++++++ emite START +++++++++++++++++++++++++++++");
     const io = req.app.get("io");
     if (io) {
@@ -58,8 +53,11 @@ export const registerCustomer = async (req: Request, res: Response) => {
       console.log("Broadcasting Success!");
     }
     console.log("++++++++++++++++++ emite END +++++++++++++++++++++++++++++");
+    return res.status(201).json({
+      Message: "Save successfully!",
+      data: saveCustormer,
+    });
   } catch (error: any) {
-
     console.error(error.message || error);
 
     return res.status(500).json({
@@ -96,7 +94,7 @@ export const login = async (req: Request, res: Response) => {
   if (io) {
     io.emit("backend-updated", {
       message: "A new customer was Loged! Please refresh.",
-      type: "CUSTOMER_LOGED",
+      type: "CUSTOMER_ONLINE",
     });
     console.log("Broadcasting Success!");
   }

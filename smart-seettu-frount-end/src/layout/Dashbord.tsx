@@ -32,10 +32,12 @@ const Dashboard = () => {
   const navigate = useNavigate();
   // -----------------------------------------------
   const [systemMembers, setSystemMembers] = useState<any>([]);
-
-  useEffect(() => {
-    getAllcustormerfuntion();
-  }, [systemMembers]);
+  const [isShowGrupreq, setisShowGrupreq] = useState(false);
+  const [notificetions, setNotyficetions] = useState<notifecetion[]>([]);
+  // meka thamai aula giye hamawelema getCustormerReqest giyapu
+  // useEffect(() => {
+  //   getAllcustormerfuntion();
+  // }, [systemMembers]);
 
   useEffect(() => {
     if (location.pathname === "/pages/Dashbord") {
@@ -58,6 +60,28 @@ const Dashboard = () => {
       window.removeEventListener("popstate", handlePopState);
     };
   }, [navigate]);
+
+  // ================================
+  const groupRequest = async () => {
+    // ------ api col
+    setisShowGrupreq(true);
+
+    try {
+      const res = await getRequestsBymemberEmail(userEmail);
+
+      const newNotifications = res.data.map((item: any) => ({
+        id: item.grupId,
+        grupAdminEmail: item.grupAdminId,
+        reqestid: item.reqestId,
+        email: item.memberEmail,
+        grupId: item.grupId,
+      }));
+
+      setNotyficetions(newNotifications);
+    } catch (error) {
+      console.error(error);
+    }
+  };
 
   // ====================================
 
@@ -88,25 +112,22 @@ const Dashboard = () => {
     socket.on("backend-updated", (data: { message: string; type: any }) => {
       if (data.type === "CUSTOMER_ADDED") {
         // alert("Custormer Offline 1");
-      } else if (data.type === "CUSTOMER_LOGED") {
+      }
+      if (data.type === "CUSTOMER_ONLINE") {
         getAllcustormerfuntion();
-      } else if (data.type === "SHOCKET_DISCONECTED") {
-        // alert("Custormer SHOCKET_DISCONECTED 2");
+      }
 
+      if (data.type === "SHOCKET_DISCONECTED") {
         getAllcustormerfuntion();
-
-        // alert("Custormer Offline");
-        // f();
-      } else if (data.type === "NEW_GRUP_ADD") {
+      }
+      if (data.type === "NEW_GRUP_ADD") {
+      }
+      if (data.type === "NEW_MEMBER_ADD_TO_THE_GRUP") {
+        alert("Ok wada ");
+        groupRequest();
       }
 
       if (data.type == "UPDATE_AS_OFFLINE") {
-        // alert("Custormer UPDATE_AS_OFFLINE 5");
-        getAllcustormerfuntion();
-      }
-
-      if (data.type === "CUSTOMER_ONLINE") {
-        // alert("Custormer Online awa 6");
         getAllcustormerfuntion();
       }
     });
@@ -117,9 +138,8 @@ const Dashboard = () => {
   }, [socket]);
 
   // ===================================
-  const [isShowGrupreq, setisShowGrupreq] = useState(false);
 
-  const [notificetions, setNotyficetions] = useState<notifecetion[]>([]);
+  // useEffect(() => {}, [notificetions]);
 
   const navItems = [
     { path: "Home", name: "Home", icon: <AiOutlineDashboard /> },
@@ -133,6 +153,11 @@ const Dashboard = () => {
     { path: "$Payment", name: "Make Payment", icon: <AiOutlineCreditCard /> },
     { path: "Contact", name: "Contacts", icon: <AiOutlineMail /> },
     { path: "AboutUs", name: "About Us", icon: <AiOutlineInfoCircle /> },
+    {
+      path: "Vidiocoll",
+      name: "Get A Vidio colle",
+      icon: <AiOutlineInfoCircle />,
+    },
   ];
 
   const [notyCount, setNotyCount] = useState(0);
@@ -209,32 +234,6 @@ const Dashboard = () => {
   };
   // const [notificetions, setNotyficetions] = useState<notifecetion[]>([]);
   //
-  const groupRequest = async () => {
-    // setNotyCount(notyCount + 1);
-    setisShowGrupreq(true);
-
-    // ------ api col
-
-    try {
-      const res = await getRequestsBymemberEmail(userEmail);
-
-      const newNotifications = res.data.map((item: any) => ({
-        id: item.grupId,
-        reqestid: item.reqestId,
-        email: item.memberEmail,
-        grupId: item.grupId,
-      }));
-
-      setNotyficetions(newNotifications);
-
-      // setNotyficetions(notificetions);
-      console.log("================");
-      console.log(notificetions);
-      console.log("======================");
-    } catch (error) {
-      console.error(error);
-    }
-  };
 
   const paymentReminder = () => {
     // setNotyCount(notyCount + 1);

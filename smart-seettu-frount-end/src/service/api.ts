@@ -67,6 +67,9 @@ api.interceptors.response.use(
         localStorage.removeItem("ACCESS_TOKEN");
         localStorage.removeItem("REFRESH_TOKEN");
         console.error(refreshError);
+        localStorage.removeItem("curentGrupId");
+        localStorage.removeItem("currentCustomer");
+
         await Swal.fire({
           title: "Logging out..",
           text: "Access denied. Please sign in again.",

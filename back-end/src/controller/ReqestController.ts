@@ -1,5 +1,8 @@
 import { Request, Response } from "express";
 import RequestModel from "../models/reqest-model";
+import mongoose from "mongoose";
+import groupModel from "../models/group-modal";
+import customerModal from "../models/customer-modal";
 
 const getNextRequestId = async (): Promise<string> => {
   try {
@@ -53,7 +56,7 @@ export const createNewRequest = async (req: Request, res: Response) => {
     const savedRequest = await newRequest.save();
 
     return res.status(201).json({
-      message: "Request Created Successfully ✅",
+      message: "Request Created Successfully ",
       data: savedRequest,
     });
   } catch (error: any) {
@@ -88,7 +91,7 @@ export const getRequestByGroupAndMember = async (
     }
 
     return res.status(200).json({
-      message: "Data fetched successfully 🎯",
+      message: "Data fetched successfully ",
       data: requestDetails,
     });
   } catch (error: any) {
@@ -153,7 +156,7 @@ export const getPendingRequestsByMemberEmail = async (
 //       return { message: "ඔබට කිසිදු සීට්ටු ආරාධනාවක් (Requests) ලැබී නැත." };
 //     }
 //     return res.status(200).json({
-//       message: "Data fetched successfully 🎯",
+//       message: "Data fetched successfully ",
 //       data: requests,
 //     });
 //   } catch (err) {
@@ -161,3 +164,77 @@ export const getPendingRequestsByMemberEmail = async (
 //     return { error: "Requests සෙවීමේදී ගැටලුවක් ඇතිවිය." };
 //   }
 // };
+
+export const tartSessionForGrupReqest = async (req: Request, res: Response) => {
+  // 1. Session created with mongose
+  const session = await mongoose.startSession();
+
+  try {
+    // start the trans section
+    session.startTransaction();
+    const { grupId, memberEmail, memberRespons, reqestId } = req.body;
+
+    const customer = await customerModal.findOne({ email: memberEmail });
+    console.log("====custormer ==> " + customer);
+    if (!customer) {
+      res.status(500).json({ Message: "Customer not found!" });
+      return;
+    }
+
+    const group = await groupModel.findOne({ id: grupId });
+
+    if (!group) {
+      res.status(500).json({ Message: "Seettu Group not found!" });
+      return;
+    }
+
+    let nextMemberId = "M-001";
+    if (group.members && group.members.length > 0) {
+      const lastMember = group.members[group.members.length - 1];
+      const lastMemberIdNum = parseInt(lastMember.memberId.split("-")[1]);
+      const nextMemberIdNum = lastMemberIdNum + 1;
+      nextMemberId = `M-${String(nextMemberIdNum).padStart(3, "0")}`;
+    }
+
+    const newMember = {
+      memberId: nextMemberId,
+      membername: customer.name,
+      contactnumber: customer.poneNumber,
+      tagname: "member",
+    };
+
+    const updatedGroup = await groupModel.findOneAndUpdate(
+      { id: grupId },
+      { $push: { members: newMember } },
+      { new: true },
+    );
+
+    const resp = await RequestModel.findOneAndUpdate(
+      { reqestId: reqestId },
+      { memberRespons: memberRespons },
+      { new: true },
+    );
+
+    await session.commitTransaction();
+
+    const io = req.app.get("io");
+    if (io) {
+      io.emit("backend-updated", {
+        message: "New member added to the group ",
+        type: "NEW_MEMBER_ADD_TO_THE_GRUP",
+      });
+    }
+
+    res.status(201).json({
+      success: true,
+      Message: "Member added successfully!",
+      nextMemberId: nextMemberId,
+      data: updatedGroup,
+    });
+  } catch (error) {
+    await session.abortTransaction();
+    res.status(500).json({ success: false, error });
+  } finally {
+    session.endSession();
+  }
+};

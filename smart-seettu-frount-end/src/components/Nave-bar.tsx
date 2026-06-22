@@ -506,6 +506,7 @@ const Header = ({ sections }: { sections: any }) => {
     localStorage.removeItem("ACCESS_TOKEN");
     localStorage.removeItem("REFRESH_TOKEN");
     localStorage.removeItem("currentCustomer");
+    localStorage.removeItem("curentGrupId");
 
     setisShowUserIcon(false);
     setUserName("User");
