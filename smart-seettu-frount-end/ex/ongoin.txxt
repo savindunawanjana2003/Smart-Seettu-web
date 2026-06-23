@@ -1,0 +1,128 @@
+// src/services/ongoinService.ts
+import api from "./api";
+
+export interface GroupData {
+  id?: string;
+  adminid: string;
+  memberCount?: string;
+  expectedMonthlySeettuAmount: string;
+  monthlyContributionPerMember: string;
+  seettuDurationInMonths: string;
+  members?: any[];
+  grupStete?: "pending" | "active" | "completed";
+  createDate?: string;
+}
+
+export const ongoinService = {
+  // Get all groups
+  getAllGroups: async () => {
+    try {
+      const { data } = await api.get("/ongoin/all");
+      return data;
+    } catch (error) {
+      console.error("Error fetching groups:", error);
+      throw error;
+    }
+  },
+
+  // Get group by ID
+  getGroupById: async (groupId: string) => {
+    try {
+      const { data } = await api.get(`/ongoin/group/${groupId}`);
+      return data;
+    } catch (error) {
+      console.error("Error fetching group:", error);
+      throw error;
+    }
+  },
+
+  // Create new group
+  createGroup: async (groupData: GroupData) => {
+    try {
+      const { data } = await api.post("/ongoin/create", groupData);
+      return data;
+    } catch (error) {
+      console.error("Error creating group:", error);
+      throw error;
+    }
+  },
+
+  // Update group
+  updateGroup: async (groupId: string, updateData: Partial<GroupData>) => {
+    try {
+      const { data } = await api.put(`/ongoin/update/${groupId}`, updateData);
+      return data;
+    } catch (error) {
+      console.error("Error updating group:", error);
+      throw error;
+    }
+  },
+
+  // Delete group
+  deleteGroup: async (groupId: string) => {
+    try {
+      const { data } = await api.delete(`/ongoin/delete/${groupId}`);
+      return data;
+    } catch (error) {
+      console.error("Error deleting group:", error);
+      throw error;
+    }
+  },
+
+  // Join group
+  joinGroup: async (groupId: string, memberData: any) => {
+    try {
+      const { data } = await api.post(`/ongoin/join/${groupId}`, memberData);
+      return data;
+    } catch (error) {
+      console.error("Error joining group:", error);
+      throw error;
+    }
+  },
+
+  // Leave group
+  leaveGroup: async (groupId: string, memberId: string) => {
+    try {
+      const { data } = await api.post(`/ongoin/leave/${groupId}`, { memberId });
+      return data;
+    } catch (error) {
+      console.error("Error leaving group:", error);
+      throw error;
+    }
+  },
+
+  // Get group members
+  getGroupMembers: async (groupId: string) => {
+    try {
+      const { data } = await api.get(`/ongoin/members/${groupId}`);
+      return data;
+    } catch (error) {
+      console.error("Error fetching members:", error);
+      throw error;
+    }
+  },
+
+  // Update group status
+  updateGroupStatus: async (groupId: string, status: string) => {
+    try {
+      const { data } = await api.patch(`/ongoin/status/${groupId}`, { status });
+      return data;
+    } catch (error) {
+      console.error("Error updating status:", error);
+      throw error;
+    }
+  },
+
+  // Get user groups
+  getUserGroups: async (userId: string) => {
+    try {
+      const { data } = await api.get(`/ongoin/user/${userId}/groups`);
+      return data;
+    } catch (error) {
+      console.error("Error fetching user groups:", error);
+      throw error;
+    }
+  },
+};
+
+export default ongoinService;

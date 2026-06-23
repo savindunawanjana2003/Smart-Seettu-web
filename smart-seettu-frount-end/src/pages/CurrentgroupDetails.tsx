@@ -9,10 +9,12 @@ import {
 } from "react-icons/ai";
 import { replace, useLocation, useNavigate } from "react-router";
 import { User } from "lucide-react";
+import { useSocket } from "../context/SocketContext";
 
 const GrupmanegementSecound = () => {
   const location = useLocation();
   const navigate = useNavigate();
+  const socket = useSocket();
 
   const [grupNumber, setGrupNumber] = useState<string | number | undefined>();
   const [memberCount, setMemberCount] = useState<number>(1);
@@ -63,6 +65,42 @@ const GrupmanegementSecound = () => {
       return () => clearTimeout(timer);
     }
   }, [currentMembers, grupmembercount]);
+
+  useEffect(() => {
+    if (!socket) {
+      return;
+    }
+
+    socket.on(
+      "backend-updated",
+      async (data: { message: string; type: string }) => {
+        if (data.type === "NEW_MEMBER_ADD_TO_THE_GRUP") {
+          try {
+            const targetGroupId = location.state?.groupId || grupNumber;
+            const resp = await getAllGrupmembersWholeGrup(targetGroupId);
+            const grupmMemberlest = resp?.memberslist || [];
+            setCurrentMembers(grupmMemberlest.length);
+
+            const memberList: grupMember[] = grupmMemberlest.map(
+              (member: any) => ({
+                memberId: member.memberId,
+                name: member.membername,
+                contact: member.contactnumber,
+              }),
+            );
+
+            setGrupmembers(memberList);
+          } catch (error) {
+            console.error("Error fetching group members:", error);
+          }
+        }
+      },
+    );
+
+    return () => {
+      socket.off("backend-updated");
+    };
+  }, [socket]);
 
   return (
     <div className="w-full min-h-screen bg-gradient-to-br from-amber-50 via-white to-amber-50 p-6 relative font-sans">

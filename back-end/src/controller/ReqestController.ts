@@ -120,9 +120,19 @@ export const getPendingRequestsByMemberEmail = async (
       memberRespons: "pending",
     });
 
+    // if (requests.length === 0) {
+    //   return res.status(404).json({
+    //     message: "No pending requests found",
+    //   });
+    // }
     if (requests.length === 0) {
-      return res.status(404).json({
+      console.log(
+        "========///////////////////=true====== requests.length === 0",
+      );
+      return res.status(200).json({
         message: "No pending requests found",
+        count: 0,
+        data: [], // හිස් array එකක් දෙනවා
       });
     }
 
@@ -165,7 +175,10 @@ export const getPendingRequestsByMemberEmail = async (
 //   }
 // };
 
-export const tartSessionForGrupReqest = async (req: Request, res: Response) => {
+export const startSessionForGrupReqest = async (
+  req: Request,
+  res: Response,
+) => {
   // 1. Session created with mongose
   const session = await mongoose.startSession();
 
@@ -216,7 +229,7 @@ export const tartSessionForGrupReqest = async (req: Request, res: Response) => {
     );
 
     await session.commitTransaction();
-
+    // =================================
     const io = req.app.get("io");
     if (io) {
       io.emit("backend-updated", {
@@ -224,6 +237,7 @@ export const tartSessionForGrupReqest = async (req: Request, res: Response) => {
         type: "NEW_MEMBER_ADD_TO_THE_GRUP",
       });
     }
+    // ===============================
 
     res.status(201).json({
       success: true,

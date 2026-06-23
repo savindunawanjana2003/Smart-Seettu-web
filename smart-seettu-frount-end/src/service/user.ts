@@ -25,10 +25,10 @@ export const setOnline = async (email: string) => {
   return rsp.data;
 };
 
-export const setOffline = async (email: string) => {
-  const rsp = await api.put("customer/setOffline", { email });
-  return rsp.data;
-};
+// export const setOffline = async (email: string) => {
+//   const rsp = await api.put("customer/setOffline", { email });
+//   return rsp.data;
+// };
 
 export const getAllcustormer = async () => {
   const rsp = await api.get("customer/getcustomer");

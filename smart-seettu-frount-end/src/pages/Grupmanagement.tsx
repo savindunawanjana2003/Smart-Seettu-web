@@ -32,7 +32,14 @@ const Grupmanagement = () => {
     seettuDurationInMonths: "",
   });
 
-  const [members, setMembers] = useState([]);
+  const [members, setMembers] = useState<
+    Array<{
+      memberId: string;
+      membername: string;
+      contactnumber: string;
+      tagname: string;
+    }>
+  >([]);
 
   const [newMember, setNewMember] = useState({
     memberId: "",
@@ -75,7 +82,7 @@ const Grupmanagement = () => {
   };
 
   const saveToServer = async () => {
-    const admin = profailuser;
+    const admin: any = profailuser;
 
     console.log(admin.id);
     console.log(admin);
@@ -124,7 +131,7 @@ const Grupmanagement = () => {
 
       if (res?.status === 201 || res?.status === 200) {
         Swal.fire({
-          title: "✅ Group Created Successfully",
+          title: "Group Created Successfully",
           text: "Your group has been registered officially.",
           icon: "success",
           position: "top-end",
@@ -168,7 +175,7 @@ const Grupmanagement = () => {
     } catch (error) {
       console.error(error);
       Swal.fire({
-        title: "❌ Save Unsuccessful",
+        title: " Save Unsuccessful",
         text: "Failed to save the group. Please check your inputs and try again.",
         icon: "error",
         position: "top-end",
@@ -187,7 +194,7 @@ const Grupmanagement = () => {
       !groupData.seettuDurationInMonths
     ) {
       Swal.fire({
-        title: "⚠️ Incomplete Form",
+        title: " Incomplete Form",
         text: "Please fill in all required fields before submitting.",
         icon: "error",
         confirmButtonColor: "#dc3545",
@@ -197,7 +204,7 @@ const Grupmanagement = () => {
 
     if (members.length === 0) {
       Swal.fire({
-        title: "⚠️ Incomplete Group",
+        title: " Incomplete Group",
         text: "Are you sure you want to add a new group without any other members?",
         icon: "info",
         showCancelButton: true,

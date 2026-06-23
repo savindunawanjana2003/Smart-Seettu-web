@@ -3,7 +3,7 @@ import {
   createNewRequest,
   getPendingRequestsByMemberEmail,
   getRequestByGroupAndMember,
-  tartSessionForGrupReqest,
+  startSessionForGrupReqest,
 } from "../controller/ReqestController";
 
 const router = express.Router();
@@ -15,6 +15,6 @@ router.get("/getdetails", getRequestByGroupAndMember);
 router.get("/getpendingrequests", getPendingRequestsByMemberEmail);
 // reactionForGrupReqest
 
-router.post("/reactionForGrupReqest", tartSessionForGrupReqest);
+router.post("/reactionForGrupReqest", startSessionForGrupReqest);
 
 export default router;

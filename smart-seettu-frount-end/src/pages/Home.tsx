@@ -37,7 +37,6 @@ const Home: React.FC = () => {
       return;
     }
 
- 
 
     socket.on("backend-updated", (data: { message: string; type: any }) => {
       if (data.type === "CUSTOMER_ADDED") {

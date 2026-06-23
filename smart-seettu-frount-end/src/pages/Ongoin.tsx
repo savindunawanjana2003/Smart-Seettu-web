@@ -4,23 +4,40 @@ import {
   Users,
   UserPlus,
   Settings,
-  ChevronRight,
   MessageCircle,
   Calendar,
   Clock,
   TrendingUp,
-  BarChart3,
-  UserCog,
   Crown,
-  LogOut,
   Eye,
   Edit,
   Trash2,
   PlusCircle,
+  Loader2,
+  AlertCircle,
+  Search,
+  X,
+  LayoutGrid,
+  List,
 } from "lucide-react";
+import { ongoinService } from "../service/ongoin";
+import Swal from "sweetalert2";
 
-// Types
 interface Group {
+  _id?: string;
+  id: string;
+  adminid: string;
+  memberCount: string;
+  expectedMonthlySeettuAmount: string;
+  monthlyContributionPerMember: string;
+  seettuDurationInMonths: string;
+  members: any[];
+  grupStete: "pending" | "active" | "completed";
+  createDate: string;
+  __v?: number;
+}
+
+interface GroupWithUI {
   id: string;
   name: string;
   description: string;
@@ -31,87 +48,87 @@ interface Group {
   isAdmin: boolean;
   isMember: boolean;
   lastActivity: string;
+  expectedMonthlySeettuAmount: string;
+  monthlyContributionPerMember: string;
+  seettuDurationInMonths: string;
 }
 
 const Ongoin = () => {
   const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState<"all" | "admin" | "member">("all");
-  const [selectedGroup, setSelectedGroup] = useState<string | null>(null);
+  const [groups, setGroups] = useState<GroupWithUI[]>([]);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [error, setError] = useState<string | null>(null);
+  const [searchTerm, setSearchTerm] = useState<string>("");
+  const [userId, setUserId] = useState<string>("");
+  const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
 
-  // Sample data - replace with real data from your backend
-  const [groups, setGroups] = useState<Group[]>([
-    {
-      id: "G001",
-      name: "සීට්ටු සමූහය 2026",
-      description: "මාසික සීට්ටු සමූහය - ජනවාරි 2026",
-      memberCount: 8,
-      maxMembers: 12,
-      createdDate: "2026-01-01",
-      status: "active",
-      isAdmin: true,
-      isMember: true,
-      lastActivity: "2026-01-15",
-    },
-    {
-      id: "G002",
-      name: "ඉතුරුම් කණ්ඩායම",
-      description: "ඉතුරුම් සහ ආයෝජන සමූහය",
-      memberCount: 5,
-      maxMembers: 10,
-      createdDate: "2026-01-05",
-      status: "pending",
-      isAdmin: false,
-      isMember: true,
-      lastActivity: "2026-01-12",
-    },
-    {
-      id: "G003",
-      name: "ව්‍යාපාරික සීට්ටු",
-      description: "ව්‍යාපාරිකයන් සඳහා සීට්ටු සමූහය",
-      memberCount: 10,
-      maxMembers: 10,
-      createdDate: "2025-12-15",
-      status: "completed",
-      isAdmin: true,
-      isMember: true,
-      lastActivity: "2026-01-10",
-    },
-    {
-      id: "G004",
-      name: "ගෘහස්ථ සීට්ටු",
-      description: "පවුලේ සාමාජිකයන් සඳහා",
-      memberCount: 4,
-      maxMembers: 8,
-      createdDate: "2026-01-10",
-      status: "active",
-      isAdmin: false,
-      isMember: true,
-      lastActivity: "2026-01-14",
-    },
-    {
-      id: "G005",
-      name: "තරුණ සීට්ටු",
-      description: "තරුණ පරපුරේ සීට්ටු සමූහය",
-      memberCount: 6,
-      maxMembers: 15,
-      createdDate: "2026-01-08",
-      status: "active",
-      isAdmin: true,
-      isMember: true,
-      lastActivity: "2026-01-13",
-    },
-  ]);
+  // Get current user ID from localStorage
+  useEffect(() => {
+    try {
+      const user = JSON.parse(localStorage.getItem("currentCustomer") || "{}");
+      setUserId(user.id || user.memberId || "");
+    } catch (error) {
+      console.error("Error getting user:", error);
+      setUserId("");
+    }
+  }, []);
+
+  // Fetch groups from API
+  useEffect(() => {
+    fetchGroups();
+  }, []);
+
+  const fetchGroups = async () => {
+    try {
+      setLoading(true);
+      setError(null);
+      const response = await ongoinService.getAllGroups();
+
+      if (response && Array.isArray(response)) {
+        const formattedGroups = response.map((group: Group) => ({
+          id: group.id || group._id || "",
+          name: `සීට්ටු සමූහය ${group.id || group._id}`,
+          description: `මාසික සීට්ටු සමූහය - ${group.createDate || "2026"}`,
+          memberCount: group.members?.length || 0,
+          maxMembers: 12,
+          createdDate:
+            group.createDate || new Date().toISOString().split("T")[0],
+          status: group.grupStete || "pending",
+          isAdmin: group.adminid === userId,
+          isMember:
+            group.members?.some((m: any) => m.memberId === userId) || false,
+          lastActivity:
+            group.createDate || new Date().toISOString().split("T")[0],
+          expectedMonthlySeettuAmount: group.expectedMonthlySeettuAmount || "0",
+          monthlyContributionPerMember:
+            group.monthlyContributionPerMember || "0",
+          seettuDurationInMonths: group.seettuDurationInMonths || "0",
+        }));
+        setGroups(formattedGroups);
+      } else {
+        setError("Failed to load groups");
+        setGroups([]);
+      }
+    } catch (err: any) {
+      console.error("Error fetching groups:", err);
+      setError(err?.message || "Failed to load groups. Please try again.");
+      setGroups([]);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const getStatusColor = (status: string) => {
     switch (status) {
       case "active":
-        return "bg-green-100 text-green-800 border-green-300";
+        return "bg-emerald-50 text-emerald-700 border-emerald-200";
       case "pending":
-        return "bg-yellow-100 text-yellow-800 border-yellow-300";
+        return "bg-amber-50 text-amber-700 border-amber-200";
       case "completed":
-        return "bg-blue-100 text-blue-800 border-blue-300";
+        return "bg-blue-50 text-blue-700 border-blue-200";
       default:
-        return "bg-gray-100 text-gray-800";
+        return "bg-gray-50 text-gray-700 border-gray-200";
     }
   };
 
@@ -128,45 +145,112 @@ const Ongoin = () => {
     }
   };
 
+  const getStatusDot = (status: string) => {
+    switch (status) {
+      case "active":
+        return "bg-emerald-500";
+      case "pending":
+        return "bg-amber-500";
+      case "completed":
+        return "bg-blue-500";
+      default:
+        return "bg-gray-500";
+    }
+  };
+
   const filteredGroups = groups.filter((group) => {
-    if (activeTab === "admin") return group.isAdmin;
-    if (activeTab === "member") return group.isMember && !group.isAdmin;
-    return group.isMember || group.isAdmin;
+    if (activeTab === "admin" && !group.isAdmin) return false;
+    if (activeTab === "member" && (group.isAdmin || !group.isMember))
+      return false;
+    if (searchTerm.trim()) {
+      const search = searchTerm.toLowerCase();
+      return (
+        group.name.toLowerCase().includes(search) ||
+        group.description.toLowerCase().includes(search) ||
+        group.id.toLowerCase().includes(search)
+      );
+    }
+    return true;
   });
 
   const handleGroupClick = (groupId: string) => {
     navigate(`/pages/Dashbord/Grup/${groupId}`);
   };
 
-  return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-amber-50/50">
-      {/* Hero Section */}
-      <div className="relative bg-gradient-to-r from-amber-700 via-amber-600 to-orange-600 text-white overflow-hidden">
-        <div className="absolute inset-0 opacity-10">
-          <div className="absolute top-0 -left-4 w-72 h-72 bg-white rounded-full mix-blend-overlay animate-pulse"></div>
-          <div className="absolute bottom-0 -right-4 w-96 h-96 bg-white rounded-full mix-blend-overlay animate-pulse delay-1000"></div>
-        </div>
+  const handleDeleteGroup = async (groupId: string, groupName: string) => {
+    const result = await Swal.fire({
+      title: "සමූහය මකා දැමීමට වග බලා ගන්න",
+      text: `"${groupName}" සමූහය මකා දැමීමට අවශ්‍ය බව ඔබට විශ්වාසද?`,
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#dc2626",
+      cancelButtonColor: "#6b7280",
+      confirmButtonText: "ඔව්, මකා දමන්න",
+      cancelButtonText: "අවලංගු කරන්න",
+    });
 
-        <div className="container mx-auto px-4 py-8 md:py-12 relative">
+    if (result.isConfirmed) {
+      try {
+        await Swal.fire({
+          title: "මකා දමන ලදි!",
+          text: "සමූහය සාර්ථකව මකා දමන ලදි.",
+          icon: "success",
+          timer: 2000,
+          showConfirmButton: false,
+        });
+        fetchGroups();
+      } catch (err) {
+        console.error("Error deleting group:", err);
+        Swal.fire({
+          title: "දෝෂයකි!",
+          text: "සමූහය මකා දැමීමට නොහැකි විය.",
+          icon: "error",
+          confirmButtonText: "හරි",
+        });
+      }
+    }
+  };
+
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-white">
+        <div className="text-center">
+          <Loader2 className="w-12 h-12 animate-spin text-blue-600 mx-auto" />
+          <p className="mt-4 text-gray-600 font-medium">
+            Loading your groups...
+          </p>
+          <p className="text-sm text-gray-400">කරුණාකර මොහොතක් රැඳී සිටින්න</p>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="min-h-screen bg-gray-50">
+      {/* Hero Section - White */}
+      <div className="bg-white border-b border-gray-200 shadow-sm">
+        <div className="container mx-auto px-4 py-8 md:py-10">
           <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
             <div>
               <div className="flex items-center gap-3 mb-2">
-                <div className="p-2 bg-white/20 rounded-xl backdrop-blur-sm">
-                  <Users className="w-6 h-6" />
+                <div className="p-2.5 bg-blue-50 rounded-xl">
+                  <Users className="w-6 h-6 text-blue-600" />
                 </div>
-                <h1 className="text-2xl md:text-3xl font-bold">
-                  මගේ සීට්ටු සමූහ
-                </h1>
+                <div>
+                  <h1 className="text-2xl md:text-3xl font-bold text-gray-800">
+                    මගේ සීට්ටු සමූහ
+                  </h1>
+                  <p className="text-gray-500 text-sm mt-0.5">
+                    ඔබ සම්බන්ධ වී සිටින සහ ඔබ විසින් නිර්මාණය කරන ලද සියලුම
+                    සීට්ටු සමූහ
+                  </p>
+                </div>
               </div>
-              <p className="text-amber-100/90 text-sm md:text-base max-w-2xl">
-                ඔබ සම්බන්ධ වී සිටින සහ ඔබ විසින් නිර්මාණය කරන ලද සියලුම සීට්ටු
-                සමූහ මෙතැනින් කළමනාකරණය කරන්න.
-              </p>
             </div>
 
             <button
               onClick={() => navigate("/pages/Dashbord/Grupmanagement")}
-              className="flex items-center gap-2 px-4 py-2.5 bg-white/20 backdrop-blur-sm hover:bg-white/30 rounded-xl transition-all duration-200 text-sm font-medium border border-white/20"
+              className="flex items-center gap-2 px-5 py-2.5 bg-blue-600 hover:bg-blue-700 text-white rounded-xl transition-all duration-200 text-sm font-medium shadow-sm hover:shadow-md"
             >
               <PlusCircle className="w-4 h-4" />
               නව සමූහයක් සාදන්න
@@ -175,118 +259,182 @@ const Ongoin = () => {
         </div>
       </div>
 
-      {/* Stats Cards */}
+      {/* Stats Cards - White */}
       <div className="container mx-auto px-4 -mt-4 relative z-10">
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-          <div className="bg-white rounded-xl shadow-lg p-4 border border-amber-100/50">
+          <div className="bg-white rounded-xl shadow-sm p-5 border border-gray-100 hover:shadow-md transition-shadow">
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-2xl font-bold text-gray-800">
                   {groups.length}
                 </p>
-                <p className="text-xs text-gray-500">මුළු සමූහ</p>
+                <p className="text-xs text-gray-500 mt-0.5">මුළු සමූහ</p>
               </div>
-              <div className="w-10 h-10 rounded-full bg-amber-100 flex items-center justify-center">
-                <Users className="w-5 h-5 text-amber-600" />
+              <div className="w-11 h-11 rounded-xl bg-blue-50 flex items-center justify-center">
+                <Users className="w-5 h-5 text-blue-600" />
               </div>
             </div>
           </div>
 
-          <div className="bg-white rounded-xl shadow-lg p-4 border border-amber-100/50">
+          <div className="bg-white rounded-xl shadow-sm p-5 border border-gray-100 hover:shadow-md transition-shadow">
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-2xl font-bold text-gray-800">
                   {groups.filter((g) => g.isAdmin).length}
                 </p>
-                <p className="text-xs text-gray-500">පරිපාලක</p>
+                <p className="text-xs text-gray-500 mt-0.5">පරිපාලක</p>
               </div>
-              <div className="w-10 h-10 rounded-full bg-purple-100 flex items-center justify-center">
+              <div className="w-11 h-11 rounded-xl bg-purple-50 flex items-center justify-center">
                 <Crown className="w-5 h-5 text-purple-600" />
               </div>
             </div>
           </div>
 
-          <div className="bg-white rounded-xl shadow-lg p-4 border border-amber-100/50">
+          <div className="bg-white rounded-xl shadow-sm p-5 border border-gray-100 hover:shadow-md transition-shadow">
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-2xl font-bold text-gray-800">
                   {groups.filter((g) => g.isMember && !g.isAdmin).length}
                 </p>
-                <p className="text-xs text-gray-500">සාමාජික</p>
+                <p className="text-xs text-gray-500 mt-0.5">සාමාජික</p>
               </div>
-              <div className="w-10 h-10 rounded-full bg-green-100 flex items-center justify-center">
-                <UserPlus className="w-5 h-5 text-green-600" />
+              <div className="w-11 h-11 rounded-xl bg-emerald-50 flex items-center justify-center">
+                <UserPlus className="w-5 h-5 text-emerald-600" />
               </div>
             </div>
           </div>
 
-          <div className="bg-white rounded-xl shadow-lg p-4 border border-amber-100/50">
+          <div className="bg-white rounded-xl shadow-sm p-5 border border-gray-100 hover:shadow-md transition-shadow">
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-2xl font-bold text-gray-800">
                   {groups.filter((g) => g.status === "active").length}
                 </p>
-                <p className="text-xs text-gray-500">සක්‍රිය</p>
+                <p className="text-xs text-gray-500 mt-0.5">සක්‍රිය</p>
               </div>
-              <div className="w-10 h-10 rounded-full bg-green-100 flex items-center justify-center">
-                <TrendingUp className="w-5 h-5 text-green-600" />
+              <div className="w-11 h-11 rounded-xl bg-emerald-50 flex items-center justify-center">
+                <TrendingUp className="w-5 h-5 text-emerald-600" />
               </div>
             </div>
           </div>
         </div>
       </div>
 
-      {/* Filter Tabs */}
-      <div className="container mx-auto px-4 mt-8">
-        <div className="flex flex-wrap gap-2 border-b border-gray-200 pb-4">
-          <button
-            onClick={() => setActiveTab("all")}
-            className={`px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 ${
-              activeTab === "all"
-                ? "bg-amber-600 text-white shadow-lg shadow-amber-600/20"
-                : "bg-gray-100 text-gray-600 hover:bg-gray-200"
-            }`}
-          >
-            සියල්ල
-          </button>
-          <button
-            onClick={() => setActiveTab("admin")}
-            className={`px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 flex items-center gap-2 ${
-              activeTab === "admin"
-                ? "bg-purple-600 text-white shadow-lg shadow-purple-600/20"
-                : "bg-gray-100 text-gray-600 hover:bg-gray-200"
-            }`}
-          >
-            <Crown className="w-4 h-4" />
-            මම පරිපාලක
-          </button>
-          <button
-            onClick={() => setActiveTab("member")}
-            className={`px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 flex items-center gap-2 ${
-              activeTab === "member"
-                ? "bg-green-600 text-white shadow-lg shadow-green-600/20"
-                : "bg-gray-100 text-gray-600 hover:bg-gray-200"
-            }`}
-          >
-            <UserPlus className="w-4 h-4" />
-            මම සාමාජික
-          </button>
+      {/* Search and Filter - White */}
+      <div className="container mx-auto px-4 mt-6">
+        <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-4">
+          <div className="flex flex-col md:flex-row gap-3">
+            <div className="flex-1 relative">
+              <Search className="absolute left-3.5 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
+              <input
+                type="text"
+                placeholder="සමූහයක් සොයන්න..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                className="w-full pl-10 pr-10 py-2.5 bg-gray-50 border border-gray-200 rounded-lg text-gray-700 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
+              />
+              {searchTerm && (
+                <button
+                  onClick={() => setSearchTerm("")}
+                  className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                >
+                  <X className="w-4 h-4" />
+                </button>
+              )}
+            </div>
+
+            <div className="flex flex-wrap gap-2">
+              <button
+                onClick={() => setActiveTab("all")}
+                className={`px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 ${
+                  activeTab === "all"
+                    ? "bg-blue-600 text-white shadow-sm"
+                    : "bg-gray-50 text-gray-600 hover:bg-gray-100 border border-gray-200"
+                }`}
+              >
+                සියල්ල
+              </button>
+              <button
+                onClick={() => setActiveTab("admin")}
+                className={`px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 flex items-center gap-1.5 ${
+                  activeTab === "admin"
+                    ? "bg-purple-600 text-white shadow-sm"
+                    : "bg-gray-50 text-gray-600 hover:bg-gray-100 border border-gray-200"
+                }`}
+              >
+                <Crown className="w-3.5 h-3.5" />
+                පරිපාලක
+              </button>
+              <button
+                onClick={() => setActiveTab("member")}
+                className={`px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 flex items-center gap-1.5 ${
+                  activeTab === "member"
+                    ? "bg-emerald-600 text-white shadow-sm"
+                    : "bg-gray-50 text-gray-600 hover:bg-gray-100 border border-gray-200"
+                }`}
+              >
+                <UserPlus className="w-3.5 h-3.5" />
+                සාමාජික
+              </button>
+            </div>
+
+            {/* View toggle */}
+            <div className="flex gap-1 bg-gray-100 p-1 rounded-lg">
+              <button
+                onClick={() => setViewMode("grid")}
+                className={`p-2 rounded-md transition-all ${
+                  viewMode === "grid"
+                    ? "bg-white shadow-sm text-gray-800"
+                    : "text-gray-500 hover:text-gray-700"
+                }`}
+              >
+                <LayoutGrid className="w-4 h-4" />
+              </button>
+              <button
+                onClick={() => setViewMode("list")}
+                className={`p-2 rounded-md transition-all ${
+                  viewMode === "list"
+                    ? "bg-white shadow-sm text-gray-800"
+                    : "text-gray-500 hover:text-gray-700"
+                }`}
+              >
+                <List className="w-4 h-4" />
+              </button>
+            </div>
+          </div>
         </div>
       </div>
 
       {/* Group List */}
       <div className="container mx-auto px-4 py-6">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {error && (
+          <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-xl mb-6 flex items-center gap-2">
+            <AlertCircle className="w-5 h-5 flex-shrink-0" />
+            {error}
+          </div>
+        )}
+
+        <div
+          className={
+            viewMode === "grid"
+              ? "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5"
+              : "space-y-4"
+          }
+        >
           {filteredGroups.length === 0 ? (
-            <div className="col-span-full text-center py-12">
+            <div className="col-span-full text-center py-16 bg-white rounded-xl shadow-sm border border-gray-100">
               <div className="inline-flex flex-col items-center gap-4">
                 <div className="w-20 h-20 rounded-full bg-gray-100 flex items-center justify-center">
                   <Users className="w-10 h-10 text-gray-400" />
                 </div>
                 <div>
-                  <p className="text-gray-600 font-medium">සමූහ නොමැත</p>
-                  <p className="text-sm text-gray-400">
-                    මෙම කාණ්ඩයේ සමූහ කිසිවක් සොයාගත නොහැක
+                  <p className="text-gray-600 font-medium">
+                    {searchTerm ? "සමූහයක් හමු නොවීය" : "සමූහ නොමැත"}
+                  </p>
+                  <p className="text-sm text-gray-400 mt-0.5">
+                    {searchTerm
+                      ? `"${searchTerm}" සඳහා සමූහ හමු නොවීය`
+                      : "මෙම කාණ්ඩයේ සමූහ කිසිවක් සොයාගත නොහැක"}
                   </p>
                 </div>
               </div>
@@ -295,18 +443,21 @@ const Ongoin = () => {
             filteredGroups.map((group) => (
               <div
                 key={group.id}
-                className="group bg-white rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-300 hover:-translate-y-1 overflow-hidden border border-gray-100"
+                className="bg-white rounded-xl shadow-sm hover:shadow-md transition-all duration-300 overflow-hidden border border-gray-100 group"
               >
                 {/* Group Header */}
                 <div className="p-5 border-b border-gray-100">
                   <div className="flex items-start justify-between">
-                    <div className="flex-1">
+                    <div className="flex-1 min-w-0">
                       <div className="flex items-center gap-2">
-                        <h3 className="font-bold text-gray-800 text-lg">
+                        <div
+                          className={`w-2 h-2 rounded-full ${getStatusDot(group.status)}`}
+                        />
+                        <h3 className="font-semibold text-gray-800 text-base truncate">
                           {group.name}
                         </h3>
                         {group.isAdmin && (
-                          <span className="text-[10px] px-2 py-0.5 bg-purple-100 text-purple-700 rounded-full font-medium">
+                          <span className="text-[10px] px-2 py-0.5 bg-purple-100 text-purple-700 rounded-full font-medium whitespace-nowrap">
                             Admin
                           </span>
                         )}
@@ -316,7 +467,7 @@ const Ongoin = () => {
                       </p>
                     </div>
                     <span
-                      className={`px-2.5 py-1 rounded-full text-xs font-medium border ${getStatusColor(group.status)}`}
+                      className={`px-2.5 py-1 rounded-full text-xs font-medium border whitespace-nowrap ml-2 ${getStatusColor(group.status)}`}
                     >
                       {getStatusText(group.status)}
                     </span>
@@ -327,17 +478,17 @@ const Ongoin = () => {
                 <div className="px-5 py-3 bg-gray-50/50 flex items-center justify-between">
                   <div className="flex items-center gap-4 text-sm">
                     <div className="flex items-center gap-1.5 text-gray-600">
-                      <Users className="w-4 h-4" />
-                      <span>
+                      <Users className="w-4 h-4 text-gray-400" />
+                      <span className="font-medium">
                         {group.memberCount}/{group.maxMembers}
                       </span>
                     </div>
-                    <div className="flex items-center gap-1.5 text-gray-600">
-                      <Calendar className="w-4 h-4" />
+                    <div className="flex items-center gap-1.5 text-gray-500">
+                      <Calendar className="w-4 h-4 text-gray-400" />
                       <span className="text-xs">{group.createdDate}</span>
                     </div>
                   </div>
-                  <div className="flex items-center gap-1.5 text-xs text-gray-500">
+                  <div className="flex items-center gap-1.5 text-xs text-gray-400">
                     <Clock className="w-3 h-3" />
                     <span>{group.lastActivity}</span>
                   </div>
@@ -347,7 +498,7 @@ const Ongoin = () => {
                 <div className="px-5 py-2">
                   <div className="w-full bg-gray-200 h-1.5 rounded-full overflow-hidden">
                     <div
-                      className="h-full bg-gradient-to-r from-amber-500 to-orange-500 rounded-full transition-all duration-500"
+                      className="h-full bg-gradient-to-r from-blue-500 to-blue-600 rounded-full transition-all duration-500"
                       style={{
                         width: `${(group.memberCount / group.maxMembers) * 100}%`,
                       }}
@@ -359,31 +510,44 @@ const Ongoin = () => {
                 <div className="px-5 py-3 border-t border-gray-100 flex items-center gap-2">
                   <button
                     onClick={() => handleGroupClick(group.id)}
-                    className="flex-1 flex items-center justify-center gap-2 px-3 py-2 bg-amber-600 hover:bg-amber-700 text-white rounded-lg text-sm font-medium transition-all duration-200"
+                    className="flex-1 flex items-center justify-center gap-2 px-3 py-2 bg-green-500 hover:bg-lime-600 text-white rounded-lg text-sm font-medium transition-all duration-200"
                   >
                     <Eye className="w-4 h-4" />
                     බලන්න
                   </button>
 
-                  {group.isAdmin && (
+                  {group.isAdmin ? (
                     <>
                       <button
                         onClick={() =>
                           navigate(`/pages/Dashbord/Grupmanagement/${group.id}`)
                         }
                         className="px-3 py-2 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-lg text-sm font-medium transition-all duration-200"
+                        title="සංස්කරණය කරන්න"
                       >
                         <Edit className="w-4 h-4" />
                       </button>
-                      <button className="px-3 py-2 bg-gray-100 hover:bg-red-100 text-gray-700 hover:text-red-600 rounded-lg text-sm font-medium transition-all duration-200">
+                      <button
+                        onClick={() => handleDeleteGroup(group.id, group.name)}
+                        className="px-3 py-2 bg-gray-100 hover:bg-red-100 text-gray-700 hover:text-red-600 rounded-lg text-sm font-medium transition-all duration-200"
+                        title="මකා දමන්න"
+                      >
                         <Trash2 className="w-4 h-4" />
                       </button>
                     </>
+                  ) : (
+                    <button
+                      className="px-3 py-2 bg-gray-100 hover:bg-red-100 text-gray-700 hover:text-red-600 rounded-lg text-sm font-medium transition-all duration-200"
+                      title="පිටවන්න"
+                    >
+                      <UserPlus className="w-4 h-4" />
+                    </button>
                   )}
 
                   <button
                     onClick={() => navigate(`/pages/Dashbord/Chat/${group.id}`)}
                     className="px-3 py-2 bg-gray-100 hover:bg-blue-100 text-gray-700 hover:text-blue-600 rounded-lg text-sm font-medium transition-all duration-200"
+                    title="කතාබස් කරන්න"
                   >
                     <MessageCircle className="w-4 h-4" />
                   </button>
@@ -394,26 +558,28 @@ const Ongoin = () => {
         </div>
       </div>
 
-      {/* Quick Actions */}
-      <div className="container mx-auto px-4 py-8">
-        <div className="bg-gradient-to-r from-amber-600 to-orange-600 rounded-2xl p-6 md:p-8 text-white">
+      {/* Quick Actions - White */}
+      <div className="container mx-auto px-4 py-6">
+        <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6 md:p-8">
           <div className="flex flex-col md:flex-row items-center justify-between gap-4">
             <div>
-              <h3 className="text-xl font-bold">🚀 අදහස් තිබේද?</h3>
-              <p className="text-amber-100/90 text-sm mt-1">
+              <h3 className="text-lg font-bold text-gray-800">
+                🚀 අදහස් තිබේද?
+              </h3>
+              <p className="text-gray-500 text-sm mt-0.5">
                 නව සීට්ටු සමූහයක් ආරම්භ කිරීමට හෝ පවතින සමූහයක් කළමනාකරණය කිරීමට
               </p>
             </div>
             <div className="flex flex-wrap gap-3">
               <button
                 onClick={() => navigate("/pages/Dashbord/Grupmanagement")}
-                className="px-5 py-2.5 bg-white text-amber-700 rounded-xl font-medium hover:bg-amber-50 transition-all duration-200 flex items-center gap-2 shadow-lg"
+                className="px-5 py-2.5 bg-blue-600 hover:bg-blue-700 text-white rounded-xl font-medium transition-all duration-200 flex items-center gap-2 shadow-sm hover:shadow-md"
               >
                 <PlusCircle className="w-4 h-4" />
                 නව සමූහය
               </button>
-              <button className="px-5 py-2.5 bg-white/20 backdrop-blur-sm hover:bg-white/30 rounded-xl font-medium transition-all duration-200 border border-white/20">
-                <Settings className="w-4 h-4 inline mr-1" />
+              <button className="px-5 py-2.5 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-xl font-medium transition-all duration-200 flex items-center gap-2">
+                <Settings className="w-4 h-4" />
                 සැකසුම්
               </button>
             </div>

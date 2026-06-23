@@ -14,7 +14,7 @@ import {
   faUsers,
 } from "@fortawesome/free-solid-svg-icons";
 import { Link } from "react-scroll";
-import { registere, setOffline, setOnline } from "../service/user";
+// import { registere, setOffline, setOnline } from "../service/user";
 import { useSocket } from "../context/SocketContext";
 interface RegistrationData {
   name: string;
@@ -224,8 +224,8 @@ const Header = ({ sections }: { sections: any }) => {
         });
 
         // =================================================/  update stetus  from usin api coll
-        const onlineStatusResponse = await setOnline(email);
-        console.log("Online status updated:", onlineStatusResponse);
+        // const onlineStatusResponse = await setOnline(email);
+        // console.log("Online status updated:", onlineStatusResponse);
         console.log("Login response:", respons.data);
         console.log("=======================================================");
         setUserName(respons.data.data.name);
@@ -267,7 +267,7 @@ const Header = ({ sections }: { sections: any }) => {
             }
           },
         });
-        const offlineStatusResponse = await setOffline(email);
+        // const offlineStatusResponse = await setOffline(email);
         await setisShowUserIcon(false);
 
         return;
@@ -502,7 +502,7 @@ const Header = ({ sections }: { sections: any }) => {
       ? JSON.parse(currentCustomer).email
       : "";
 
-    const offlineStatusResponse = await setOffline(emailuser);
+    // const offlineStatusResponse = await setOffline(emailuser);
     localStorage.removeItem("ACCESS_TOKEN");
     localStorage.removeItem("REFRESH_TOKEN");
     localStorage.removeItem("currentCustomer");
@@ -519,7 +519,7 @@ const Header = ({ sections }: { sections: any }) => {
       ? JSON.parse(currentCustomer).email
       : "";
 
-    const offlineStatusResponse = await setOffline(emailuser);
+    // const offlineStatusResponse = await setOffline(emailuser);
   };
 
   // -----------------------------
@@ -531,7 +531,7 @@ const Header = ({ sections }: { sections: any }) => {
 
     if (emailuser == "") {
     } else {
-      const offlineStatusResponse = await setOnline(emailuser);
+      // const offlineStatusResponse = await setOnline(emailuser);
     }
   };
 

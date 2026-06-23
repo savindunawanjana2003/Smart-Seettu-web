@@ -87,18 +87,8 @@ export const login = async (req: Request, res: Response) => {
   const accessToken = singAccesstoken(customer);
   const refreshToken = signRefreshToken(customer);
 
-  await customerModal.findOneAndUpdate({ email }, { isOnline: true });
+  // await customerModal.findOneAndUpdate({ email }, { isOnline: true });
 
-  console.log("++++++++++++++++++ emite START +++++++++++++++++++++++++++++");
-  const io = req.app.get("io");
-  if (io) {
-    io.emit("backend-updated", {
-      message: "A new customer was Loged! Please refresh.",
-      type: "CUSTOMER_ONLINE",
-    });
-    console.log("Broadcasting Success!");
-  }
-  console.log("++++++++++++++++++ emite END +++++++++++++++++++++++++++++");
   res.status(200).json({
     message: "Success",
     data: {
@@ -112,36 +102,7 @@ export const login = async (req: Request, res: Response) => {
   });
 };
 
-export const updateCustomerOnlineStatus = async (
-  req: Request,
-  res: Response,
-  next: NextFunction,
-) => {
-  try {
-    const { email } = req.body;
-
-    const customer = await customerModal.findOneAndUpdate(
-      { email },
-      { isOnline: true },
-      { new: true }, // updated document will be return in hear
-    );
-
-    if (!customer) {
-      return res.status(404).json({
-        success: false,
-        message: "Customer not found plesae register firstly",
-      });
-    }
-
-    return res.status(200).json({
-      success: true,
-      message: "Customer online status updated",
-      data: customer,
-    });
-  } catch (error) {
-    console.error(error);
-  }
-};
+//
 
 export const updateCustomerOfflineStatus = async (
   req: Request,
@@ -263,3 +224,5 @@ export const moveToTheDashBod = async (req: Request, res: Response) => {
   }
   console.log("++++++++++++++++++ emite END +++++++++++++++++++++++++++++");
 };
+
+// =======================================================

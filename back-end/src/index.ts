@@ -7,6 +7,9 @@ import Gruprouter from "./routes/group-router";
 import Reqestrouter from "./routes/reqest-router";
 import Custormerouter from "./routes/customer-router";
 import Airouter from "./routes/ai-router";
+import Contact from "./routes/contact";
+import ongoinRouter from "./routes/ongoin-router";
+
 import http from "http";
 import { Server } from "socket.io";
 
@@ -15,13 +18,23 @@ import { connection } from "./config/db";
 import customerModal from "./models/customer-modal";
 
 dotenv.config();
-const PORT = process.env.PORT;
+const PORT = process.env.PORT || 3001;
 const app = express();
 
 app.set("trust proxy", 1);
 app.use(cors());
 app.use(express.json());
-// ====================
+
+// ==================== Custom Request Logger Middleware ====================
+app.use((req, res, next) => {
+  console.log(`\n================== [ NEW REQUEST ] ==================`);
+  console.log(`Method: ${req.method}`);
+  console.log(`URL: ${req.originalUrl}`);
+  console.log(`Body:`, req.body);
+  console.log(`=====================================================\n`);
+  next();
+});
+
 const server = http.createServer(app);
 const io = new Server(server, {
   cors: {
@@ -31,44 +44,59 @@ const io = new Server(server, {
   transports: ["websocket", "polling"],
 });
 
-// ==============Socket.io setup==============
-const getUser = async (email: any) => {
-  const user = await customerModal.findOne({ email });
-  if (user) return user;
+app.set("io", io);
+
+// DB Operations
+const getUser = async (email: string) => {
+  return await customerModal.findOne({ email });
 };
 
-const updatecustomerOfflineStetus = async (email: any) => {
+const updatecustomerOfflineStetus = async (email: string) => {
+  console.log(
+    "Ok  updatecustomerOfflineStetus funshion ejke triger wenawa e kiyanna db eka update wenna oneee =================",
+  );
   await customerModal.findOneAndUpdate(
     { email },
     { isOnline: false },
     { new: true },
-    // { returnDocument: "after" },
+  );
+  console.log(
+    "Ok  updatecustomerOfflineStetus funshion ejke triger wenawa e kiyanna db eka update wenna oneee =================",
   );
 };
 
-const updatecustomerOnelineStetus = async (email: any) => {
+const updatecustomerOnelineStetus = async (email: string) => {
   await customerModal.findOneAndUpdate(
     { email },
     { isOnline: true },
     { new: true },
-    // { returnDocument: "after" },
   );
 };
 
-app.set("io", io);
-
+// Memory In-Memory Storage for Tracking
 const onlineUsers: { [email: string]: number } = {};
+const disconnectTimers: { [email: string]: NodeJS.Timeout } = {};
 
+// ==================== Socket Connection Logic ====================
 io.on("connection", async (socket) => {
-  const curentUseremail: any = socket.handshake.query.userEmail;
+  const curentUseremail = socket.handshake.query.userEmail as string;
+  console.log(socket.id);
 
   if (!curentUseremail) {
-    console.log(" Connection rejected: No userEmail provided");
+    console.log("Connection rejected: No userEmail provided");
     return socket.disconnect();
   }
 
   (socket as any).email = curentUseremail;
-  console.log(`Tab connected: ${socket.id} for ${curentUseremail}`);
+  console.log(` Tab connected: ${socket.id} for ${curentUseremail}`);
+
+  if (disconnectTimers[curentUseremail]) {
+    clearTimeout(disconnectTimers[curentUseremail]);
+    delete disconnectTimers[curentUseremail];
+    console.log(
+      ` Disconnect timer cleared for ${curentUseremail} (User reconnected/refreshed)`,
+    );
+  }
 
   if (!onlineUsers[curentUseremail]) {
     onlineUsers[curentUseremail] = 0;
@@ -79,27 +107,34 @@ io.on("connection", async (socket) => {
     await updatecustomerOnelineStetus(curentUseremail);
 
     io.emit("backend-updated", {
-      message: "User offline status updated",
+      message: "User status updated to online",
       type: "CUSTOMER_ONLINE",
+      email: curentUseremail,
     });
 
     console.log(`User ${curentUseremail} is now fully ONLINE`);
   }
-  // https://docs.google.com/document/d/1_7_9q883s3peAz4eapU3EkjaEzguesesUzomGk6F5WE/edit?tab=t.0
+
+  // ==================== Disconnect Logic ====================
   socket.on("disconnect", async () => {
+    console.log("mokek hari off ine giyaaaaaaa ==================");
     const email = (socket as any).email;
     console.log(` Tab disconnected: ${socket.id} for ${email}`);
 
     if (email && onlineUsers[email]) {
       onlineUsers[email]--;
 
-      setTimeout(async () => {
-        if (onlineUsers[email] === 0) {
+      // Active tabs okkoma wahilanam thiyenne
+      if (onlineUsers[email] === 0) {
+        console.log(`Starting offline timeout (7s) for ${email}...`);
+
+        disconnectTimers[email] = setTimeout(async () => {
           const curuntUser = await getUser(email);
 
           if (curuntUser) {
             await updatecustomerOfflineStetus(email);
             delete onlineUsers[email];
+            delete disconnectTimers[email];
 
             io.emit("backend-updated", {
               message: "User is now offline",
@@ -107,48 +142,39 @@ io.on("connection", async (socket) => {
             });
             console.log(`User ${email} is now fully OFFLINE`);
           }
-        } else {
-          console.log(
-            ` User ${email} still has ${onlineUsers[email]} tab(s) open.`,
-          );
-          io.emit("backend-updated", {
-            message: "Active tabs updated",
-            type: "CUSTOMER_ONLINE",
-          });
-        }
-      }, 7000);
+        }, 7000);
+      } else {
+        console.log(
+          `User ${email} still has ${onlineUsers[email]} tab(s) open.`,
+        );
+        io.emit("backend-updated", {
+          message: "Active tabs updated",
+          type: "CUSTOMER_ONLINE",
+          email: email,
+        });
+      }
     }
   });
 });
 
-// =========== setup==============
-// app.post("/", (req, res) => {});
-app.use((req, res, next) => {
-  // console.log(req.)
-  console.log(`\n================== [ NEW REQUEST ] ==================`);
-  console.log(`Method: ${req.method}`);
-  console.log(`URL: ${req.originalUrl}`);
-  console.log(`Body:`, req.body);
-  console.log(`Body:`, req.headers);
-  console.log(`=====================================================\n`);
-  next();
-});
-
+// ==================== API Routes Setup ====================
 app.use("/api/v1/auth", Authrouter);
 app.use("/api/v1/grup", Gruprouter);
 app.use("/api/v1/reqest", Reqestrouter);
 app.use("/api/v1/customer", Custormerouter);
 app.use("/api/v1/ai", Airouter);
-
-// ============Global Error Handling Middleware
+app.use("/api/v1/contact", Contact);
+app.use("/api/v1/ongoin", ongoinRouter);
+// Global Error Handling Middleware
 app.use(globalErrorHandler);
 
+// ==================== Server Start ====================
 const startSever = async (): Promise<void> => {
   try {
     await connection();
 
     server.listen(PORT, () => {
-      console.log(`Server is running on port: ${PORT} `);
+      console.log(` Server is running on port: ${PORT} `);
     });
 
     server.on("error", (err: any) => {

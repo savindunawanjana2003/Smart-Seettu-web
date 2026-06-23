@@ -31,10 +31,16 @@ const GrupReqest = ({
   }, [isShow]);
   // =========================
 
+  const [notyficetion, setNotyficetions] = useState<notifecetion[]>([]);
+
+  useEffect(() => {
+    setNotyficetions(reque);
+  }, [reque]);
+
   const getEmailAvailableAdmins = (data: notifecetion): string => {
     return data.email || "admin@example.com";
   };
-  // =========================
+  // ====================
 
   if (!show) return null;
   // =================================action fro grup reqest ===================
@@ -50,7 +56,7 @@ const GrupReqest = ({
     const memberRespons = "accept";
 
     try {
-      // alert(`${grupId, memberEmail, reqestId}`)
+      // alert(`${grupId, memberEmail, reqestId}`)accept
       console.log(
         grupId + "//" + memberEmail + "//" + reqestId + "////////////////////",
       );
@@ -68,9 +74,9 @@ const GrupReqest = ({
           toast: true,
           position: "top-end",
           showConfirmButton: false,
-          timer: 3000, 
+          timer: 3000,
           timerProgressBar: true,
-          width: "400px", 
+          width: "400px",
           customClass: {
             popup: "custom-toast-class",
           },
@@ -152,7 +158,7 @@ const GrupReqest = ({
 
         {/* Content with smooth scroll */}
         <div className="p-4 space-y-3 h-[calc(100%-85px)] overflow-y-auto">
-          {reque.length === 0 ? (
+          {notyficetion.length === 0 ? (
             <div className="flex flex-col items-center justify-center h-full text-center">
               <div className="w-20 h-20 rounded-full bg-gradient-to-br from-gray-50 to-gray-100 flex items-center justify-center mb-4 shadow-inner">
                 <span className="text-3xl">🔕</span>
@@ -163,7 +169,7 @@ const GrupReqest = ({
               </p>
             </div>
           ) : (
-            reque.map((req, index) => (
+            notyficetion.map((req, index) => (
               <div
                 key={req.id}
                 className={`group bg-white rounded-xl border border-gray-100 p-3 transition-all duration-500 hover:shadow-lg hover:-translate-y-0.5

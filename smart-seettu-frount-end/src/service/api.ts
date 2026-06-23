@@ -64,11 +64,12 @@ api.interceptors.response.use(
         originalRequest.headers.Authorization = `Bearer ${newAccsesTocken}`;
         return api(originalRequest);
       } catch (refreshError) {
+        console.error(refreshError);
+
         localStorage.removeItem("ACCESS_TOKEN");
         localStorage.removeItem("REFRESH_TOKEN");
-        console.error(refreshError);
-        localStorage.removeItem("curentGrupId");
         localStorage.removeItem("currentCustomer");
+        localStorage.removeItem("curentGrupId");
 
         await Swal.fire({
           title: "Logging out..",
