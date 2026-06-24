@@ -27,7 +27,7 @@ app.use(express.json());
 
 // Add this route for testing
 app.get("/", (req, res) => {
-  res.send("<h1>Server is running perfectly! Backend is live! 🚀</h1>");
+  res.send(req);
 });
 
 // ==================== Custom Request Logger Middleware ====================

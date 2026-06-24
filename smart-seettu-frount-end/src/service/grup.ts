@@ -26,9 +26,6 @@ export const getAllGroups = async () => {
 };
 // /grup/getAllGrupmembersFromGrupId/GRP-123  /grup/getAllGrupmembersFromGrupId/GRP-123
 export const getAllGrupmembersFromGrupId = async (groupId: string) => {
-  // console.log("==================00000000000000000000000000=================");
-  // grupId = "GRP-001";
-  // console.log(grupId + "/////////");
 
   const res = await api.get(`/grup/getAllGrupmembersFromGrupId/${groupId}`);
   return res.data;
