@@ -1596,8 +1596,8 @@ const Dashboard = () => {
         </nav>
 
         {/* Main Content */}
-        <main className="flex-1 bg-gray-50 p-6 min-h-[calc(100vh-4rem)] overflow-y-auto">
-          <div className="max-w-7xl mx-auto">
+        <main className="flex-1 bg-amber-500 p-2 min-h-[calc(100vh-4rem)] overflow-y-auto">
+          <div className="max-w-10xl mx-auto">
             <Outlet />
           </div>
         </main>

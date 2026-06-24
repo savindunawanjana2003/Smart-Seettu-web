@@ -1,62 +1,3 @@
-// import React, { useRef } from "react";
-// import { JitsiMeeting } from "@jitsi/react-sdk";
-// import { useNavigate } from "react-router-dom";
-
-// const Videocall: React.FC = () => {
-//   const jitsiApiRef = useRef<any>(null);
-//   const navigate = useNavigate();
-
-//   const jaasAppId = "vpaas-magic-cookie-afa8f7c5e8ea414e86cbf77fd2b6cc23";
-
-//   const roomName = `${jaasAppId}/dental-care-room-xyz987`;
-//   const userName = "Savindu Dev";
-//   const userEmail = "savindu@example.com";
-
-//   return (
-//     <div
-//       style={{
-//         height: "100%",
-//         width: "100%",
-//         maxWidth: "100%",
-//         margin: "0 auto",
-//       }}
-//     >
-//       <JitsiMeeting
-//         domain="8x8.vc"
-//         roomName={roomName}
-//         configOverwrite={{
-//           startWithAudioMuted: false,
-//           startWithVideoMuted: false,
-//           prejoinPageEnabled: false,
-//           disableThirdPartyRequests: true,
-//         }}
-//         interfaceConfigOverwrite={{
-//           SHOW_JITSI_WATERMARK: false,
-//           HIDE_INVITE_YOUR_TEAM: true,
-//         }}
-//         userInfo={{
-//           displayName: userName,
-//           email: userEmail,
-//         }}
-//         onReadyToClose={() => {
-//           navigate("/");
-//         }}
-//         onApiReady={(externalApi) => {
-//           jitsiApiRef.current = externalApi;
-//           console.log("Jitsi Meet API via JaaS is ready");
-//         }}
-//         getIFrameRef={(iframeRef) => {
-//           iframeRef.style.height = "100%";
-//           iframeRef.style.width = "100%";
-//           iframeRef.style.flex = "1";
-//         }}
-//       />
-//     </div>
-//   );
-// };
-
-// export default Videocall;
-
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import {
@@ -105,10 +46,11 @@ const VideoCallPage = () => {
 
     setTimeout(() => {
       setLoading(false);
-      navigate(`/video-call/room/${groupName}`, {
+      navigate("/pages/Dashbord/JitsiColle", {
+        replace: true,
         state: {
-          groupName: groupName,
-          userName: userName,
+          groupname: groupName,
+          adminName: userName,
         },
       });
     }, 1500);
@@ -335,7 +277,7 @@ const VideoCallPage = () => {
                     ) : (
                       <>
                         ඇමතුම ආරම්භ කරන්න
-                        <Video className="w-4 h-4" />
+                        {/* <Video className="w-4 h-4" /> */}
                       </>
                     )}
                   </button>
@@ -413,39 +355,14 @@ const VideoCallPage = () => {
         </div>
 
         {/* Back Button */}
-        <button
+        {/* <button
           onClick={() => navigate(-1)}
           className="mt-6 w-full px-4 py-2.5 text-sm text-gray-500 hover:text-gray-700 transition-colors flex items-center justify-center gap-2 bg-white/80 backdrop-blur-sm rounded-xl border border-white/50 shadow-sm hover:shadow-md"
         >
           <ArrowLeft className="w-4 h-4" />
           ආපසු
-        </button>
+        </button> */}
       </div>
-
-      {/* Custom CSS for animations */}
-      <style>{`
-        @keyframes fadeIn {
-          from {
-            opacity: 0;
-            transform: translateY(10px);
-          }
-          to {
-            opacity: 1;
-            transform: translateY(0);
-          }
-        }
-        @keyframes shake {
-          0%, 100% { transform: translateX(0); }
-          25% { transform: translateX(-5px); }
-          75% { transform: translateX(5px); }
-        }
-        .animate-fadeIn {
-          animation: fadeIn 0.5s ease-out;
-        }
-        .animate-shake {
-          animation: shake 0.3s ease-in-out;
-        }
-      `}</style>
     </div>
   );
 };

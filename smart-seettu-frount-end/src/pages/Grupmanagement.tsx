@@ -74,7 +74,7 @@ const Grupmanagement = () => {
   };
 
   // member kenek cart eken delete karanne meken
-  const removeMemberFromList = (id) => {
+  const removeMemberFromList = (id:any) => {
     setMembers(
       members.filter((m) => m.memberId !== id || m.tagname === "admin"),
     );

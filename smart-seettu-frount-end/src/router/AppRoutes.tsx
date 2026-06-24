@@ -1,4 +1,4 @@
-import Firstpage from "../pages/Web";
+// import Firstpage from "../pages/Web";
 import Apage from "../pages/Grupmanagement";
 import Payment from "../pages/Payment";
 import Home from "../pages/Home";
@@ -8,6 +8,7 @@ import Ongoin from "../pages/Ongoin";
 
 import AboutUs from "../pages/AboutUs";
 import Contact from "../pages/Contact";
+import Jitsi from "../pages/jitsi";
 
 import Dashbord from "../layout/Dashbord";
 import Main from "../layout/mainConteiner";
@@ -15,19 +16,22 @@ import { BrowserRouter, Route, Routes } from "react-router-dom";
 import { createContext } from "react";
 import CurrentgroupDetails from "../pages/CurrentgroupDetails";
 import Grupmanagement from "../pages/Grupmanagement";
+import Header from "../components/Nave-bar";
 
 export const Xcontext = createContext<any>(null);
 export const AppRoutes = () => {
   // const marginTop = localStorage.getItem("ptop");
   // const naveBarisvisible = localStorage.getItem("naveBarisvisible");
   // methanadi mama nested routing use kara
+  const naveItems = [{ id: "home" }, { id: "seettuHub" }, { id: "userReveus" }];
+
   return (
     <BrowserRouter>
       <Xcontext.Provider value={{}}>
         <Routes>
-          <Route path="/" element={<Main />}>
+          <Route path="/" element={<Header sections={naveItems} />}>
             {/* index dala kiwama  me page eka thamai  mulinma aoutlate ekata set wenne */}
-            <Route index element={<Firstpage />} />
+            {/* <Route index element={<Firstpage />} /> */}
           </Route>
           {/* ------------------------- */}
           <Route path="/pages/Dashbord" element={<Dashbord />}>
@@ -44,6 +48,7 @@ export const AppRoutes = () => {
             <Route path="AboutUs" element={<AboutUs />} />
             <Route path="Contact" element={<Contact />} />
             <Route path="Vidiocoll" element={<Vidocollae />} />
+            <Route path="JitsiColle" element={<Jitsi />} />
           </Route>
         </Routes>
       </Xcontext.Provider>

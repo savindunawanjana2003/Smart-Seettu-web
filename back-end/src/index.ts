@@ -1,6 +1,6 @@
 import express from "express";
 import cors from "cors";
-import mongoose from "mongoose";
+// import mongoose from "mongoose";
 import dotenv from "dotenv";
 import Authrouter from "./routes/auth-custormer-router";
 import Gruprouter from "./routes/group-router";
@@ -24,6 +24,11 @@ const app = express();
 app.set("trust proxy", 1);
 app.use(cors());
 app.use(express.json());
+
+// Add this route for testing
+app.get("/", (req, res) => {
+  res.send("<h1>Server is running perfectly! Backend is live! 🚀</h1>");
+});
 
 // ==================== Custom Request Logger Middleware ====================
 app.use((req, res, next) => {
