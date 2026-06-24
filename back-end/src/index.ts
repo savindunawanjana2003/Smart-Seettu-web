@@ -27,7 +27,8 @@ app.use(express.json());
 
 // Add this route for testing
 app.get("/", (req, res) => {
-  res.send(req);
+  // res.send(req);
+  console.log(req)
 });
 
 // ==================== Custom Request Logger Middleware ====================
