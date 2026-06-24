@@ -1340,7 +1340,7 @@ const Dashboard = () => {
     },
   ];
 
-  const [notyCount, setNotyCount] = useState(0);
+  // const [notyCount, setNotyCount] = useState(0);
   const [showNotificationBar, setshowNotificationBar] =
     useState<boolean>(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -1382,7 +1382,7 @@ const Dashboard = () => {
         Swal.showLoading();
       },
     }).then(async () => {
-      const email: string = currentCustomer?.email || "";
+      // const email: string = currentCustomer?.email || "";
       dispatch(logoutCustomer());
       navigate("/", { replace: true });
       localStorage.removeItem("ACCESS_TOKEN");

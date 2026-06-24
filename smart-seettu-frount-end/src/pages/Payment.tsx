@@ -2,37 +2,37 @@ import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import {
   ArrowLeft,
-  Calendar,
+  // Calendar,
   DollarSign,
-  Users,
+  // Users,
   CheckCircle,
   XCircle,
   Clock,
   Search,
-  Filter,
+  // Filter,
   Download,
   Send,
   Printer,
   Eye,
   CreditCard,
   Wallet,
-  TrendingUp,
-  Award,
+  // TrendingUp,
+  // Award,
   AlertCircle,
   Loader2,
-  ChevronDown,
-  ChevronUp,
-  UserCheck,
-  UserX,
+  // ChevronDown,
+  // ChevronUp,
+  // UserCheck,
+  // UserX,
   Bell,
-  Mail,
-  Phone,
-  FileText,
+  // Mail,
+  // Phone,
+  // FileText,
   Upload,
   Image,
-  MessageSquare,
-  ThumbsUp,
-  ThumbsDown,
+  // MessageSquare,
+  // ThumbsUp,
+  // ThumbsDown,
   AlertTriangle,
   Info,
   Shield,
@@ -40,13 +40,13 @@ import {
   Crown,
   Settings,
   BarChart3,
-  PieChart,
-  Activity,
-  Zap,
-  Star,
-  Medal,
-  Gift,
-  Heart,
+  // PieChart,
+  // Activity,
+  // Zap,
+  // Star,
+  // Medal,
+  // Gift,
+  // Heart,
 } from "lucide-react";
 import Swal from "sweetalert2";
 
@@ -135,7 +135,7 @@ const Payment = () => {
   const [showStatsPanel, setShowStatsPanel] = useState(false);
   const [selectedPayment, setSelectedPayment] = useState<Payment | null>(null);
   const [showVerifyModal, setShowVerifyModal] = useState(false);
-  const [isAdmin, setIsAdmin] = useState(true); // Set based on user role
+  // const [isAdmin, setIsAdmin] = useState(true); // Set based on user role
 
   const sinhalaMonths = [
     "ජනවාරි",
@@ -499,7 +499,7 @@ const Payment = () => {
                   <h1 className="text-2xl font-bold text-gray-800">
                     {group?.name || "සීට්ටු ගෙවීම්"}
                   </h1>
-                  {isAdmin && (
+                  {true && ( //isAdmin
                     <span className="px-2.5 py-1 bg-purple-100 text-purple-700 rounded-full text-xs font-medium flex items-center gap-1">
                       <Crown className="w-3 h-3" />
                       පරිපාලක

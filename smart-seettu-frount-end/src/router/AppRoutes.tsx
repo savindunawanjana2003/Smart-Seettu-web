@@ -11,7 +11,7 @@ import Contact from "../pages/Contact";
 import Jitsi from "../pages/jitsi";
 
 import Dashbord from "../layout/Dashbord";
-import Main from "../layout/mainConteiner";
+// import Main from "../layout/mainConteiner";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import { createContext } from "react";
 import CurrentgroupDetails from "../pages/CurrentgroupDetails";

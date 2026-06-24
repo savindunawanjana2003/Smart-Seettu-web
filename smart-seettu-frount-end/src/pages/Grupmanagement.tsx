@@ -7,7 +7,7 @@ import {
 import Swal from "sweetalert2";
 import {
   createGrup,
-  getAllGrupmembersWholeGrup,
+  // getAllGrupmembersWholeGrup,
   getNextGrupId,
 } from "../service/grup";
 import { useSelector } from "react-redux";
@@ -74,7 +74,7 @@ const Grupmanagement = () => {
   };
 
   // member kenek cart eken delete karanne meken
-  const removeMemberFromList = (id:any) => {
+  const removeMemberFromList = (id: any) => {
     setMembers(
       members.filter((m) => m.memberId !== id || m.tagname === "admin"),
     );

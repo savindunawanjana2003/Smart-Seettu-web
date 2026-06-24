@@ -7,7 +7,7 @@ import {
   AiOutlineInfoCircle,
   AiOutlineCheckCircle,
 } from "react-icons/ai";
-import { replace, useLocation, useNavigate } from "react-router";
+import { useLocation, useNavigate } from "react-router";
 import { User } from "lucide-react";
 import { useSocket } from "../context/SocketContext";
 

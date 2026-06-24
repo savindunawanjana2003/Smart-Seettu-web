@@ -12,7 +12,7 @@ interface GrupReqestProps {
 
 const GrupReqest = ({
   isShow,
-  userEmail,
+  // userEmail,
   onClose,
   reque = [],
 }: GrupReqestProps) => {
@@ -37,9 +37,9 @@ const GrupReqest = ({
     setNotyficetions(reque);
   }, [reque]);
 
-  const getEmailAvailableAdmins = (data: notifecetion): string => {
-    return data.email || "admin@example.com";
-  };
+  // const getEmailAvailableAdmins = (data: notifecetion): string => {
+  //   return data.email || "admin@example.com";
+  // };
   // ====================
 
   if (!show) return null;
@@ -115,7 +115,7 @@ const GrupReqest = ({
   };
 
   function handleReject(id: string): void {
-    throw new Error("Function not implemented.");
+    throw new Error(`Function not implemented.${id}`);
   }
   // ===========================================================================
   return (

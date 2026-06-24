@@ -71,7 +71,6 @@ const Header = ({ sections }: { sections: any }) => {
   // ====================================================Header section ==================================================================================
 
   const dispatch = useDispatch();
-  const socket = useSocket();
   const [open, setOpen] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [isShowUserIcon, setisShowUserIcon] = useState(false);
@@ -488,36 +487,36 @@ const Header = ({ sections }: { sections: any }) => {
     console.log("Google sign up initiated");
   };
 
-  const navItems = [
-    {
-      targetSection: "customers-section",
-      icon: faUsers,
-      label: "Customers",
-      color: "bg-blue-500 hover:bg-blue-600",
-    },
-    {
-      targetSection: "items-section",
-      icon: faBox,
-      label: "Items",
-      color: "bg-green-500 hover:bg-green-600",
-    },
-    {
-      targetSection: "orders-section",
-      icon: faShoppingCart,
-      label: "Orders",
-      color: "bg-purple-500 hover:bg-purple-600",
-    },
-  ];
+  // const navItems = [
+  //   {
+  //     targetSection: "customers-section",
+  //     icon: faUsers,
+  //     label: "Customers",
+  //     color: "bg-blue-500 hover:bg-blue-600",
+  //   },
+  //   {
+  //     targetSection: "items-section",
+  //     icon: faBox,
+  //     label: "Items",
+  //     color: "bg-green-500 hover:bg-green-600",
+  //   },
+  //   {
+  //     targetSection: "orders-section",
+  //     icon: faShoppingCart,
+  //     label: "Orders",
+  //     color: "bg-purple-500 hover:bg-purple-600",
+  //   },
+  // ];
 
   const clilUserIcon = () => {
     setShowLogoutModal(true);
   };
 
   const handleLogout = async () => {
-    const currentCustomer = localStorage.getItem("currentCustomer");
-    const emailuser: string = currentCustomer
-      ? JSON.parse(currentCustomer).email
-      : "";
+    // const currentCustomer = localStorage.getItem("currentCustomer");
+    // const emailuser: string = currentCustomer
+    //   ? JSON.parse(currentCustomer).email
+    //   : "";
 
     // const offlineStatusResponse = await setOffline(emailuser);
     localStorage.removeItem("ACCESS_TOKEN");
@@ -530,27 +529,27 @@ const Header = ({ sections }: { sections: any }) => {
     setShowLogoutModal(false);
   };
 
-  const setOfflinef = async () => {
-    const currentCustomer = localStorage.getItem("currentCustomer");
-    const emailuser: string = currentCustomer
-      ? JSON.parse(currentCustomer).email
-      : "";
+  // const setOfflinef = async () => {
+  //   const currentCustomer = localStorage.getItem("currentCustomer");
+  //   const emailuser: string = currentCustomer
+  //     ? JSON.parse(currentCustomer).email
+  //     : "";
 
-    // const offlineStatusResponse = await setOffline(emailuser);
-  };
+  //   // const offlineStatusResponse = await setOffline(emailuser);
+  // };
 
   // -----------------------------
-  const setOnline1 = async () => {
-    const currentCustomer = localStorage.getItem("currentCustomer");
-    const emailuser: string = currentCustomer
-      ? JSON.parse(currentCustomer).email
-      : "";
+  // const setOnline1 = async () => {
+  //   const currentCustomer = localStorage.getItem("currentCustomer");
+  //   const emailuser: string = currentCustomer
+  //     ? JSON.parse(currentCustomer).email
+  //     : "";
 
-    if (emailuser == "") {
-    } else {
-      // const offlineStatusResponse = await setOnline(emailuser);
-    }
-  };
+  //   if (emailuser == "") {
+  //   } else {
+  //     // const offlineStatusResponse = await setOnline(emailuser);
+  //   }
+  // };
 
   // ====================================
 

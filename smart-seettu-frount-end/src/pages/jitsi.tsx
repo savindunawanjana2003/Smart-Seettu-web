@@ -77,7 +77,7 @@ const JitsiColle: React.FC = () => {
     }
   }, [location.state]);
 
-  const jitsiApiRef = useRef<any>(null);
+  // const jitsiApiRef = useRef<any>(null);
   const navigate = useNavigate();
 
   const jaasAppId = "vpaas-magic-cookie-afa8f7c5e8ea414e86cbf77fd2b6cc23";

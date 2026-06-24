@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import {
   Users,
@@ -180,7 +180,7 @@ const Ongoin = () => {
   const handleDeleteGroup = async (groupId: string, groupName: string) => {
     const result = await Swal.fire({
       title: "සමූහය මකා දැමීමට වග බලා ගන්න",
-      text: `"${groupName}" සමූහය මකා දැමීමට අවශ්‍ය බව ඔබට විශ්වාසද?`,
+      text: `"${groupName}/""${groupId}" සමූහය මකා දැමීමට අවශ්‍ය බව ඔබට විශ්වාසද?`,
       icon: "warning",
       showCancelButton: true,
       confirmButtonColor: "#dc2626",

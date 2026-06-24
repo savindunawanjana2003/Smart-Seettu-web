@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import {
   Video,
@@ -11,16 +11,16 @@ import {
   Camera,
   Mic,
   ChevronRight,
-  ArrowLeft,
+  // ArrowLeft,
   Sparkles,
-  Globe,
-  Phone,
-  Calendar,
-  Clock,
-  Star,
-  Heart,
-  Waves,
-  Circle,
+  // Globe,
+  // Phone,
+  // Calendar,
+  // Clock,
+  // Star,
+  // Heart,
+  // Waves,
+  // Circle,
 } from "lucide-react";
 
 const VideoCallPage = () => {
