@@ -20,7 +20,7 @@ import customerModal from "./models/customer-modal";
 dotenv.config();
 const PORT = process.env.PORT || 3001;
 const app = express();
-
+// ,
 app.set("trust proxy", 1);
 app.use(cors());
 app.use(express.json());
