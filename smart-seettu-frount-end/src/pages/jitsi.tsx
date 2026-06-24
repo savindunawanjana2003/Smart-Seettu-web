@@ -56,7 +56,7 @@
 // };
 
 // export default JitsiColle;
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { JitsiMeeting } from "@jitsi/react-sdk";
 import { useLocation, useNavigate } from "react-router-dom";
 

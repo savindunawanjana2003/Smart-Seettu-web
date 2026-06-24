@@ -774,7 +774,7 @@ const Payment = () => {
                 ))}
               </select>
 
-              {isAdmin && (
+              {true && ( //isAdmin
                 <button
                   onClick={() => {
                     Swal.fire({
@@ -898,46 +898,48 @@ const Payment = () => {
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-right">
                       <div className="flex items-center justify-end gap-2">
-                        {isAdmin && payment.status === "pending" && (
-                          <button
-                            onClick={() => handleVerifyPayment(payment)}
-                            className="p-1.5 bg-blue-50 hover:bg-blue-100 text-blue-600 rounded-lg transition-colors"
-                            title="ගෙවීම තහවුරු කරන්න"
-                          >
-                            <Shield className="w-4 h-4" />
-                          </button>
-                        )}
-
-                        {isAdmin && payment.status !== "paid" && (
-                          <>
+                        {true &&
+                          payment.status === "pending" && ( //isAdmin
                             <button
-                              onClick={() =>
-                                handleSendReminder(
-                                  payment.memberId,
-                                  payment.memberName,
-                                )
-                              }
-                              className="p-1.5 bg-amber-50 hover:bg-amber-100 text-amber-600 rounded-lg transition-colors"
-                              title="සිහිපත් කිරීම යවන්න"
+                              onClick={() => handleVerifyPayment(payment)}
+                              className="p-1.5 bg-blue-50 hover:bg-blue-100 text-blue-600 rounded-lg transition-colors"
+                              title="ගෙවීම තහවුරු කරන්න"
                             >
-                              <Bell className="w-4 h-4" />
+                              <Shield className="w-4 h-4" />
                             </button>
-                            {payment.status === "overdue" && (
+                          )}
+
+                        {true &&
+                          payment.status !== "paid" && ( //
+                            <>
                               <button
                                 onClick={() =>
-                                  handleSendOverdueAlert(
+                                  handleSendReminder(
                                     payment.memberId,
                                     payment.memberName,
                                   )
                                 }
-                                className="p-1.5 bg-red-50 hover:bg-red-100 text-red-600 rounded-lg transition-colors"
-                                title="කල් ඉකුත් අනතුරු ඇඟවීම"
+                                className="p-1.5 bg-amber-50 hover:bg-amber-100 text-amber-600 rounded-lg transition-colors"
+                                title="සිහිපත් කිරීම යවන්න"
                               >
-                                <AlertTriangle className="w-4 h-4" />
+                                <Bell className="w-4 h-4" />
                               </button>
-                            )}
-                          </>
-                        )}
+                              {payment.status === "overdue" && (
+                                <button
+                                  onClick={() =>
+                                    handleSendOverdueAlert(
+                                      payment.memberId,
+                                      payment.memberName,
+                                    )
+                                  }
+                                  className="p-1.5 bg-red-50 hover:bg-red-100 text-red-600 rounded-lg transition-colors"
+                                  title="කල් ඉකුත් අනතුරු ඇඟවීම"
+                                >
+                                  <AlertTriangle className="w-4 h-4" />
+                                </button>
+                              )}
+                            </>
+                          )}
 
                         {payment.bankReceipt && (
                           <button
@@ -1251,7 +1253,7 @@ const Payment = () => {
       )}
 
       {/* Admin Summary Card */}
-      {isAdmin && (
+      {true && ( //isAdmin
         <div className="container mx-auto px-4 pb-6">
           <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
             <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
