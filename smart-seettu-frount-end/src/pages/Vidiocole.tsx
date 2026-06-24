@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { setShowEmailIcon } from "../redux/slice/mailSlice"; // ඔබේ mailSlice එකට path එක
 import {
   Video,
   Users,
@@ -11,19 +12,13 @@ import {
   Camera,
   Mic,
   ChevronRight,
-  // ArrowLeft,
   Sparkles,
-  // Globe,
-  // Phone,
-  // Calendar,
-  // Clock,
-  // Star,
-  // Heart,
-  // Waves,
-  // Circle,
 } from "lucide-react";
+import { useDispatch } from "react-redux";
 
 const VideoCallPage = () => {
+  const dispatch = useDispatch();
+
   const navigate = useNavigate();
   const [step, setStep] = useState(1);
   const [groupName, setGroupName] = useState("");
@@ -43,6 +38,9 @@ const VideoCallPage = () => {
 
     setError("");
     setLoading(true);
+
+    dispatch(setShowEmailIcon(true));
+
 
     setTimeout(() => {
       setLoading(false);

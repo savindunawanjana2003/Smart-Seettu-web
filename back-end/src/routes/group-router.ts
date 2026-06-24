@@ -7,6 +7,7 @@ import {
   getNextmemberIdBygrupId,
   getNextGrupId,
   getAllGroups,
+  getAllGrupmembersFromGrupId,
 } from "../controller/grupController";
 
 const router = Router();
@@ -29,6 +30,10 @@ router.get(
 );
 
 router.get("/getAllGroups", getAllGroups);
+router.get(
+  "/getAllGrupmembersFromGrupId/:groupId",
+  getAllGrupmembersFromGrupId,
+);
 
 export default router;
 

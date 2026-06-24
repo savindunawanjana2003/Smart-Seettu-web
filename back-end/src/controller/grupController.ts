@@ -1,5 +1,6 @@
 import { Request, Response } from "express";
 import groupModel from "../models/group-modal";
+import custormerModal from "../models/customer-modal";
 
 export const savegroup = async (req: Request, res: Response) => {
   const {
@@ -166,6 +167,60 @@ export const getAllGroups = async (req: Request, res: Response) => {
     res.status(500).json({
       message: "Error fetching groups!",
       error: error.message,
+    });
+  }
+};
+
+export const getAllGrupmembersFromGrupId = async (
+  req: Request,
+  res: Response,
+) => {
+  try {
+    const { groupId } = req.params;
+
+    const group = await groupModel.findOne({ id: groupId });
+
+    if (!group) {
+      res.status(500).json({ Message: "Seettu Group not found!" });
+      return;
+    }
+    const allMembers = group.members || [];
+
+    const frountEndNeedObject = [];
+
+    for (let i = 0; i < allMembers.length; i++) {
+      let memberContact = allMembers[i].contactnumber;
+      const memberObject = await custormerModal.findOne({
+        poneNumber: memberContact,
+      });
+      console.log(memberObject);
+      console.log("]]]]]]]]]]]]]]]]]]]]]]]]");
+
+      const csmer = {
+        id: allMembers[i].memberId,
+        name: allMembers[i].membername,
+        email: memberObject?.email ?? "Member not found",
+        isOnline: memberObject?.isOnline ?? "fales",
+      };
+      frountEndNeedObject.push(csmer);
+    }
+    console.log(
+      "=================ou me ee members la tika thamai====================",
+    );
+
+    console.log(frountEndNeedObject.length);
+    console.log(frountEndNeedObject);
+
+    res.status(200).json({
+      Message: "Members fetched successfully!",
+      count: allMembers.length,
+      memberslist: frountEndNeedObject,
+    });
+  } catch (error: any) {
+    console.error(error);
+    res.status(500).json({
+      Message: "Error fetching group members!",
+      Error: error.message,
     });
   }
 };

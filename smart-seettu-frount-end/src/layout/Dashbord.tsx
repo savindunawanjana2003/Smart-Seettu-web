@@ -1193,6 +1193,8 @@ import {
   AiOutlineLogout,
   AiOutlineMenu,
 } from "react-icons/ai";
+import { MdSend } from "react-icons/md";
+import EmailModal from "../components/EmailModal";
 import Swal from "sweetalert2";
 import { useEffect, useState } from "react";
 import SendNotyfy from "../components/SendNotyfy";
@@ -1202,6 +1204,7 @@ import type { notifecetion } from "../types/types";
 import { getRequestsBymemberEmail } from "../service/reqest";
 import { getAllcustormer } from "../service/user";
 import { useSocket } from "../context/SocketContext";
+import { setShowEmailIcon } from "../redux/slice/mailSlice";
 
 const Dashboard = () => {
   const socket = useSocket();
@@ -1210,6 +1213,9 @@ const Dashboard = () => {
     (state: RootState) => state.customer.currentCustomer,
   );
   const userEmail: string = currentCustomer?.email ?? "No email found";
+  const userName: string =
+    currentCustomer?.name ?? "user not found plaes login agen";
+
   const dispatch = useDispatch();
   const location = useLocation();
   const navigate = useNavigate();
@@ -1217,13 +1223,22 @@ const Dashboard = () => {
   const [systemMembers, setSystemMembers] = useState<any>([]);
   const [isShowGrupreq, setisShowGrupreq] = useState(false);
   const [notificetions, setNotyficetions] = useState<notifecetion[]>([]);
-
+  const [needTosendEmail, setneedTosendEmail] = useState(false);
+  const showEmailIcon = useSelector(
+    (state: RootState) => state.mail.showEmailIcon,
+  );
   useEffect(() => {
     if (location.pathname === "/pages/Dashbord") {
       navigate("/pages/Dashbord/Home", { replace: true });
     }
     getAllcustormerfuntion();
+    dispatch(setShowEmailIcon(false));
+    setneedTosendEmail(showEmailIcon);
   }, []);
+
+  useEffect(() => {
+    setneedTosendEmail(showEmailIcon);
+  }, [showEmailIcon]);
 
   useEffect(() => {
     const handlePopState = () => {
@@ -1401,7 +1416,16 @@ const Dashboard = () => {
   const groupCreated = () => {
     setisShowGrupreq(true);
   };
-
+  const [isShowEmail, setisShowEmail] = useState<boolean>(false);
+  // ========================================================
+  function clickForsendEmail(): void {
+    if (isShowEmail) {
+      setisShowEmail(false);
+    } else {
+      setisShowEmail(true);
+    }
+  }
+  // =========================================================
   return (
     <div className="min-h-screen bg-gray-50 text-gray-800 flex flex-col">
       {/* Header */}
@@ -1418,6 +1442,19 @@ const Dashboard = () => {
         </div>
 
         <div className="flex items-center gap-4">
+          {/* =========================================================== */}
+          {needTosendEmail && (
+            <div
+              className="relative cursor-pointer"
+              onClick={clickForsendEmail}
+            >
+              <div className="p-2 rounded-lg hover:bg-gray-100 transition-colors">
+                <MdSend size={22} className="text-gray-600" />
+              </div>
+              <span className="absolute -top-0.5 -right-0.5 bg-emerald-600 text-white text-[10px] min-w-[5px] h-[5px] rounded-full flex items-center justify-center font-bold shadow-sm shadow-red-500/30"></span>
+            </div>
+          )}
+          {/* ====================================================== */}
           <div className="relative cursor-pointer" onClick={clikNotyfy}>
             <div className="p-2 rounded-lg hover:bg-gray-100 transition-colors">
               <AiOutlineBell size={22} className="text-gray-600" />
@@ -1429,11 +1466,11 @@ const Dashboard = () => {
 
           <div className="flex items-center gap-3 pl-3 border-l border-gray-200">
             <div className="w-9 h-9 rounded-full bg-gradient-to-br from-blue-500 to-blue-600 text-white flex items-center justify-center font-semibold text-sm shadow-md shadow-blue-500/20">
-              S
+              {userName.charAt(0)}
             </div>
             <div className="hidden md:block">
               <p className="text-sm font-semibold text-gray-800 leading-none">
-                Savindu Nawanjana
+                {userName}
               </p>
               <p className="text-xs text-gray-400">{userEmail}</p>
             </div>
@@ -1539,17 +1576,29 @@ const Dashboard = () => {
         reque={notificetions}
       />
 
+      {/* ============================ */}
+      {isShowEmail && (
+        <EmailModal
+          isShow={true}
+          onClose={() => {}}
+          groupId={"GRP-001"}
+          onSend={() => {}}
+        />
+      )}
+
+      {/* ========================== */}
+
       <div className="flex flex-1">
         {/* Sidebar Navigation */}
         <nav className="w-64 h-[calc(100vh-4rem)] sticky top-16 hidden lg:flex flex-col bg-white border-r border-gray-200 overflow-y-auto">
           <div className="p-4 border-b border-gray-100">
             <div className="flex items-center gap-3 p-2 rounded-xl bg-gray-50 hover:bg-gray-100 transition-colors cursor-pointer">
               <div className="w-10 h-10 rounded-full bg-gradient-to-br from-amber-500 to-amber-600 text-white flex items-center justify-center font-bold shadow-md shadow-amber-500/20">
-                S
+                {userName.charAt(0)}
               </div>
               <div>
                 <p className="font-semibold text-sm text-gray-800">
-                  Savindu Nawanjana
+                  {userName}
                 </p>
                 <p className="text-xs text-gray-400">Admin</p>
               </div>
