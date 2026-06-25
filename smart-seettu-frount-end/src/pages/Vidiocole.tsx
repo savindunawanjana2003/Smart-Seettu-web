@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { setShowEmailIcon } from "../redux/slice/mailSlice"; // ඔබේ mailSlice එකට path එක
 import {
@@ -15,10 +15,10 @@ import {
   Sparkles,
 } from "lucide-react";
 import { useDispatch } from "react-redux";
+import { getAllGrupmembersWholeGrup } from "../service/grup";
 
 const VideoCallPage = () => {
   const dispatch = useDispatch();
-
   const navigate = useNavigate();
   const [step, setStep] = useState(1);
   const [groupName, setGroupName] = useState("");
@@ -41,7 +41,6 @@ const VideoCallPage = () => {
 
     dispatch(setShowEmailIcon(true));
 
-
     setTimeout(() => {
       setLoading(false);
       navigate("/pages/Dashbord/JitsiColle", {
@@ -53,6 +52,33 @@ const VideoCallPage = () => {
       });
     }, 1500);
   };
+
+  const isgrupavelable = async () => {
+    try {
+      const resp = await getAllGrupmembersWholeGrup(groupName);
+      const memberList: [] = resp.memberslist;
+      if (memberList.length > 0) {
+        localStorage.setItem("userSelectGrupIdForMeeting", groupName);
+        setStep(2);
+      } else {
+        alert(
+          "Please enter Valide grup name  so you can checj it Grup work option from Dashbord ",
+        );
+        return;
+      }
+    } catch (error) {
+      alert(
+        "Please enter Valide grup name  so you can checj it Grup work option from Dashbord ",
+      );
+      return;
+    }
+
+    // const mlist:[]= resp.memberslist;
+  };
+
+  useEffect(() => {
+    dispatch(setShowEmailIcon(false));
+  }, []);
 
   return (
     <div className="min-h-screen relative overflow-hidden bg-gradient-to-br from-blue-50 via-indigo-50/30 to-purple-50/40 flex items-center justify-center p-4">
@@ -172,16 +198,16 @@ const VideoCallPage = () => {
               <div className="space-y-4 animate-fadeIn">
                 <div className="text-center mb-2">
                   <h2 className="text-lg font-semibold text-gray-800">
-                    සමූහයක් සාදන්න
+                    Give grup id to create a grup meeting
                   </h2>
                   <p className="text-sm text-gray-500">
-                    ඔබගේ වීඩියෝ ඇමතුම සඳහා සමූහ නමක් ඇතුළත් කරන්න
+                    ඔබගේ වීඩියෝ ඇමතුම සඳහා සමූහ Id ඇතුළත් කරන්න
                   </p>
                 </div>
 
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1.5">
-                    සමූහ නම
+                    GRUP ID
                   </label>
                   <div className="relative group">
                     <Users className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400 group-focus-within:text-blue-600 transition-colors" />
@@ -189,7 +215,7 @@ const VideoCallPage = () => {
                       type="text"
                       value={groupName}
                       onChange={(e) => setGroupName(e.target.value)}
-                      placeholder="උදා: සීට්ටු සමූහය 2026"
+                      placeholder="උදා: GRP-###"
                       className="w-full pl-10 pr-4 py-3 bg-gray-50 border border-gray-200 rounded-xl text-gray-700 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
                       onKeyPress={(e) => e.key === "Enter" && setStep(2)}
                     />
@@ -205,9 +231,11 @@ const VideoCallPage = () => {
                     if (!groupName.trim()) {
                       setError("කරුණාකර සමූහ නමක් ඇතුළත් කරන්න");
                       return;
+                    } else {
+                      isgrupavelable();
                     }
                     setError("");
-                    setStep(2);
+                    // setStep(2);
                   }}
                   className="w-full px-6 py-3 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white rounded-xl font-medium transition-all duration-200 flex items-center justify-center gap-2 shadow-lg shadow-blue-600/20 hover:shadow-blue-600/30 transform hover:scale-[1.02]"
                 >

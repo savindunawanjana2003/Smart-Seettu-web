@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { Search, MapPin, UserPlus, X, Mail, Phone } from "lucide-react";
 import { getCustomers, createCustomer } from "../service/contact";
+import { useDispatch } from "react-redux";
+import { setShowEmailIcon } from "../redux/slice/mailSlice";
 
 const Contact = () => {
   const [members, setMembers] = useState([]);
@@ -15,8 +17,10 @@ const Contact = () => {
     poneNumber: "",
     address: "",
   });
+  const dispatch = useDispatch();
 
   useEffect(() => {
+    dispatch(setShowEmailIcon(false));
     fetchMembers();
   }, []);
 

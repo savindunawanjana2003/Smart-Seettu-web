@@ -49,6 +49,8 @@ import {
   // Heart,
 } from "lucide-react";
 import Swal from "sweetalert2";
+import { useDispatch } from "react-redux";
+import { setShowEmailIcon } from "../redux/slice/mailSlice";
 
 interface Member {
   id: string;
@@ -108,6 +110,8 @@ interface PaymentNotification {
 }
 
 const Payment = () => {
+  const dispatch = useDispatch();
+
   const { groupId } = useParams<{ groupId: string }>();
   const navigate = useNavigate();
   const [loading, setLoading] = useState(true);
@@ -151,6 +155,10 @@ const Payment = () => {
     "නොවැම්බර්",
     "දෙසැම්බර්",
   ];
+
+  useEffect(() => {
+    dispatch(setShowEmailIcon(false));
+  }, []);
 
   // Sample data - Replace with API calls
   useEffect(() => {

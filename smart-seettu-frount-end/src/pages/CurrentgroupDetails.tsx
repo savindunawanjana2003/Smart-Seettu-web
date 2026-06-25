@@ -102,6 +102,9 @@ const GrupmanegementSecound = () => {
     };
   }, [socket]);
 
+  window.addEventListener("beforeunload", function (e) {
+    alert("Do you shuwar it");
+  });
   return (
     <div className="w-full min-h-screen bg-gradient-to-br from-amber-50 via-white to-amber-50 p-6 relative font-sans">
       <div className="absolute top-4 right-6 bg-emerald-50 border-l-4 border-emerald-500 text-emerald-800 px-5 py-3 rounded-r-xl shadow-lg flex items-center gap-3 animate-bounce z-10">

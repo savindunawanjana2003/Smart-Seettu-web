@@ -3,8 +3,9 @@ import { refreshTokenCall } from "./auth";
 import Swal from "sweetalert2";
 
 const api = axios.create({
-  baseURL: "https://smart-seettu-web.onrender.com/api/v1",
+  baseURL: "http://localhost:3001/api/v1",
 });
+//  "https://smart-seettu-web.onrender.com/api/v1"
 
 const PUBLIC_ENDPOINT = [
   "/auth/login",

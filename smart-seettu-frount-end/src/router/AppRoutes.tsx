@@ -5,7 +5,6 @@ import Home from "../pages/Home";
 import Vidocollae from "../pages/Vidiocole";
 
 import Ongoin from "../pages/Ongoin";
-
 import AboutUs from "../pages/AboutUs";
 import Contact from "../pages/Contact";
 import Jitsi from "../pages/jitsi";

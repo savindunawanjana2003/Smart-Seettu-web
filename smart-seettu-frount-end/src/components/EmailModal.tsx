@@ -8,6 +8,7 @@ import {
   Loader2,
 } from "lucide-react";
 import { getAllGrupmembersFromGrupId } from "../service/grup";
+import emailjs from "@emailjs/browser";
 
 // interface Member {
 //   memberId: string;
@@ -54,12 +55,6 @@ const EmailModal: React.FC<EmailModalProps> = ({
   const [isActive, setisActive] = useState<boolean>(false);
   const [grupId, setGrupId] = useState<string>("");
   //   const [grupMembersList, setgrupMembersList] = useState<any[]>([]);
-
-  if (!groupId) {
-    // return alert("Please enter GrupId()")
-    return;
-  }
-  //   alert(groupId);
   const [groupData, setGrupData] = useState<any>({
     id: grupId || "",
     name: "සීට්ටු සමූහය",
@@ -68,35 +63,29 @@ const EmailModal: React.FC<EmailModalProps> = ({
     adminName: "",
     members: [],
   });
+
   useEffect(() => {
+    if (!groupId) return;
+
+    const loadGroup = async () => {
+      try {
+        const res = await getAllGrupmembersFromGrupId(groupId);
+
+        setGrupData((prev: any) => ({
+          ...prev,
+          members: res.memberslist,
+        }));
+
+        setisActive(true);
+      } catch (error) {
+        console.error("Error loading members:", error);
+      }
+    };
+
     setGrupId(groupId);
-    setisActive(isShow);
-  }, [groupId, isShow]);
+    loadGroup();
+  }, [groupId]);
 
-  const getGrupForAvelablegrupId = async (id: string) => {
-    try {
-      const res = await getAllGrupmembersFromGrupId(id);
-
-      console.log("Members:", res.memberslist);
-
-      //   setgrupMembersList(res.memberslist);
-
-      setGrupData((prev: any) => ({
-        ...prev,
-        id: id,
-        members: res.memberslist,
-      }));
-    } catch (error) {
-      console.error("Error loading members:", error);
-    }
-  };
-
-  useEffect(() => {
-    getGrupForAvelablegrupId(grupId);
-  }, [isShow]);
-  // Mock Data - Group Members
-
-  // Sinhala Months
   const sinhalaMonths = [
     "ජනවාරි",
     "පෙබරවාරි",
@@ -135,7 +124,6 @@ const EmailModal: React.FC<EmailModalProps> = ({
     });
   };
 
-  // Handle Send
   const handleSend = () => {
     if (selectedEmails.length === 0) {
       alert("කරුණාකර අවම වශයෙන් එක් සාමාජිකයෙකු හෝ තෝරන්න");
@@ -151,21 +139,42 @@ const EmailModal: React.FC<EmailModalProps> = ({
     }
 
     setIsSending(true);
-    setTimeout(() => {
-      onSend({
-        groupId: groupData.id,
-        emails: selectedEmails,
-        message: message,
-        month: selectedMonth,
+
+    const SERVICE_ID = "service_tsxopuf";
+    const TEMPLATE_ID = "template_az4ojz8";
+    const PUBLIC_KEY = "oR4C8lPUI9m_NgRPk";
+
+    const emailsString = selectedEmails.join(", ");
+
+    const templateParams = {
+      group_name: grupId,
+      month: selectedMonth,
+      message: message,
+      to_emails: emailsString,
+    };
+
+    emailjs
+      .send(SERVICE_ID, TEMPLATE_ID, templateParams, PUBLIC_KEY)
+      .then((response) => {
+        console.log("SUCCESS!", response.status, response.text);
+
+    
+
+        alert("ඊමේල් සියල්ල සාර්ථකව යැවුණා");
+      })
+      .catch((error) => {
+        console.error("FAILED...", error);
+        alert("ඊමේල් යැවීම අසාර්ථකයි. කරුණාකර නැවත උත්සාහ කරන්න. ");
+      })
+      .finally(() => {
+        setIsSending(false);
+        onClose();
+        // Form එක reset කිරීම
+        setSelectedEmails([]);
+        setSelectAll(false);
+        setMessage("");
+        setSelectedMonth("");
       });
-      setIsSending(false);
-      onClose();
-      // Reset form
-      setSelectedEmails([]);
-      setSelectAll(false);
-      setMessage("");
-      setSelectedMonth("");
-    }, 1500);
   };
 
   if (!isShow) return null;
