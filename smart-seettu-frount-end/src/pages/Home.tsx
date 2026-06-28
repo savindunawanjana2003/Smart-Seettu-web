@@ -5,8 +5,11 @@ import { getOnlineMembers } from "../service/user";
 import { getAllGroups } from "../service/grup";
 import { sendMassegetoAi } from "../service/ai";
 import { useSocket } from "../context/SocketContext";
+import { useDispatch } from "react-redux";
+import { setShowEmailIcon } from "../redux/slice/mailSlice";
 
 const Home: React.FC = () => {
+  const dispatch = useDispatch();
   const socket = useSocket();
   const [showChat, setShowChat] = useState(false);
   const [messages, setMessages] = useState([
@@ -29,6 +32,8 @@ const Home: React.FC = () => {
     setactiveMembers(String(res1.count));
   };
   useEffect(() => {
+    dispatch(setShowEmailIcon(false));
+
     f();
   }, []);
 
@@ -36,7 +41,6 @@ const Home: React.FC = () => {
     if (!socket) {
       return;
     }
-
 
     socket.on("backend-updated", (data: { message: string; type: any }) => {
       if (data.type === "CUSTOMER_ADDED") {

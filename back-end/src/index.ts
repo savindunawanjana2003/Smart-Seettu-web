@@ -9,6 +9,7 @@ import Custormerouter from "./routes/customer-router";
 import Airouter from "./routes/ai-router";
 import Contact from "./routes/contact";
 import ongoinRouter from "./routes/ongoin-router";
+import paymentRouter from "./routes/payment-router";
 
 import http from "http";
 import { Server } from "socket.io";
@@ -22,13 +23,14 @@ const PORT = process.env.PORT || 3001;
 const app = express();
 // ,
 app.set("trust proxy", 1);
-app.use(cors());
+// app.use(cors());
+app.use(cors({ origin: "*" }));
 app.use(express.json());
 
 // Add this route for testing
 app.get("/", (req, res) => {
   // res.send(req);
-  console.log(req)
+  console.log(req);
 });
 
 // ==================== Custom Request Logger Middleware ====================
@@ -171,6 +173,7 @@ app.use("/api/v1/customer", Custormerouter);
 app.use("/api/v1/ai", Airouter);
 app.use("/api/v1/contact", Contact);
 app.use("/api/v1/ongoin", ongoinRouter);
+app.use("/api/v1/payment", paymentRouter);
 // Global Error Handling Middleware
 app.use(globalErrorHandler);
 

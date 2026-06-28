@@ -20,11 +20,9 @@ body {
 .slider .item {
   position: absolute;
   inset: 0;
-  /* Mobile වලදී රවුම පොඩි වෙන්න translateZ(140px) දුන්නා */
   transform: rotateY(calc((var(--position) - 1) * (360deg / var(--quantity)))) translateZ(140px);
 }
 
-/* Laptop/Desktop (Medium screens) වලදී slider එක ලොකු කරනවා */
 @media (min-width: 768px) {
   .slider {
     width: 280px; 
@@ -32,7 +30,6 @@ body {
   }
   
   .slider .item {
-    /* Desktop වලදී රවුම ලොකු වෙන්න translateZ(280px) දුන්නා */
     transform: rotateY(calc((var(--position) - 1) * (360deg / var(--quantity)))) translateZ(280px);
   }
 }
@@ -55,7 +52,6 @@ body {
   }
 }
 
-/* Custom Font classes (Tailwind වලින් නැති ඒවා විතරයි) */
 .font-ica {
   font-family: 'ICA Rubrik', sans-serif;
 }

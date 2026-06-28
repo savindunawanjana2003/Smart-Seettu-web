@@ -31,6 +31,14 @@ export interface notifecetion {
   grupId: string;
 }
 
+export interface userType {
+  name: string;
+  email: string;
+  address: string;
+  poneNumber: string;
+  phone: string;
+}
+
 // const notificetions = [
 //   { id: "1", name: "Kavindu Sandeepa", email: "kavi@gmail.com" },
 //   { id: "2", name: "Ishan Chinthaka", email: "ishan@gmail.com" },

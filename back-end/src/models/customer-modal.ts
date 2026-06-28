@@ -9,6 +9,11 @@ export interface Icustomer extends Document {
   resetPasswrod?: string;
   otp?: string;
   isOnline?: boolean;
+  accountHoldername?: string;
+  bankname?: string;
+  branchname?: string;
+  bankaccountnumber?: string;
+  branchcode?: string;
 }
 
 const custormerSchema = new Schema<Icustomer>(
@@ -22,6 +27,11 @@ const custormerSchema = new Schema<Icustomer>(
     isOnline: { type: Boolean, default: false },
     resetPasswrod: { type: String },
     otp: { type: String },
+    accountHoldername: { type: String },
+    bankname: { type: String },
+    branchname: { type: String },
+    bankaccountnumber: { type: String },
+    branchcode: { type: String },
   },
   {
     timestamps: true,

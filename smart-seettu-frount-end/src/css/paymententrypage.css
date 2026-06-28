@@ -1,0 +1,85 @@
+/* Add these new styles to existing PaymentEntry.css */
+
+/* Member Type Options */
+.member-type-options {
+  display: flex;
+  gap: 20px;
+  padding: 10px 0;
+}
+
+.member-type-option {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.member-type-option input[type="radio"] {
+  width: 18px;
+  height: 18px;
+  cursor: pointer;
+  accent-color: #667eea;
+}
+
+.member-type-option label {
+  font-weight: 500;
+  color: #333;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+/* Payment Summary */
+.payment-summary {
+  background: linear-gradient(135deg, #667eea15 0%, #764ba215 100%);
+  border: 2px solid #667eea;
+  border-radius: 12px;
+  padding: 20px;
+  margin: 10px 0;
+}
+
+.payment-summary h3 {
+  color: #333;
+  margin-top: 0;
+  margin-bottom: 15px;
+  font-size: 18px;
+}
+
+.summary-details {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px 20px;
+}
+
+.summary-details p {
+  margin: 5px 0;
+  font-size: 14px;
+  color: #444;
+}
+
+.summary-details strong {
+  color: #333;
+}
+
+/* Helper Text */
+.helper-text {
+  font-size: 13px;
+  color: #667eea;
+  margin-top: 4px;
+  font-weight: 500;
+}
+
+/* Group Select Option Styling */
+.form-group select option {
+  padding: 10px;
+}
+
+/* Responsive for summary */
+@media (max-width: 480px) {
+  .summary-details {
+    grid-template-columns: 1fr;
+  }
+  
+  .member-type-options {
+    flex-direction: column;
+    gap: 10px;
+  }
+}

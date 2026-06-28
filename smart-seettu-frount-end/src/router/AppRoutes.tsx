@@ -16,6 +16,8 @@ import { createContext } from "react";
 import CurrentgroupDetails from "../pages/CurrentgroupDetails";
 import Grupmanagement from "../pages/Grupmanagement";
 import Header from "../components/Nave-bar";
+import PaymentSuccess from "../pages/PaymentSuccses";
+import PaymentUnsuccessful from "../pages/PaymentFail";
 
 export const Xcontext = createContext<any>(null);
 export const AppRoutes = () => {
@@ -38,6 +40,11 @@ export const AppRoutes = () => {
             <Route
               path="CurrentgroupDetails"
               element={<CurrentgroupDetails />}
+            />
+            <Route path="PaymentSuccsessfully" element={<PaymentSuccess />} />
+            <Route
+              path="PaymentUnSuccsessfully"
+              element={<PaymentUnsuccessful />}
             />
             <Route path="$Payment" element={<Payment />} />
             <Route path="Grupmanagement" element={<Grupmanagement />} />

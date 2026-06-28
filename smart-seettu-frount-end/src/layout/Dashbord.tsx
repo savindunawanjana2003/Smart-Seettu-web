@@ -14,17 +14,18 @@ import {
   AiOutlineMenu,
 } from "react-icons/ai";
 import { MdSend } from "react-icons/md";
-import EmailModal from "../components/EmailModal";
+import EmailModal from "../components/EmailModalForVidiocall";
 import Swal from "sweetalert2";
 import { useEffect, useState } from "react";
 import SendNotyfy from "../components/SendNotyfy";
 import GrupReqest from "../components/NotificetionModal";
 import type { RootState } from "../redux/store";
-import type { notifecetion } from "../types/types";
+import type { notifecetion, userType } from "../types/types";
 import { getRequestsBymemberEmail } from "../service/reqest";
 import { getAllcustormer } from "../service/user";
 import { useSocket } from "../context/SocketContext";
 import { setShowEmailIcon } from "../redux/slice/mailSlice";
+import MemberDetailsModal from "../components/ModalForRecognizeuser";
 
 export let uData = {
   id: "",
@@ -81,6 +82,15 @@ const Dashboard = () => {
   const showEmailIcon = useSelector(
     (state: RootState) => state.mail.showEmailIcon,
   );
+  const [userDeatiles, setUserDeatiles] = useState<userType>({
+    name: "",
+    email: "",
+    address: "",
+    poneNumber: "",
+    phone: "",
+  });
+
+  const [popupuserDeatils, setpopupuserDeatils] = useState<boolean>();
   useEffect(() => {
     if (location.pathname === "/pages/Dashbord") {
       navigate("/pages/Dashbord/Home", { replace: true });
@@ -132,6 +142,7 @@ const Dashboard = () => {
         email: c.email,
         contact: c.poneNumber,
         isOnline: c.isOnline,
+        address: c.address,
       }));
       setSystemMembers(formatted);
     } catch (error) {
@@ -210,6 +221,11 @@ const Dashboard = () => {
     { path: "AboutUs", name: "About Us", icon: <AiOutlineInfoCircle /> },
   ];
 
+  // const DoubleClickExample = () => {
+  // const handleDoubleClick = () => {
+  //   alert("අඩෝ... ඔයා Card එක Double Click කරා! 🎉");
+  // };
+
   const [showNotificationBar, setshowNotificationBar] =
     useState<boolean>(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -222,7 +238,6 @@ const Dashboard = () => {
       actionForGroupManagement(user);
     } else if (currentPath.endsWith("pages/Dashbord/Grupmanagement")) {
       actionForAdmemberAsGrupInitialais(user);
-     
     } else if (currentPath.endsWith("/payments")) {
       actionForMakePayment(user);
     }
@@ -235,6 +250,7 @@ const Dashboard = () => {
 
   const actionForAdmemberAsGrupInitialais = (user: any) => {
     updateMyData(user);
+
     // console.log(user.contact + "=======================0000000000");
   };
 
@@ -282,7 +298,25 @@ const Dashboard = () => {
       setisShowEmail(true);
     }
   };
+
+  const clickDuble = (user: any) => {
+    // alert(user.address);
+    const selectMember: userType = {
+      name: user.name ?? "",
+      email: user.email ?? "",
+      address: user.address ?? "",
+      poneNumber: user.contact ?? "",
+      phone: user.phone ?? "",
+    };
+    setUserDeatiles(selectMember);
+    setpopupuserDeatils(true);
+  };
+
   // =========================================================
+
+  const closed = () => {
+    setpopupuserDeatils(false);
+  };
 
   return (
     <div className="min-h-screen bg-gray-50 text-gray-800 flex flex-col">
@@ -335,7 +369,6 @@ const Dashboard = () => {
           </div>
         </div>
       </header>
-
       {/* Notification Sidebar */}
       <div
         className={`w-[320px] h-[calc(100vh-4rem)] bg-white border-l border-gray-200 shadow-xl fixed right-0 top-16 z-40 overflow-y-auto transition-all duration-300 ${
@@ -421,7 +454,6 @@ const Dashboard = () => {
           </div>
         </div>
       </div>
-
       <SendNotyfy
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
@@ -433,7 +465,6 @@ const Dashboard = () => {
         onClose={() => setisShowGrupreq(false)}
         reque={notificetions}
       />
-
       {/* ============================ */}
       {isShowEmail && (
         <EmailModal
@@ -443,9 +474,14 @@ const Dashboard = () => {
           onSend={() => {}}
         />
       )}
-
-      {/* ========================== */}
-
+      {/* =============user deatils modal============= */}
+      {/* <MemberDetailsModal /> */}
+      <MemberDetailsModal
+        isOpen={popupuserDeatils || false}
+        onClose={closed}
+        member={userDeatiles}
+      />
+      ;{/* =================================== */}
       <div className="flex flex-1">
         {/* Sidebar Navigation */}
         <nav className="w-64 h-[calc(100vh-4rem)] sticky top-16 hidden lg:flex flex-col bg-white border-r border-gray-200 overflow-y-auto">
@@ -532,38 +568,40 @@ const Dashboard = () => {
               </div>
             ) : (
               systemMembers.map((user: any) => (
-                <div
-                  key={user.id}
-                  onClick={() => handleUserClick(user)}
-                  className="flex items-center justify-between p-2.5 rounded-lg hover:bg-gray-50 cursor-pointer transition-all duration-200 hover:shadow-sm"
-                >
-                  <div className="flex items-center gap-3">
-                    <div className="relative">
-                      <div
-                        className={`w-9 h-9 rounded-full flex items-center justify-center font-semibold text-sm text-white ${
-                          user.isOnline
-                            ? "bg-gradient-to-br from-green-500 to-green-600 shadow-md shadow-green-500/20"
-                            : "bg-gray-400"
-                        }`}
-                      >
-                        {user.name.charAt(0).toUpperCase()}
+                <div onDoubleClick={() => clickDuble(user)}>
+                  <div
+                    key={user.id}
+                    onClick={() => handleUserClick(user)}
+                    className="flex items-center justify-between p-2.5 rounded-lg hover:bg-gray-50 cursor-pointer transition-all duration-200 hover:shadow-sm"
+                  >
+                    <div className="flex items-center gap-3">
+                      <div className="relative">
+                        <div
+                          className={`w-9 h-9 rounded-full flex items-center justify-center font-semibold text-sm text-white ${
+                            user.isOnline
+                              ? "bg-gradient-to-br from-green-500 to-green-600 shadow-md shadow-green-500/20"
+                              : "bg-gray-400"
+                          }`}
+                        >
+                          {user.name.charAt(0).toUpperCase()}
+                        </div>
+                        {user.isOnline && (
+                          <span className="absolute bottom-0 right-0 w-3 h-3 bg-green-500 border-2 border-white rounded-full shadow-sm shadow-green-500/30"></span>
+                        )}
                       </div>
-                      {user.isOnline && (
-                        <span className="absolute bottom-0 right-0 w-3 h-3 bg-green-500 border-2 border-white rounded-full shadow-sm shadow-green-500/30"></span>
-                      )}
+                      <div>
+                        <p className="text-sm font-medium text-gray-800">
+                          {user.name}
+                        </p>
+                        <p className="text-xs text-gray-400">
+                          {user.isOnline ? "Online" : "Offline"}
+                        </p>
+                      </div>
                     </div>
-                    <div>
-                      <p className="text-sm font-medium text-gray-800">
-                        {user.name}
-                      </p>
-                      <p className="text-xs text-gray-400">
-                        {user.isOnline ? "Online" : "Offline"}
-                      </p>
-                    </div>
+                    {user.isOnline && (
+                      <span className="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse" />
+                    )}
                   </div>
-                  {user.isOnline && (
-                    <span className="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse" />
-                  )}
                 </div>
               ))
             )}

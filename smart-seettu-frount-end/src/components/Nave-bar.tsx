@@ -5,8 +5,7 @@ import { loginCustomer } from "../redux/slice/customerSlice";
 import Swal from "sweetalert2";
 import { loginfuntion } from "../service/auth";
 import { LogOut } from "lucide-react";
-import "../hirowPage.css";
-import "../hirowPage.css";
+import "../css/hirowPage.css";
 
 import img4 from "../assets/image/4.jpg";
 
@@ -22,14 +21,8 @@ import img8 from "../assets/image/Wealthy Place.jpeg";
 // import { type CurrentCustomerObject } from "../types/types";
 
 import userIcon from "../assets/image/userIcon.png";
-// import {
-//   faBox,
-//   faShoppingCart,
-//   faUsers,
-// } from "@fortawesome/free-solid-svg-icons";
+
 import { Link } from "react-scroll";
-// import { registere, setOffline, setOnline } from "../service/user";
-// import { useSocket } from "../context/SocketContext";
 import { useNavigate } from "react-router";
 import { registere } from "../service/user";
 interface RegistrationData {

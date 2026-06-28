@@ -86,20 +86,20 @@ const EmailModal: React.FC<EmailModalProps> = ({
     loadGroup();
   }, [groupId]);
 
-  const sinhalaMonths = [
-    "ජනවාරි",
-    "පෙබරවාරි",
-    "මාර්තු",
-    "අප්‍රේල්",
-    "මැයි",
-    "ජූනි",
-    "ජූලි",
-    "අගෝස්තු",
-    "සැප්තැම්බර්",
-    "ඔක්තෝබර්",
-    "නොවැම්බර්",
-    "දෙසැම්බර්",
-  ];
+  // const sinhalaMonths = [
+  //   "ජනවාරි",
+  //   "පෙබරවාරි",
+  //   "මාර්තු",
+  //   "අප්‍රේල්",
+  //   "මැයි",
+  //   "ජූනි",
+  //   "ජූලි",
+  //   "අගෝස්තු",
+  //   "සැප්තැම්බර්",
+  //   "ඔක්තෝබර්",
+  //   "නොවැම්බර්",
+  //   "දෙසැම්බර්",
+  // ];
 
   // Handle Select All
   const handleSelectAll = () => {
@@ -129,10 +129,7 @@ const EmailModal: React.FC<EmailModalProps> = ({
       alert("කරුණාකර අවම වශයෙන් එක් සාමාජිකයෙකු හෝ තෝරන්න");
       return;
     }
-    if (!selectedMonth) {
-      alert("කරුණාකර මාසයක් තෝරන්න");
-      return;
-    }
+
     if (!message.trim()) {
       alert("කරුණාකර පණිවිඩයක් ඇතුළත් කරන්න");
       return;
@@ -151,15 +148,13 @@ const EmailModal: React.FC<EmailModalProps> = ({
       month: selectedMonth,
       message: message,
       to_emails: emailsString,
+      PUBLIC_KEY,
     };
 
     emailjs
       .send(SERVICE_ID, TEMPLATE_ID, templateParams, PUBLIC_KEY)
       .then((response) => {
         console.log("SUCCESS!", response.status, response.text);
-
-    
-
         alert("ඊමේල් සියල්ල සාර්ථකව යැවුණා");
       })
       .catch((error) => {
@@ -169,7 +164,6 @@ const EmailModal: React.FC<EmailModalProps> = ({
       .finally(() => {
         setIsSending(false);
         onClose();
-        // Form එක reset කිරීම
         setSelectedEmails([]);
         setSelectAll(false);
         setMessage("");
@@ -315,7 +309,7 @@ const EmailModal: React.FC<EmailModalProps> = ({
               </div>
 
               {/* Month Selection */}
-              <div>
+              {/* <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1.5">
                   මාසය තෝරන්න
                 </label>
@@ -331,7 +325,7 @@ const EmailModal: React.FC<EmailModalProps> = ({
                     </option>
                   ))}
                 </select>
-              </div>
+              </div> */}
 
               {/* Message */}
               <div>

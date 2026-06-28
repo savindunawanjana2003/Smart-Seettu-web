@@ -1,5 +1,4 @@
 import { Document, model, Schema } from "mongoose";
-import { string } from "zod";
 import { Igrup } from "../types/types";
 import { Imembers } from "../types/types";
 
