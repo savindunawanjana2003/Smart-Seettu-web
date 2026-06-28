@@ -21,10 +21,14 @@ import PaymentUnsuccessful from "../pages/PaymentFail";
 
 export const Xcontext = createContext<any>(null);
 export const AppRoutes = () => {
-  // const marginTop = localStorage.getItem("ptop");
-  // const naveBarisvisible = localStorage.getItem("naveBarisvisible");
+  const naveItems = [
+    { id: "home" },
+    { id: "seettuHub" },
+    { id: "about" },
+    { id: "footer" },
+  ];
+
   // methanadi mama nested routing use kara
-  const naveItems = [{ id: "home" }, { id: "seettuHub" }, { id: "userReveus" }];
 
   return (
     <BrowserRouter>

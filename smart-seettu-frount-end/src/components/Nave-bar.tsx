@@ -1,10 +1,29 @@
 import { useEffect, useState } from "react";
-import { ArrowRight, Menu, Users, X, Zap } from "lucide-react";
+import {
+  ArrowRight,
+  Menu,
+  Users,
+  X,
+  Zap,
+  LogOut,
+  Shield,
+  Clock,
+  Globe,
+  ArrowUpRight,
+  Phone,
+  Mail,
+  CreditCard,
+  MapPin,
+  TrendingUp,
+  Target,
+  Award,
+  Sparkles,
+} from "lucide-react";
+const Facebook = Globe;
 import { useDispatch } from "react-redux";
 import { loginCustomer } from "../redux/slice/customerSlice";
 import Swal from "sweetalert2";
 import { loginfuntion } from "../service/auth";
-import { LogOut } from "lucide-react";
 import "../css/hirowPage.css";
 
 import img4 from "../assets/image/4.jpg";
@@ -522,47 +541,6 @@ const Header = ({ sections }: { sections: any }) => {
     setShowLogoutModal(false);
   };
 
-  // const setOfflinef = async () => {
-  //   const currentCustomer = localStorage.getItem("currentCustomer");
-  //   const emailuser: string = currentCustomer
-  //     ? JSON.parse(currentCustomer).email
-  //     : "";
-
-  //   // const offlineStatusResponse = await setOffline(emailuser);
-  // };
-
-  // -----------------------------
-  // const setOnline1 = async () => {
-  //   const currentCustomer = localStorage.getItem("currentCustomer");
-  //   const emailuser: string = currentCustomer
-  //     ? JSON.parse(currentCustomer).email
-  //     : "";
-
-  //   if (emailuser == "") {
-  //   } else {
-  //     // const offlineStatusResponse = await setOnline(emailuser);
-  //   }
-  // };
-
-  // ====================================
-
-  // useEffect(() => {
-  //   setOnline1();
-
-  //   const handleTabClose = (event: BeforeUnloadEvent) => {
-  //     console.log("Tab is closing");
-  //     setOfflinef();
-
-  //     event.preventDefault();
-  //   };
-
-  //   window.addEventListener("beforeunload", handleTabClose);
-
-  //   return () => {
-  //     window.removeEventListener("beforeunload", handleTabClose);
-  //   };
-  // });
-
   // ====================================================Main section ==================================================================================
 
   const navigeter = useNavigate();
@@ -615,7 +593,16 @@ const Header = ({ sections }: { sections: any }) => {
       });
     }
   };
-  // ====================================================Main section ==================================================================================
+
+  // helper: scroll to top for footer button
+  const scrollToTop = () => {
+    if (typeof window !== "undefined") {
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+  };
+
+  const currentYear = new Date().getFullYear();
+  // ===========================================}=========Main section ==================================================================================
 
   return (
     <header className="flex-col">
@@ -650,7 +637,7 @@ const Header = ({ sections }: { sections: any }) => {
                 offset={-70}
                 duration={500}
               >
-                Members
+                Get Start
               </Link>
             </li>
             <li>
@@ -661,23 +648,23 @@ const Header = ({ sections }: { sections: any }) => {
                 offset={-70}
                 duration={500}
               >
-                Payments
+                About
               </Link>
             </li>
             <li>
               <Link
-                to={sections[0].id}
+                to={sections[3].id}
                 className="hover:text-amber-400 transition-colors duration-200"
                 smooth={true}
                 offset={-70}
                 duration={500}
               >
-                Dashboard
+                Contact
               </Link>
             </li>
-            <li>
+            {/* <li>
               <Link
-                to={sections[1].id}
+                to={sections[3].id}
                 className="hover:text-amber-400 transition-colors duration-200"
                 smooth={true}
                 offset={-70}
@@ -688,7 +675,7 @@ const Header = ({ sections }: { sections: any }) => {
             </li>
             <li>
               <Link
-                to={sections[0].id}
+                to={sections[2].id}
                 className="hover:text-amber-400 transition-colors duration-200"
                 smooth={true}
                 offset={-70}
@@ -696,7 +683,7 @@ const Header = ({ sections }: { sections: any }) => {
               >
                 Contact
               </Link>
-            </li>
+            </li> */}
           </ul>
 
           <button
@@ -1702,7 +1689,192 @@ const Header = ({ sections }: { sections: any }) => {
               </div>
             </div>
           </section>
+          {/* ======================= About Section ======================= */}
 
+          <section
+            id="about"
+            className="relative overflow-hidden bg-gradient-to-br from-black via-gray-900 to-green-950 py-20 md:py-28"
+          >
+            {/* Background Decorations */}
+            <div className="absolute inset-0">
+              <div className="absolute top-10 right-10 w-80 h-80 bg-amber-500/10 rounded-full blur-3xl animate-pulse"></div>
+              <div className="absolute bottom-10 left-10 w-80 h-80 bg-green-500/10 rounded-full blur-3xl animate-pulse delay-700"></div>
+              <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-emerald-500/5 rounded-full blur-3xl"></div>
+            </div>
+
+            <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+              {/* Section Header */}
+              <div className="text-center mb-16">
+                <div className="inline-flex items-center gap-2 bg-white/5 backdrop-blur-sm rounded-full px-4 py-2 mb-4 border border-white/10">
+                  <Sparkles size={16} className="text-amber-400" />
+                  <span className="text-gray-300 text-sm font-medium">
+                    About Seettu Lanka
+                  </span>
+                </div>
+
+                <h2 className="text-4xl sm:text-5xl md:text-6xl font-bold mb-4 leading-tight">
+                  <span className="text-white">Empowering </span>
+                  <span className="bg-gradient-to-r from-amber-400 to-amber-600 bg-clip-text text-transparent">
+                    Financial Communities
+                  </span>
+                </h2>
+
+                <p className="text-gray-400 text-base md:text-lg max-w-3xl mx-auto leading-relaxed">
+                  Seettu Lanka is Sri Lanka's premier digital seettu management
+                  platform, bringing traditional community savings into the
+                  modern age with security, transparency, and ease of use.
+                </p>
+
+                <div className="w-24 h-1 bg-gradient-to-r from-amber-500 to-transparent mx-auto mt-6"></div>
+              </div>
+
+              {/* Stats Grid */}
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6 mb-16">
+                <div className="bg-white/5 backdrop-blur-sm border border-white/10 hover:border-amber-500/50 rounded-2xl p-6 text-center transition-all duration-300 hover:transform hover:scale-105 hover:shadow-lg hover:shadow-amber-500/10 group">
+                  <div className="text-2xl sm:text-3xl md:text-4xl font-bold text-amber-400 group-hover:text-amber-300 transition-colors">
+                    500+
+                  </div>
+                  <div className="text-gray-400 text-xs sm:text-sm mt-1">
+                    Active Groups
+                  </div>
+                </div>
+
+                <div className="bg-white/5 backdrop-blur-sm border border-white/10 hover:border-amber-500/50 rounded-2xl p-6 text-center transition-all duration-300 hover:transform hover:scale-105 hover:shadow-lg hover:shadow-amber-500/10 group">
+                  <div className="text-2xl sm:text-3xl md:text-4xl font-bold text-amber-400 group-hover:text-amber-300 transition-colors">
+                    10K+
+                  </div>
+                  <div className="text-gray-400 text-xs sm:text-sm mt-1">
+                    Happy Members
+                  </div>
+                </div>
+
+                <div className="bg-white/5 backdrop-blur-sm border border-white/10 hover:border-amber-500/50 rounded-2xl p-6 text-center transition-all duration-300 hover:transform hover:scale-105 hover:shadow-lg hover:shadow-amber-500/10 group">
+                  <div className="text-2xl sm:text-3xl md:text-4xl font-bold text-amber-400 group-hover:text-amber-300 transition-colors">
+                    ₹2M+
+                  </div>
+                  <div className="text-gray-400 text-xs sm:text-sm mt-1">
+                    Transactions
+                  </div>
+                </div>
+
+                <div className="bg-white/5 backdrop-blur-sm border border-white/10 hover:border-amber-500/50 rounded-2xl p-6 text-center transition-all duration-300 hover:transform hover:scale-105 hover:shadow-lg hover:shadow-amber-500/10 group">
+                  <div className="text-2xl sm:text-3xl md:text-4xl font-bold text-amber-400 group-hover:text-amber-300 transition-colors">
+                    99.9%
+                  </div>
+                  <div className="text-gray-400 text-xs sm:text-sm mt-1">
+                    Uptime
+                  </div>
+                </div>
+              </div>
+
+              {/* Features Grid */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8 mb-16">
+                <div className="group bg-white/5 backdrop-blur-sm border border-white/10 hover:border-amber-500/50 rounded-2xl p-6 md:p-8 transition-all duration-300 hover:shadow-lg hover:shadow-amber-500/10 hover:transform hover:-translate-y-1">
+                  <div className="flex items-start gap-4">
+                    <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-amber-400/20 to-amber-600/20 flex items-center justify-center flex-shrink-0 group-hover:scale-110 transition-transform duration-300">
+                      <Users size={24} className="text-amber-400" />
+                    </div>
+                    <div>
+                      <h3 className="text-white text-lg font-semibold mb-2 group-hover:text-amber-400 transition-colors">
+                        Community Driven
+                      </h3>
+                      <p className="text-gray-400 text-sm leading-relaxed">
+                        Built for Sri Lankan communities to manage seettu groups
+                        with transparency and trust.
+                      </p>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="group bg-white/5 backdrop-blur-sm border border-white/10 hover:border-amber-500/50 rounded-2xl p-6 md:p-8 transition-all duration-300 hover:shadow-lg hover:shadow-amber-500/10 hover:transform hover:-translate-y-1">
+                  <div className="flex items-start gap-4">
+                    <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-amber-400/20 to-amber-600/20 flex items-center justify-center flex-shrink-0 group-hover:scale-110 transition-transform duration-300">
+                      <Shield size={24} className="text-amber-400" />
+                    </div>
+                    <div>
+                      <h3 className="text-white text-lg font-semibold mb-2 group-hover:text-amber-400 transition-colors">
+                        Secure & Reliable
+                      </h3>
+                      <p className="text-gray-400 text-sm leading-relaxed">
+                        Bank-grade security ensures your financial data and
+                        transactions are always protected.
+                      </p>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="group bg-white/5 backdrop-blur-sm border border-white/10 hover:border-amber-500/50 rounded-2xl p-6 md:p-8 transition-all duration-300 hover:shadow-lg hover:shadow-amber-500/10 hover:transform hover:-translate-y-1">
+                  <div className="flex items-start gap-4">
+                    <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-amber-400/20 to-amber-600/20 flex items-center justify-center flex-shrink-0 group-hover:scale-110 transition-transform duration-300">
+                      <Clock size={24} className="text-amber-400" />
+                    </div>
+                    <div>
+                      <h3 className="text-white text-lg font-semibold mb-2 group-hover:text-amber-400 transition-colors">
+                        Real-time Tracking
+                      </h3>
+                      <p className="text-gray-400 text-sm leading-relaxed">
+                        Monitor payments, contributions, and group activities
+                        instantly with live updates.
+                      </p>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="group bg-white/5 backdrop-blur-sm border border-white/10 hover:border-amber-500/50 rounded-2xl p-6 md:p-8 transition-all duration-300 hover:shadow-lg hover:shadow-amber-500/10 hover:transform hover:-translate-y-1">
+                  <div className="flex items-start gap-4">
+                    <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-amber-400/20 to-amber-600/20 flex items-center justify-center flex-shrink-0 group-hover:scale-110 transition-transform duration-300">
+                      <TrendingUp size={24} className="text-amber-400" />
+                    </div>
+                    <div>
+                      <h3 className="text-white text-lg font-semibold mb-2 group-hover:text-amber-400 transition-colors">
+                        Smart Analytics
+                      </h3>
+                      <p className="text-gray-400 text-sm leading-relaxed">
+                        Gain insights with detailed reports and analytics to
+                        make informed decisions.
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Mission & Vision Cards */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8">
+                <div className="bg-gradient-to-br from-amber-500/10 to-amber-600/5 border border-amber-500/20 rounded-2xl p-6 md:p-8 backdrop-blur-sm hover:border-amber-400/50 transition-all duration-300 group">
+                  <div className="flex items-center gap-3 mb-4">
+                    <Target
+                      size={24}
+                      className="text-amber-400 group-hover:rotate-12 transition-transform duration-300"
+                    />
+                    <h3 className="text-white text-xl font-bold">
+                      Our Mission
+                    </h3>
+                  </div>
+                  <p className="text-gray-300 text-sm md:text-base leading-relaxed">
+                    To revolutionize seettu management in Sri Lanka by providing
+                    a secure, transparent, and accessible digital platform that
+                    empowers communities to achieve their financial goals
+                    together.
+                  </p>
+                </div>
+
+                <div className="bg-gradient-to-br from-green-500/10 to-emerald-600/5 border border-green-500/20 rounded-2xl p-6 md:p-8 backdrop-blur-sm hover:border-green-400/50 transition-all duration-300 group">
+                  <div className="flex items-center gap-3 mb-4">
+                    <Award
+                      size={24}
+                      className="text-green-400 group-hover:rotate-12 transition-transform duration-300"
+                    />
+                    <h3 className="text-white text-xl font-bold">Our Vision</h3>
+                  </div>
+                  <p className="text-gray-300 text-sm md:text-base leading-relaxed">
+                    To become the most trusted digital seettu platform in Sri
+                    Lanka, fostering financial inclusion and community growth
+                    through innovative technology and exceptional service.
+                  </p>
+                </div>
+              </div>
+            </div>
+          </section>
           {/* ======================= Bottom Scaling Section ======================= */}
 
           <section
@@ -1762,6 +1934,229 @@ const Header = ({ sections }: { sections: any }) => {
                 </button>
               </div>
             </div>
+          </section>
+          {/* ======================================================================== */}
+
+          <section id="footer">
+            <footer className="relative bg-gradient-to-br from-black via-gray-900 to-green-950 overflow-hidden">
+              {/* Background Effects */}
+              <div className="absolute inset-0">
+                <div className="absolute top-0 left-1/4 w-96 h-96 bg-green-500/10 rounded-full blur-3xl"></div>
+                <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-amber-500/10 rounded-full blur-3xl"></div>
+                <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-72 h-72 bg-emerald-500/5 rounded-full blur-3xl"></div>
+              </div>
+
+              <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-16 pb-8">
+                {/* Main Footer Grid */}
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 lg:gap-12 pb-12 border-b border-white/10">
+                  {/* Column 1 - Brand */}
+                  <div className="space-y-6">
+                    <div className="flex items-center gap-3">
+                      <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-amber-400 to-amber-600 flex items-center justify-center shadow-lg shadow-amber-500/20">
+                        <span className="text-white font-bold text-lg">SL</span>
+                      </div>
+                      <h2 className="text-2xl font-bold bg-gradient-to-r from-amber-400 to-amber-600 bg-clip-text text-transparent">
+                        Seettu Lanka
+                      </h2>
+                    </div>
+
+                    <p className="text-gray-400 text-sm leading-relaxed">
+                      Digital Seettu Management Platform. Track members, manage
+                      payments, monitor collections, and simplify your seettu
+                      operations in one place.
+                    </p>
+
+                    <div className="flex items-center gap-3">
+                      <div className="flex items-center gap-2 bg-white/5 rounded-full px-3 py-1.5 border border-white/10">
+                        <Shield size={14} className="text-green-400" />
+                        <span className="text-gray-400 text-xs">Secure</span>
+                      </div>
+                      <div className="flex items-center gap-2 bg-white/5 rounded-full px-3 py-1.5 border border-white/10">
+                        <Clock size={14} className="text-amber-400" />
+                        <span className="text-gray-400 text-xs">24/7</span>
+                      </div>
+                    </div>
+
+                    {/* Social Links */}
+                    <div className="flex items-center gap-3 pt-2">
+                      <a
+                        href="#"
+                        className="w-9 h-9 rounded-lg bg-white/5 hover:bg-green-500/20 border border-white/10 hover:border-green-500/50 flex items-center justify-center text-gray-400 hover:text-green-400 transition-all duration-300 group"
+                      >
+                        <Facebook
+                          size={16}
+                          className="group-hover:scale-110 transition"
+                        />
+                      </a>
+                      <a
+                        href="#"
+                        className="w-9 h-9 rounded-lg bg-white/5 hover:bg-green-500/20 border border-white/10 hover:border-green-500/50 flex items-center justify-center text-gray-400 hover:text-green-400 transition-all duration-300 group"
+                      >
+                        {/* <Twitter
+                          size={16}
+                          className="group-hover:scale-110 transition"
+                        />
+                      </a>
+                      <a
+                        href="#"
+                        className="w-9 h-9 rounded-lg bg-white/5 hover:bg-green-500/20 border border-white/10 hover:border-green-500/50 flex items-center justify-center text-gray-400 hover:text-green-400 transition-all duration-300 group"
+                      >
+                        <Instagram
+                          size={16}
+                          className="group-hover:scale-110 transition"
+                        />
+                      </a>
+                      <a
+                        href="#"
+                        className="w-9 h-9 rounded-lg bg-white/5 hover:bg-green-500/20 border border-white/10 hover:border-green-500/50 flex items-center justify-center text-gray-400 hover:text-green-400 transition-all duration-300 group"
+                      >
+                        <Linkedin
+                          size={16}
+                          className="group-hover:scale-110 transition"
+                        /> */}
+                      </a>
+                    </div>
+                  </div>
+
+                  {/* Column 2 - Quick Links */}
+                  <div className="space-y-4">
+                    <h3 className="text-white font-semibold text-lg">
+                      Quick Links
+                    </h3>
+                    <ul className="space-y-3">
+                      {[
+                        "Home",
+                        "Seettu Hub",
+                        "Features",
+                        "Pricing",
+                        "About Us",
+                      ].map((item) => (
+                        <li key={item}>
+                          <a
+                            href="#"
+                            className="text-gray-400 hover:text-amber-400 text-sm transition-all duration-300 flex items-center gap-2 group"
+                          >
+                            <ArrowUpRight
+                              size={14}
+                              className="opacity-0 group-hover:opacity-100 transition-all duration-300 -translate-x-2 group-hover:translate-x-0"
+                            />
+                            <span className="group-hover:translate-x-1 transition-all duration-300">
+                              {item}
+                            </span>
+                          </a>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+
+                  {/* Column 3 - Support */}
+                  <div className="space-y-4">
+                    <h3 className="text-white font-semibold text-lg">
+                      Support
+                    </h3>
+                    <ul className="space-y-3">
+                      {[
+                        "Help Center",
+                        "Contact Us",
+                        "Privacy Policy",
+                        "Terms of Service",
+                        "FAQ",
+                      ].map((item) => (
+                        <li key={item}>
+                          <a
+                            href="#"
+                            className="text-gray-400 hover:text-amber-400 text-sm transition-all duration-300 flex items-center gap-2 group"
+                          >
+                            <ArrowUpRight
+                              size={14}
+                              className="opacity-0 group-hover:opacity-100 transition-all duration-300 -translate-x-2 group-hover:translate-x-0"
+                            />
+                            <span className="group-hover:translate-x-1 transition-all duration-300">
+                              {item}
+                            </span>
+                          </a>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+
+                  {/* Column 4 - Contact */}
+                  <div className="space-y-4">
+                    <h3 className="text-white font-semibold text-lg">
+                      Contact
+                    </h3>
+                    <div className="space-y-4">
+                      <div className="flex items-start gap-3 group">
+                        <MapPin
+                          size={18}
+                          className="text-amber-400 mt-0.5 flex-shrink-0 group-hover:scale-110 transition"
+                        />
+                        <p className="text-gray-400 text-sm">
+                          Colombo, Sri Lanka
+                        </p>
+                      </div>
+                      <div className="flex items-center gap-3 group">
+                        <Mail
+                          size={18}
+                          className="text-amber-400 flex-shrink-0 group-hover:scale-110 transition"
+                        />
+                        <a
+                          href="mailto:info@seettulanka.com"
+                          className="text-gray-400 hover:text-amber-400 text-sm transition"
+                        >
+                          info@seettulanka.com
+                        </a>
+                      </div>
+                      <div className="flex items-center gap-3 group">
+                        <Phone
+                          size={18}
+                          className="text-amber-400 flex-shrink-0 group-hover:scale-110 transition"
+                        />
+                        <a
+                          href="tel:+94771234567"
+                          className="text-gray-400 hover:text-amber-400 text-sm transition"
+                        >
+                          +94 77 123 4567
+                        </a>
+                      </div>
+                      <div className="flex items-center gap-3 group">
+                        <CreditCard
+                          size={18}
+                          className="text-amber-400 flex-shrink-0 group-hover:scale-110 transition"
+                        />
+                        <span className="text-gray-400 text-sm">
+                          Secure Payments
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Bottom Bar */}
+                <div className="pt-8 flex flex-col sm:flex-row items-center justify-between gap-4">
+                  <p className="text-gray-500 text-sm">
+                    © {currentYear}{" "}
+                    <span className="text-amber-400 font-medium">
+                      Seettu Lanka
+                    </span>
+                    . All rights reserved.
+                  </p>
+
+                  <div className="flex items-center gap-6">
+                    <button
+                      onClick={scrollToTop}
+                      className="flex items-center gap-2 text-gray-500 hover:text-amber-400 text-sm transition-colors group"
+                    >
+                      <span>Back to Top</span>
+                      <ArrowUpRight
+                        size={16}
+                        className="group-hover:-translate-y-1 group-hover:translate-x-1 transition-all duration-300"
+                      />
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </footer>
           </section>
         </div>
       </main>

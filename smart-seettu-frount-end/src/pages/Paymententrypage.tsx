@@ -492,36 +492,6 @@ const PaymentEntry: React.FC<PaymentEntryProps> = ({ groupData }) => {
             </p>
           </div>
 
-          {/* Alternative Payment Option */}
-          <div className="bg-gray-50 p-5 rounded-xl border border-gray-200 mt-2.5">
-            <p className="text-gray-700 text-sm my-2">
-              <strong>Notice:</strong> Only for users who are unable to do
-              payments via above online gateways.
-            </p>
-            <p className="text-gray-600 text-sm leading-relaxed my-2">
-              You can deposit contribution fee to the bank account below and
-              send a photo of your bank slip, stating your registered email and
-              group name (with month) intending to purchase on top of the slip,
-              to <strong className="text-gray-800">0704242333</strong> via
-              WhatsApp or Viber.
-            </p>
-            <div className="bg-white p-3.5 rounded-lg mt-2.5 border border-gray-200">
-              <p className="text-sm text-gray-700 my-1">
-                <strong>Bank:</strong> People's bank
-              </p>
-              <p className="text-sm text-gray-700 my-1">
-                <strong>Branch:</strong> Matara (Dharmapala mashitha)
-              </p>
-              <p className="text-sm text-gray-700 my-1">
-                <strong>Account name:</strong> Dekma Higher Educational
-                Institute PVT LTD
-              </p>
-              <p className="text-sm text-gray-700 my-1">
-                <strong>Account number:</strong> 152100120073662
-              </p>
-            </div>
-          </div>
-
           {/* Submit Button */}
           <button
             type="submit"

@@ -1,11 +1,11 @@
 import { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 // import PaymentEntry from "../pages/Paymententrypage";
-import { ArrowLeft, Printer, Loader2, Crown } from "lucide-react";
+import { Loader2 } from "lucide-react";
 // import Swal from "sweetalert2";
 import { useDispatch } from "react-redux";
 import { setShowEmailIcon } from "../redux/slice/mailSlice";
-import PaymentButton from "../components/Payhearui";
+// import PaymentButton from "../components/Payhearui";
 import PaymentEntry from "./Paymententrypage";
 
 interface Member {
@@ -41,7 +41,7 @@ interface Payment {
 interface Group {
   id: string;
   name: string;
-  description: string;
+  // description: string;
   adminId: string;
   adminName: string;
   members: Member[];
@@ -74,7 +74,7 @@ const Payment = () => {
         const sampleGroup: Group = {
           id: groupId || "G001",
           name: "සීට්ටු සමූහය 2026",
-          description: "මාසික සීට්ටු සමූහය - ජනවාරි 2026",
+          // description: "මාසික සීට්ටු සමූහය - ජනවාරි 2026",
           adminId: "ADM001",
           adminName: "Kamal Perera",
           monthlyAmount: 10000,
@@ -85,38 +85,7 @@ const Payment = () => {
           totalCollected: 45000,
           pendingAmount: 25000,
           overdueAmount: 10000,
-          members: [
-            {
-              id: "M001",
-              name: "Kamal Perera",
-              email: "kamal@email.com",
-              phone: "0771234567",
-              joinedDate: "2026-01-01",
-              totalPaid: 10000,
-              lastPayment: "2026-01-15",
-              paymentStatus: "paid",
-            },
-            {
-              id: "M002",
-              name: "Nimal Fernando",
-              email: "nimal@email.com",
-              phone: "0719876543",
-              joinedDate: "2026-01-01",
-              totalPaid: 5000,
-              lastPayment: "2026-01-10",
-              paymentStatus: "pending",
-            },
-            {
-              id: "M003",
-              name: "Sunil Wijesinghe",
-              email: "sunil@email.com",
-              phone: "0764567890",
-              joinedDate: "2026-01-01",
-              totalPaid: 0,
-              lastPayment: "-",
-              paymentStatus: "overdue",
-            },
-          ],
+          members: [],
         };
         setGroup(sampleGroup);
 
@@ -146,37 +115,16 @@ const Payment = () => {
         <div className="container mx-auto px-4 py-4">
           <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
             <div className="flex items-center gap-4">
-              <button
-                onClick={() => navigate(-1)}
-                className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
-              >
-                <ArrowLeft className="w-5 h-5 text-gray-600" />
-              </button>
               <div>
                 <div className="flex items-center gap-3">
                   <h1 className="text-2xl font-bold text-gray-800">
                     {group?.name || "සීට්ටු ගෙවීම්"}
                   </h1>
-                  {true && ( //isAdmin
-                    <span className="px-2.5 py-1 bg-purple-100 text-purple-700 rounded-full text-xs font-medium flex items-center gap-1">
-                      <Crown className="w-3 h-3" />
-                      පරිපාලක
-                    </span>
-                  )}
                 </div>
-                <p className="text-sm text-gray-500">
-                  {group?.description} • සාමාජිකයින් {group?.totalMembers}
-                  මාසික දායකත්වය Rs. {group?.monthlyAmount?.toLocaleString()}
-                </p>
               </div>
             </div>
 
-            <div className="flex items-center gap-3 w-full md:w-auto">
-              <button className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg text-sm font-medium transition-colors flex items-center gap-2">
-                <Printer className="w-4 h-4" />
-                Print
-              </button>
-            </div>
+            <div className="flex items-center gap-3 w-full md:w-auto"></div>
           </div>
         </div>
       </div>
