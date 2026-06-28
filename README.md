@@ -1,111 +1,64 @@
-<img width="1701" height="935" alt="Screenshot from 2026-06-29 01-10-48" src="https://github.com/user-attachments/assets/ac067a09-a70a-4e82-bfb4-1792f4bbd686" /><img width="1701" height="935" alt="Screenshot from 2026-06-29 01-10-48" src="https://github.com/user-attachments/assets/7aaceebd-fceb-4be4-9acb-c39733b6836f" />Seettu Application System – Project Description
-
-![Home](smart-seettu-frount-end/src/assets/image/redmefile-home.png)
-1. Introduction
+<img width="1701" height="935" alt="Screenshot from 2026-06-29 01-10-48" src="https://github.com/user-attachments/assets/ac067a09-a70a-4e82-bfb4-1792f4bbd686" />
 
 
 
-This system is a modern financial management application developed by integrating the traditional Sri Lankan “Seettu” (Cheetu) savings and loan system with digital technology.
-
-The main objective of this application is to reduce issues such as manual record keeping, payment tracking errors, member management difficulties, and lack of transparency found in the traditional Seettu system.
-
-2. About the Seettu System
 
 
+Seettu Application System
+This application is a modern financial management solution designed to digitize the traditional Sri Lankan "Seettu" (Cheetu) savings and loan system.
 
-The Seettu system is:
+📋 Project Objective
+The main objective of this application is to resolve common issues associated with the traditional system, such as manual record-keeping errors, payment tracking difficulties, and a lack of transparency.
 
-A group savings system
-A rotating credit system
-An informal community-based financial system
+📸 System Features
+Below are the core functionalities of the system and their corresponding interface references:
 
-In this system, a group of members contribute a fixed amount of money at regular intervals (monthly or weekly). The total collected amount is then given to one member at a time in a rotating order until the cycle is completed.
+1. Group Management
+Create new Seettu groups and configure financial parameters effortlessly.
+![Group Setup](Screenshot from 2026-06-29 01-26-05.jpg)
+(Interface for creating a new Seettu group)
 
-3. Core Concept
-
-
-
-The Seettu system is known as a “Rotating Credit Association.”
-
-Example:
-
-5 members participate
-Each member contributes Rs. 5000
-
-Then:
-
-Total monthly collection = Rs. 25,000
-One member receives the full amount per turn
-The process continues until all members receive their turn
-4. Social Importance
+2. Group Dashboard
+Monitor the current status of the group, track member progress, and visualize the cycle journey.
 
 
-The Seettu system plays an important role in community finance by:
+(Interface displaying group members and progress)
 
-Increasing trust among members
-Strengthening community relationships
-Providing mutual financial support
-Enhancing social cohesion
+3. Group Meetings
+A built-in video conferencing interface designed to coordinate group discussions.
+![Video Meeting](Screenshot from 2026-06-29 01-19-58.png)
+(Interface for the group video calling feature)
 
-Because of these benefits, it has become popular in both rural and urban areas of Sri Lanka.
+4. Meeting Access
+Easily initiate or join discussions using a secure Group ID.
+![Join Meeting](Screenshot from 2026-06-29 01-36-44.jpg)
+(Interface for joining a scheduled meeting)
 
-5. Types of Seettu System
+5. Communication & Notifications
+Send automated email notifications regarding payments and invitations directly to members.
+![Email System](Screenshot from 2026-06-29 01-34-28.png)
+(Interface for the email notification system)
 
-5.1 Drawing Lots Seettu
+6. Invite Management
+Manage meeting participants and share access links efficiently.
+![Meeting Invites](Screenshot from 2026-06-29 01-21-30.jpg)
+(Interface for managing meeting invitations)
 
+🛠️ Technical Details
+Frontend: Smart Seettu Web App
 
-In this method, the winner is selected through a lottery (drawing lots).
+System Advantages:
+Error Reduction: Minimizes calculation errors caused by manual record-keeping.
 
-5.2 Auction Seettu
+Data Security: Lowers the risk of data loss.
 
-(Font Size: 16 – Bold)
-In this method, the member who wishes to receive the money earlier is selected through a bidding or auction process.
+Transparency: Enhances transparency and builds trust among community members.
 
-6. Features of the Seettu Application
+📝 Conclusion
+This application combines traditional financial culture with modern technology to provide a secure, efficient, and reliable financial management solution.
 
+For more information, please visit the Frontend Link.
 
-Member registration
-Seettu group creation
-Monthly/weekly payment management
-Payment history tracking
-Installment tracking
-Due payment notifications
-Winner selection management
-Financial report generation
-7. System Advantages
-
-
-
-Reduces manual errors
-Minimizes data loss
-Improves transparency
-Reduces fraud risk
-Ensures accurate and fast calculations
-8. User Roles
-
-
-8.1 Administrator
-
-
-
-Manage members
-Monitor payments
-Generate reports
-Control Seettu groups
-8.2 Members
-
-
-View payment status
-Check due payments
-Track Seettu progress
-9. Conclusion
-
-
-The Seettu Application System modernizes the traditional Sri Lankan Seettu savings method by transforming it into a digital platform.
-
-It combines community-based financial culture with modern technology to provide a secure, efficient, and reliable financial management solution.
-
- frount-end=https://smart-seettu-web-fe.vercel.app/
 
 
 
