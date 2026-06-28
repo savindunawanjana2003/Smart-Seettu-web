@@ -223,7 +223,6 @@ const Dashboard = () => {
 
   // const DoubleClickExample = () => {
   // const handleDoubleClick = () => {
-  //   alert("අඩෝ... ඔයා Card එක Double Click කරා! 🎉");
   // };
 
   const [showNotificationBar, setshowNotificationBar] =
@@ -255,6 +254,7 @@ const Dashboard = () => {
   };
 
   const actionForMakePayment = (user: any) => {
+    console.log(user);
     // alert(`now page and clik member : Make Payment  : ${user.name}`);
   };
 
@@ -348,6 +348,7 @@ const Dashboard = () => {
           )}
           {/* ====================================================== */}
           <div className="relative cursor-pointer" onClick={clikNotyfy}>
+            {/* <p className="text-transparent">{userData}</p> */}
             <div className="p-2 rounded-lg hover:bg-gray-100 transition-colors">
               <AiOutlineBell size={22} className="text-gray-600" />
             </div>

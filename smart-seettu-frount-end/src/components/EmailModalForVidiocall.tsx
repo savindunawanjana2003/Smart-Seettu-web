@@ -29,24 +29,19 @@ import emailjs from "@emailjs/browser";
 //   createDate: string;
 // }
 
-interface EmailModalProps {
-  isShow: boolean;
-  onClose: () => void;
-  groupId?: string;
-  onSend: (data: {
-    groupId: string;
-    emails: string[];
-    message: string;
-    month: string;
-  }) => void;
-}
+// interface EmailModalProps {
+//   isShow: boolean;
+//   onClose: () => void;
+//   groupId?: string;
+//   onSend: (data: {
+//     groupId: string;
+//     emails: string[];
+//     message: string;
+//     month: string;
+//   }) => void;
+// }
 
-const EmailModal: React.FC<EmailModalProps> = ({
-  isShow,
-  onClose,
-  groupId,
-  onSend,
-}) => {
+const EmailModal: React.FC<any> = ({ isShow, onClose, groupId }) => {
   const [selectedMonth, setSelectedMonth] = useState("");
   const [message, setMessage] = useState("");
   const [isSending, setIsSending] = useState(false);

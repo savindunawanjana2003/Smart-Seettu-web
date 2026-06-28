@@ -103,6 +103,7 @@ const GrupmanegementSecound = () => {
   }, [socket]);
 
   window.addEventListener("beforeunload", function (e) {
+    console.log(e.target);
     alert("Do you shuwar it");
   });
   return (

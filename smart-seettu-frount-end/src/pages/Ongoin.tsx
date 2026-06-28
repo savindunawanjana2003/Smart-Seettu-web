@@ -2,7 +2,6 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import {
   Users,
-  UserPlus,
   Settings,
   MessageCircle,
   Calendar,
@@ -13,15 +12,9 @@ import {
   Edit,
   Trash2,
   PlusCircle,
-  Loader2,
   AlertCircle,
   Search,
   X,
-  LayoutGrid,
-  List,
-  ChevronRight,
-  MoreVertical,
-  Shield,
   UserCheck,
   UserX,
   Zap,
@@ -70,7 +63,7 @@ const Ongoin = () => {
   const [error, setError] = useState<string | null>(null);
   const [searchTerm, setSearchTerm] = useState<string>("");
   const [userId, setUserId] = useState<string>("");
-  const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
+  // const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
 
   useEffect(() => {
     dispatch(setShowEmailIcon(false));
@@ -228,6 +221,7 @@ const Ongoin = () => {
   };
 
   const handleDeleteGroup = async (groupId: string, groupName: string) => {
+    console.log(groupId);
     const result = await Swal.fire({
       title: "සමූහය මකා දැමීමට වග බලා ගන්න",
       text: `"${groupName}" සමූහය මකා දැමීමට අවශ්‍ය බව ඔබට විශ්වාසද?`,

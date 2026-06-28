@@ -5,8 +5,6 @@ import {
   Mail,
   MapPin,
   Phone,
-  Award,
-  Calendar,
   ShieldCheck,
 } from "lucide-react";
 

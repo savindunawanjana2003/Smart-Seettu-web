@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import {
   AiOutlineUserAdd,
@@ -97,6 +96,7 @@ const Grupmanagement = () => {
   };
 
   const addMemberToList = (e: React.FormEvent) => {
+    console.log(userData);
     e.preventDefault();
     if (
       !newMember.memberId.trim() ||
@@ -234,6 +234,7 @@ const Grupmanagement = () => {
     }
   };
   window.addEventListener("beforeunload", function (e) {
+    console.log(e.target);
     alert("Do you shuwar it");
   });
 
