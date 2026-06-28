@@ -1,6 +1,6 @@
-Seettu Application System – Project Description
+<img width="1701" height="935" alt="Screenshot from 2026-06-29 01-10-48" src="https://github.com/user-attachments/assets/ac067a09-a70a-4e82-bfb4-1792f4bbd686" /><img width="1701" height="935" alt="Screenshot from 2026-06-29 01-10-48" src="https://github.com/user-attachments/assets/7aaceebd-fceb-4be4-9acb-c39733b6836f" />Seettu Application System – Project Description
 
-
+![Home](smart-seettu-frount-end/src/assets/image/redmefile-home.png)
 1. Introduction
 
 
@@ -105,8 +105,7 @@ The Seettu Application System modernizes the traditional Sri Lankan Seettu savin
 
 It combines community-based financial culture with modern technology to provide a secure, efficient, and reliable financial management solution.
 
-Back-end-url= https://smart-seettu-web.vercel.app/
- frount-end=https://seettu-web.vercel.app/
+ frount-end=https://smart-seettu-web-fe.vercel.app/
 
 
 
