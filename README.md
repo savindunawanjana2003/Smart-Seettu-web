@@ -1,7 +1,75 @@
 <img width="1701" height="935" alt="Screenshot from 2026-06-29 01-10-48" src="https://github.com/user-attachments/assets/ac067a09-a70a-4e82-bfb4-1792f4bbd686" />
 
 
+🚀 Technology Stack
+Frontend: React.js
+React is a powerful JavaScript library for building interactive user interfaces. It allows for a component-based architecture, making the UI highly maintainable and responsive.
 
+Key Features Used:
+
+React Hooks: For efficient state management and lifecycle handling.
+
+React Router: For seamless single-page navigation.
+
+Live Updates: Integrated with WebSocket technology to display real-time status (e.g., "Active Users" online status).
+
+Backend: Node.js & Express
+Node.js: A JavaScript runtime that enables scalable, server-side development.
+
+Express.js: A minimal, fast web framework for Node.js, used here to build secure RESTful APIs.
+
+📂 Project Structure
+Frontend Structure (smart-seettu-front-end)
+The frontend is organized to maintain a clean separation of concerns:
+
+Plaintext
+smart-seettu-front-end/
+├── src/
+│   ├── components/    # Reusable UI components (e.g., Navbar, Cards)
+│   ├── context/       # Global state management
+│   ├── pages/         # Page-specific views
+│   ├── redux/         # State management store
+│   ├── router/        # Navigation routing configuration
+│   ├── service/       # API integration services (Axios/WebSockets)
+│   └── types/         # TypeScript type definitions
+├── tailwind.config.js # Styling configuration
+└── package.json       # Project dependencies
+Backend Structure (back-end)
+The backend follows a standard MVC-inspired architecture:
+
+Plaintext
+back-end/
+├── src/
+│   ├── config/        # Database and server settings
+│   ├── controller/    # Business logic for requests
+│   ├── middlewares/   # Authentication and validation layers
+│   ├── models/        # Database schema definitions
+│   ├── routes/        # API endpoint definitions
+│   └── utils/         # Helper functions
+|   |__ errors/
+|    |__schemas
+└── index.ts           # Entry point of the server
+💡 Key Features
+Live Updates: Utilizes WebSockets to provide instant feedback, such as tracking which members are currently online.
+
+Group Management: An intuitive dashboard for creating groups and tracking monthly contributions.
+
+Integrated Communication: Features an in-app video calling interface to facilitate group meetings.
+
+Secure Authentication: Robust API integration to protect member data.
+
+Automated Notifications: Email integration to keep members updated on payment schedules.
+
+🛠️ Getting Started
+To run this project locally, ensure you have Node.js installed, then:
+
+Clone the repository.
+
+Install dependencies using npm install.
+
+Configure your .env files for backend database connectivity.
+
+Run the frontend and backend servers.
 
 
 Seettu Application System
