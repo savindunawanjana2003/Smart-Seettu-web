@@ -6,7 +6,7 @@ import { ArrowLeft, Printer, Loader2, Crown } from "lucide-react";
 import { useDispatch } from "react-redux";
 import { setShowEmailIcon } from "../redux/slice/mailSlice";
 import PaymentButton from "../components/Payhearui";
-// import PaymentEntry from "./Paymententrypage";
+import PaymentEntry from "./Paymententrypage";
 
 interface Member {
   id: string;
@@ -181,111 +181,30 @@ const Payment = () => {
         </div>
       </div>
       <div className="min-h-screen bg-white">
-        <PaymentButton />;
+        <PaymentEntry
+          onProceedToPayment={function (data: {
+            fullName: string;
+            customerPhone: string;
+            email: string;
+            groupName: string;
+            memberType: string;
+            selectedMonth: string;
+            amount: string;
+            selectedPaymentMethod: string;
+            groupDetails?: {
+              id: number;
+              name: string;
+              memberCount: number;
+              monthlyFee: number;
+            };
+          }): void {
+            throw new Error("Function not implemented.");
+          }}
+        />
+        ;
       </div>
     </div>
   );
 };
 
 export default Payment;
-
-// import React, { useEffect, useState } from "react";
-// import { useParams, useNavigate } from "react-router-dom";
-// import { ArrowLeft, Printer, Loader2, Crown } from "lucide-react";
-// import { useDispatch } from "react-redux";
-// import { setShowEmailIcon } from "../redux/slice/mailSlice";
-// import PaymentButton from "../components/Payhearui";
-
-// // Group සහ Member interfaces පමණක් තබාගන්න ලදී (අවශ්‍ය නම් පමණක් භාවිතා කිරීමට)
-// interface Member {
-//   id: string;
-//   name: string;
-//   totalMembers?: number;
-// }
-
-// interface Group {
-//   id: string;
-//   name: string;
-// }
-
-// const Payment = () => {
-//   const dispatch = useDispatch();
-//   const { groupId } = useParams<{ groupId: string }>();
-//   const navigate = useNavigate();
-
-//   const [loading, setLoading] = useState(true);
-//   const [group, setGroup] = useState<Group | null>(null);
-
-//   useEffect(() => {
-//     dispatch(setShowEmailIcon(false));
-
-//     // දත්ත ලබාගැනීමේ mock process එක
-//     const fetchData = async () => {
-//       setLoading(true);
-//       setTimeout(() => {
-//         setGroup({
-//           id: groupId || "G001",
-//           name: "සීට්ටු සමූහය 2026",
-//         });
-//         setLoading(false);
-//       }, 500);
-//     };
-//     fetchData();
-//   }, [dispatch, groupId]);
-
-//   if (loading) {
-//     return (
-//       <div className="min-h-screen flex items-center justify-center bg-gray-50">
-//         <div className="text-center">
-//           <Loader2 className="w-12 h-12 animate-spin text-blue-600 mx-auto" />
-//           <p className="mt-4 text-gray-600 font-medium">Loading...</p>
-//         </div>
-//       </div>
-//     );
-//   }
-
-//   return (
-//     <div className="min-h-screen bg-gray-50">
-//       {/* Header */}
-//       <div className="bg-white border-b border-gray-200 shadow-sm sticky top-0 z-40">
-//         <div className="container mx-auto px-4 py-4">
-//           <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
-//             <div className="flex items-center gap-4">
-//               <button
-//                 onClick={() => navigate(-1)}
-//                 className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
-//               >
-//                 <ArrowLeft className="w-5 h-5 text-gray-600" />
-//               </button>
-//               <div>
-//                 <div className="flex items-center gap-3">
-//                   <h1 className="text-2xl font-bold text-gray-800">
-//                     {group?.name || "සීට්ටු ගෙවීම්"}
-//                   </h1>
-//                   <span className="px-2.5 py-1 bg-purple-100 text-purple-700 rounded-full text-xs font-medium flex items-center gap-1">
-//                     <Crown className="w-3 h-3" />
-//                     පරිපාලක
-//                   </span>
-//                 </div>
-//               </div>
-//             </div>
-
-//             <div className="flex items-center gap-3 w-full md:w-auto">
-//               <button className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg text-sm font-medium transition-colors flex items-center gap-2">
-//                 <Printer className="w-4 h-4" />
-//                 Print
-//               </button>
-//             </div>
-//           </div>
-//         </div>
-//       </div>
-
-//       {/* Payment Section */}
-//       <div className="p-6">
-//         <PaymentButton />
-//       </div>
-//     </div>
-//   );
-// };
-
-// export default Payment;
