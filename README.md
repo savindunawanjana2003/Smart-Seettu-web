@@ -15,33 +15,27 @@ Below are the core functionalities of the system and their corresponding interfa
 
 1. Group Management
 Create new Seettu groups and configure financial parameters effortlessly.
-![Group Setup](Screenshot from 2026-06-29 01-26-05.jpg)
+
 (Interface for creating a new Seettu group)
 
 2. Group Dashboard
 Monitor the current status of the group, track member progress, and visualize the cycle journey.
-
-
 (Interface displaying group members and progress)
 
 3. Group Meetings
 A built-in video conferencing interface designed to coordinate group discussions.
-![Video Meeting](Screenshot from 2026-06-29 01-19-58.png)
 (Interface for the group video calling feature)
 
 4. Meeting Access
 Easily initiate or join discussions using a secure Group ID.
-![Join Meeting](Screenshot from 2026-06-29 01-36-44.jpg)
 (Interface for joining a scheduled meeting)
 
-5. Communication & Notifications
+6. Communication & Notifications
 Send automated email notifications regarding payments and invitations directly to members.
-![Email System](Screenshot from 2026-06-29 01-34-28.png)
 (Interface for the email notification system)
 
-6. Invite Management
+7. Invite Management
 Manage meeting participants and share access links efficiently.
-![Meeting Invites](Screenshot from 2026-06-29 01-21-30.jpg)
 (Interface for managing meeting invitations)
 
 🛠️ Technical Details
@@ -58,6 +52,7 @@ Transparency: Enhances transparency and builds trust among community members.
 This application combines traditional financial culture with modern technology to provide a secure, efficient, and reliable financial management solution.
 
 For more information, please visit the Frontend Link.
+https://smart-seettu-web-fe.vercel.app/
 
 
 
