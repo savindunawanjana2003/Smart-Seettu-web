@@ -10,37 +10,6 @@ import {
 import { getAllGrupmembersFromGrupId } from "../service/grup";
 import emailjs from "@emailjs/browser";
 
-// interface Member {
-//   memberId: string;
-//   membername: string;
-//   email: string;
-//   contactnumber?: boolean;
-// }
-
-// interface Group {
-//   id: string;
-//   adminid: string;
-//   memberCount: string;
-//   expectedMonthlySeettuAmount: string;
-//   monthlyContributionPerMember: string;
-//   seettuDurationInMonths: string;
-//   members: Member;
-//   grupStete: string;
-//   createDate: string;
-// }
-
-// interface EmailModalProps {
-//   isShow: boolean;
-//   onClose: () => void;
-//   groupId?: string;
-//   onSend: (data: {
-//     groupId: string;
-//     emails: string[];
-//     message: string;
-//     month: string;
-//   }) => void;
-// }
-
 const EmailModal: React.FC<any> = ({ isShow, onClose, groupId }) => {
   const [selectedMonth, setSelectedMonth] = useState("");
   const [message, setMessage] = useState("");
