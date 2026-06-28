@@ -22,7 +22,7 @@ Express.js: A minimal, fast web framework for Node.js, used here to build secure
 Frontend Structure (smart-seettu-front-end)
 The frontend is organized to maintain a clean separation of concerns:
 
-Plaintext
+
 smart-seettu-front-end/
 ├── src/
 │   ├── components/    # Reusable UI components (e.g., Navbar, Cards)
@@ -37,7 +37,6 @@ smart-seettu-front-end/
 Backend Structure (back-end)
 The backend follows a standard MVC-inspired architecture:
 
-Plaintext
 back-end/
 ├── src/
 │   ├── config/        # Database and server settings
