@@ -1,7 +1,5 @@
 // PaymentSuccess.jsx
-import React from "react";
-import { CheckCircle, Download, Share2, Home, Receipt } from "lucide-react";
-
+import { CheckCircle, Share2, Home, Receipt } from "lucide-react";
 const PaymentSuccess = () => {
   const paymentDetails = {
     transactionId: "TXN-2024-001234",

@@ -46,10 +46,11 @@ interface errTypes {
   amount?: string;
 }
 
-const PaymentEntry: React.FC<PaymentEntryProps> = ({
-  onProceedToPayment,
-  groupData,
-}) => {
+// const PaymentEntry: React.FC<PaymentEntryProps> = ({
+//   onProceedToPayment,
+//   groupData,
+// })
+const PaymentEntry: React.FC<PaymentEntryProps> = ({ groupData }) => {
   const [formData, setFormData] = useState<paymentData>({
     fullName: "",
     customerPhone: "",
@@ -110,42 +111,42 @@ const PaymentEntry: React.FC<PaymentEntryProps> = ({
     }
   };
 
-  const validateForm = () => {
-    const newErrors: errTypes = {};
+  // const validateForm = () => {
+  //   const newErrors: errTypes = {};
 
-    if (!formData.fullName.trim()) {
-      newErrors.fullName = "Full name is required";
-    }
+  //   if (!formData.fullName.trim()) {
+  //     newErrors.fullName = "Full name is required";
+  //   }
 
-    if (!formData.customerPhone.trim()) {
-      newErrors.customerPhone = "Phone number is required";
-    } else if (
-      !/^[0-9]{10,}$/.test(formData.customerPhone.replace(/\s/g, ""))
-    ) {
-      newErrors.customerPhone = "Please enter a valid phone number";
-    }
+  //   if (!formData.customerPhone.trim()) {
+  //     newErrors.customerPhone = "Phone number is required";
+  //   } else if (
+  //     !/^[0-9]{10,}$/.test(formData.customerPhone.replace(/\s/g, ""))
+  //   ) {
+  //     newErrors.customerPhone = "Please enter a valid phone number";
+  //   }
 
-    if (!formData.email.trim()) {
-      newErrors.email = "Email is required";
-    } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
-      newErrors.email = "Please enter a valid email address";
-    }
+  //   if (!formData.email.trim()) {
+  //     newErrors.email = "Email is required";
+  //   } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
+  //     newErrors.email = "Please enter a valid email address";
+  //   }
 
-    if (!formData.groupName) {
-      newErrors.groupName = "Please select a group";
-    }
+  //   if (!formData.groupName) {
+  //     newErrors.groupName = "Please select a group";
+  //   }
 
-    if (!formData.selectedMonth) {
-      newErrors.selectedMonth = "Please select a month";
-    }
+  //   if (!formData.selectedMonth) {
+  //     newErrors.selectedMonth = "Please select a month";
+  //   }
 
-    if (!formData.amount || parseFloat(formData.amount) <= 0) {
-      newErrors.amount = "Please enter a valid amount";
-    }
+  //   if (!formData.amount || parseFloat(formData.amount) <= 0) {
+  //     newErrors.amount = "Please enter a valid amount";
+  //   }
 
-    setErrors(newErrors);
-    return Object.keys(newErrors).length === 0;
-  };
+  //   setErrors(newErrors);
+  //   return Object.keys(newErrors).length === 0;
+  // };
 
   const handleChange = (
     e: React.ChangeEvent<
