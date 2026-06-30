@@ -1,4 +1,4 @@
-<img width="1000" height="935" alt="Screenshot from 2026-06-29 01-10-48" src="https://github.com/user-attachments/assets/ac067a09-a70a-4e82-bfb4-1792f4bbd686" />
+<img width="1000" height="700" alt="Screenshot from 2026-06-29 01-10-48" src="https://github.com/user-attachments/assets/ac067a09-a70a-4e82-bfb4-1792f4bbd686" />
 
 
 🚀 Technology Stack
@@ -82,7 +82,7 @@ Below are the core functionalities of the system and their corresponding interfa
 
 1. Group Management
 Create new Seettu groups and configure financial parameters effortlessly.
-<img width="1000" height="935" alt="Screenshot from 2026-06-29 01-10-48" src="https://github.com/user-attachments/assets/" />
+<img width="1000" height="735" alt="Screenshot from 2026-06-29 01-10-48" src="https://github.com/user-attachments/assets/readmefile-createAgrup.png" />
 
 
 (Interface for creating a new Seettu group)
