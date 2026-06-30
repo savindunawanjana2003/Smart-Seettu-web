@@ -90,20 +90,20 @@ Create new Seettu groups and configure financial parameters effortlessly.
 2. Group Dashboard
 Monitor the current status of the group, track member progress, and visualize the cycle journey.
 (Interface displaying group members and progress)
-
+<img width="1000" height="735" alt="Screenshot from 2026-06-29 01-10-48" src="https://github.com/savindunawanjana2003/Smart-Seettu-web/blob/main/smart-seettu-frount-end/src/assets/image/redmefile-dashbod.png
+" />
 3. Group Meetings
 A built-in video conferencing interface designed to coordinate group discussions.
 (Interface for the group video calling feature)
+<img width="1000" height="735" alt="Screenshot from 2026-06-29 01-10-48" src="https://github.com/savindunawanjana2003/Smart-Seettu-web/blob/main/smart-seettu-frount-end/src/assets/image/readmefile--makeGrupmeeting.png
+" />
 
-4. Meeting Access
-Easily initiate or join discussions using a secure Group ID.
-(Interface for joining a scheduled meeting)
-
-6. Communication & Notifications
+<img width="1000" height="735" alt="Screenshot from 2026-06-29 01-10-48" src="https://github.com/savindunawanjana2003/Smart-Seettu-web/blob/main/smart-seettu-frount-end/src/assets/image/vidiocole.png" />
+5. Communication & Notifications
 Send automated email notifications regarding payments and invitations directly to members.
 (Interface for the email notification system)
 
-7. Invite Management
+6. Invite Management
 Manage meeting participants and share access links efficiently.
 (Interface for managing meeting invitations)
 
