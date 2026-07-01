@@ -24,30 +24,14 @@ The frontend is organized to maintain a clean separation of concerns:
 
 
 smart-seettu-front-end/
-├── src/
-│   ├── components/    # Reusable UI components (e.g., Navbar, Cards)
-│   ├── context/       # Global state management
-│   ├── pages/         # Page-specific views
-│   ├── redux/         # State management store
-│   ├── router/        # Navigation routing configuration
-│   ├── service/       # API integration services (Axios/WebSockets)
-│   └── types/         # TypeScript type definitions
-├── tailwind.config.js # Styling configuration
-└── package.json       # Project dependencies
+<img width="1000" height="735" alt="Screenshot from 2026-06-29 01-10-48" src="https://github.com/savindunawanjana2003/Smart-Seettu-web/blob/main/smart-seettu-frount-end/src/assets/image/frount-end-strucher.png" />
+
+
 Backend Structure (back-end)
 The backend follows a standard MVC-inspired architecture:
+<img width="1000" height="735" alt="Screenshot from 2026-06-29 01-10-48" src="https://github.com/savindunawanjana2003/Smart-Seettu-web/blob/main/smart-seettu-frount-end/src/assets/image/back-end-strucer.png" />
 
-back-end/
-├── src/
-│   ├── config/        # Database and server settings
-│   ├── controller/    # Business logic for requests
-│   ├── middlewares/   # Authentication and validation layers
-│   ├── models/        # Database schema definitions
-│   ├── routes/        # API endpoint definitions
-│   └── utils/         # Helper functions
-|   |__ errors/
-|    |__schemas
-└── index.ts           # Entry point of the server
+Entry point of the server
 💡 Key Features
 Live Updates: Utilizes WebSockets to provide instant feedback, such as tracking which members are currently online.
 
@@ -82,7 +66,7 @@ Below are the core functionalities of the system and their corresponding interfa
 
 1. Group Management
 Create new Seettu groups and configure financial parameters effortlessly.
-<img width="1000" height="735" alt="Screenshot from 2026-06-29 01-10-48" src="https://github.com/savindunawanjana2003/Smart-Seettu-web/blob/main/smart-seettu-frount-end/src/assets/image/readmefile-createAgrup.png" />
+<img width="1000" height="735" alt="Screenshot from 2026-06-29 01-10-48" src="https://github.com/savindunawanjana2003/Smart-Seettu-web/blob/main/smart-seettu-frount-end/src/assets/image/grupCreate.png" />
 
 
 (Interface for creating a new Seettu group)
@@ -98,13 +82,20 @@ A built-in video conferencing interface designed to coordinate group discussions
 " />
 
 <img width="1000" height="735" alt="Screenshot from 2026-06-29 01-10-48" src="https://github.com/savindunawanjana2003/Smart-Seettu-web/blob/main/smart-seettu-frount-end/src/assets/image/vidiocole.png" />
+
+
 5. Communication & Notifications
 Send automated email notifications regarding payments and invitations directly to members.
 (Interface for the email notification system)
 
+
+
 6. Invite Management
 Manage meeting participants and share access links efficiently.
 (Interface for managing meeting invitations)
+
+
+
 
 🛠️ Technical Details
 Frontend: Smart Seettu Web App
