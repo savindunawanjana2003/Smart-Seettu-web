@@ -88,13 +88,9 @@ A built-in video conferencing interface designed to coordinate group discussions
 
 5. Communication & Notifications
 Send automated email notifications regarding payments and invitations directly to members.
-(Interface for the email notification system)
-<img width="1000" height="735" alt="Screenshot from 2026-06-29 01-10-48" src="https://github.com/savindunawanjana2003/Smart-Seettu-web/blob/main/smart-seettu-frount-end/src/assets/image/readmefile-Contactpage.png
-" />
-
-<img width="1000" height="735" alt="Screenshot from 2026-06-29 01-10-48" src="https://github.com/savindunawanjana2003/Smart-Seettu-web/blob/main/smart-seettu-frount-end/src/assets/image/readmefile-Contactpage.png
-" />
+<img width="1000" height="735" alt="Screenshot from 2026-06-29 01-10-48" src="https://github.com/savindunawanjana2003/Smart-Seettu-web/blob/main/smart-seettu-frount-end/src/assets/image/readmefile-Contactpage.png" />
 <img width="1000" height="735" alt="Screenshot from 2026-06-29 01-10-48" src="https://github.com/savindunawanjana2003/Smart-Seettu-web/blob/main/smart-seettu-frount-end/src/assets/image/sendEmailFromcontactPage-image.png" />
+(Interface for the email notification system)
 7. Invite Management
 Manage meeting participants and share access links efficiently.
 (Interface for managing meeting invitations)
