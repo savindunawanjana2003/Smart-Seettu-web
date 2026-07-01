@@ -67,8 +67,6 @@ Below are the core functionalities of the system and their corresponding interfa
 1. Group Management
 Create new Seettu groups and configure financial parameters effortlessly.
 <img width="1000" height="735" alt="Screenshot from 2026-06-29 01-10-48" src="https://github.com/savindunawanjana2003/Smart-Seettu-web/blob/main/smart-seettu-frount-end/src/assets/image/grupCreate.png" />
-<img width="1000" height="735" alt="Screenshot from 2026-06-29 01-10-48" src="https://github.com/savindunawanjana2003/Smart-Seettu-web/blob/main/smart-seettu-frount-end/src/assets/image/readMe-showCreateGrup.png
-" />
 
 <img width="1000" height="735" alt="Screenshot from 2026-06-29 01-10-48" src="https://github.com/savindunawanjana2003/Smart-Seettu-web/blob/main/smart-seettu-frount-end/src/assets/image/grupReqest-image.png" />
 (Interface for creating a new Seettu group)
@@ -80,8 +78,6 @@ Monitor the current status of the group, track member progress, and visualize th
 3. Group Meetings
 A built-in video conferencing interface designed to coordinate group discussions.
 (Interface for the group video calling feature)
-<img width="1000" height="735" alt="Screenshot from 2026-06-29 01-10-48" src="https://github.com/savindunawanjana2003/Smart-Seettu-web/blob/main/smart-seettu-frount-end/src/assets/grupCollStart.png
-" />
 
 <img width="1000" height="735" alt="Screenshot from 2026-06-29 01-10-48" src="https://github.com/savindunawanjana2003/Smart-Seettu-web/blob/main/smart-seettu-frount-end/src/assets/image/vidiocole.png" />
 
